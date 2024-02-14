@@ -4,7 +4,7 @@ body {
   line-height: 1.5;
   background-color: #f5f5f5;
   color: #333;
-  padding: 0 50px; /* Added padding to the body */
+  padding: 0 50px 0 50px; /* Added padding to the body */
 }
 
 .container {
