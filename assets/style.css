@@ -11,7 +11,7 @@ body {
   line-height: 1.5;
   background-color: #f5f5f5;
   color: #333;
-  padding: 0 20px 0 20px 0
+  padding: 0 20px; /* Added padding to the body */
 }
 
 .container {
@@ -142,25 +142,7 @@ footer .footer-column {
 }
 
 footer .copyright {
-  background-color: #222;
+  background-color: #333;
   color: #fff;
   padding: 10px;
-}
-
-/* Add a media query for responsive layout */
-@media screen and (max-width: 768px) {
-  /* Services section */
-  .service {
-    display: block;
-    text-align: center;
-    margin-bottom: 40px;
-  }
-
-  .service i {
-    margin: 0 auto;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-  }
 }
