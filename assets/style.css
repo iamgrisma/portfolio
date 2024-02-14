@@ -131,9 +131,21 @@ footer {
   text-align: center;
 }
 
-footer p {
-  color: #fff;
+footer .container {
+  display: flex;
+  justify-content: space-between;
 }
+
+footer .footer-column {
+  flex: 1;
+}
+
+footer .copyright {
+  background-color: #222;
+  color: #fff;
+  padding: 10px;
+}
+
 /* Add a media query for responsive layout */
 @media screen and (max-width: 768px) {
   /* Services section */
