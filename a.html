@@ -1,23 +1,50 @@
 <script>
 export async function onRequest(context) {
   try {
-    // Create a prepared statement with our query
-    const ps = context.env.NORTHWIND_DB.prepare('SELECT * from ConvertDate LIMIT 100');
-    const data = await ps.all(); // Using all() to get all rows
+    // Fetch data from the database
+    const ps = context.env.NORTHWIND_DB.prepare('SELECT * from ConvertDate');
+    const data = await ps.all();
 
-    // Building the HTML table
-    let tableHTML = '<table>';
-    tableHTML += '<thead><tr><th>AD</th><th>BS</th><th>Day</th></tr></thead>';
-    tableHTML += '<tbody>';
+    // Generate HTML table markup
+    const tableRows = data.map(row => {
+      return `<tr>${Object.values(row).map(value => `<td>${value}</td>`).join('')}</tr>`;
+    }).join('');
 
-    data.forEach(row => {
-      tableHTML += `<tr><td>${row.AD}</td><td>${row.BS}</td><td>${row.Day}</td></tr>`;
-    });
+    const html = `
+      <html>
+      <head>
+        <title>Data Table</title>
+        <style>
+          table {
+            border-collapse: collapse;
+            width: 100%;
+          }
+          th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+          }
+          th {
+            background-color: #f2f2f2;
+          }
+        </style>
+      </head>
+      <body>
+        <h2>Data Table</h2>
+        <table>
+          <thead>
+            <tr>${Object.keys(data[0]).map(key => `<th>${key}</th>`).join('')}</tr>
+          </thead>
+          <tbody>
+            ${tableRows}
+          </tbody>
+        </table>
+      </body>
+      </html>
+    `;
 
-    tableHTML += '</tbody></table>';
-
-    // Returning the HTML response
-    return new Response(tableHTML, {
+    // Return HTML response
+    return new Response(html, {
       headers: {
         'Content-Type': 'text/html'
       }
