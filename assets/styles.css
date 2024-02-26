@@ -64,6 +64,11 @@
 
   #services .container {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-content: space-around;
+    flex-wrap: wrap;
+    align-items: center;
   }
 
   .services-grid {
