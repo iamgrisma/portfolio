@@ -1,0 +1,11 @@
+<a>
+<table>
+export async function onRequest(context) {
+  // Create a prepared statement with our query
+  const ps = context.env.NORTHWIND_DB.prepare('SELECT * from ConvertDate where AD='2080.01.01');
+  const data = await ps.first();
+
+  return Response.json(data);
+}
+  </table>
+</a>
