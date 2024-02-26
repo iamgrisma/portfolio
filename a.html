@@ -1,50 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Data Table</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <table id="dataTable">
-    <thead>
-      <tr>
-        <th>AD</th>
-        <th>Day</th>
-        <th>BS</th>
-        <!-- Add more column headers if needed -->
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Data rows will be inserted here dynamically -->
-    </tbody>
-  </table>
+    <script>
+export async function onRequest(context) {
+  // Create a prepared statement with our query
+  const ps = context.env.NORTHWIND_DB.prepare('SELECT * from ConvertDate where AD=2020.01.01');
+  const data = await ps.first();
 
-  <script>
-    async function fetchData() {
-  const response = await fetch('/your-endpoint'); // Replace '/your-endpoint' with the actual endpoint where your data is fetched
-  const data = await response.json();
-  return data;
+  return Response.json(data);
 }
-
-async function populateTable() {
-  const data = await fetchData();
-  const tableBody = document.querySelector('#dataTable tbody');
-
-  data.forEach(row => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${row.id}</td>
-      <td>${row.date}</td>
-      <!-- Add more cells if needed -->
-    `;
-    tableBody.appendChild(tr);
-  });
-}
-
-populateTable();
-
   </script>
-</body>
-</html>
