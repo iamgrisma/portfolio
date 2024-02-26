@@ -1,11 +1,12 @@
 <a>
   <script>
-export async function onRequest(context) {
-  // Create a prepared statement with our query
-  const ps = context.env.NORTHWIND_DB.prepare('SELECT * from ConvertDate where AD='2080.01.01');
-  const data = await ps.first();
+    export async function onRequest(context) {
+      // Create a prepared statement with our query
+      const ps = context.env.NORTHWIND_DB.prepare("SELECT * FROM ConvertDate WHERE AD='1913.04.13'");
+      const data = await ps.first();
 
-  return Response.json(data);
-}
-    </script>
+      // Assuming you want to return a JSON object
+      return JSON.stringify(data);
+    }
+  </script>
 </a>
