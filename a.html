@@ -1,7 +1,7 @@
     <script>
 export async function onRequest(context) {
   // Create a prepared statement with our query
-  const ps = context.env.NORTHWIND_DB.prepare('SELECT * from ConvertDate where AD=2020.01.01');
+  const ps = context.env.NORTHWIND_DB.prepare('SELECT * from ConvertDate');
   const data = await ps.first();
 
   return Response.json(data);
