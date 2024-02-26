@@ -1,9 +1,30 @@
-    <script>
+<script>
 export async function onRequest(context) {
-  // Create a prepared statement with our query
-  const ps = context.env.NORTHWIND_DB.prepare('SELECT * from ConvertDate');
-  const data = await ps.first();
+  try {
+    // Create a prepared statement with our query
+    const ps = context.env.NORTHWIND_DB.prepare('SELECT * from ConvertDate LIMIT 100');
+    const data = await ps.all(); // Using all() to get all rows
 
-  return Response.json(data);
+    // Building the HTML table
+    let tableHTML = '<table>';
+    tableHTML += '<thead><tr><th>AD</th><th>BS</th><th>Day</th></tr></thead>';
+    tableHTML += '<tbody>';
+
+    data.forEach(row => {
+      tableHTML += `<tr><td>${row.AD}</td><td>${row.BS}</td><td>${row.Day}</td></tr>`;
+    });
+
+    tableHTML += '</tbody></table>';
+
+    // Returning the HTML response
+    return new Response(tableHTML, {
+      headers: {
+        'Content-Type': 'text/html'
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return new Response('Error fetching data', { status: 500 });
+  }
 }
-  </script>
+</script>
