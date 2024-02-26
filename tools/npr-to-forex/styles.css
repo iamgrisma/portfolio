@@ -1,0 +1,82 @@
+  body {
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Twemoji", "EmojiOne", sans-serif;
+  }
+  .outer-container {
+    max-width: 1200px;
+    margin: 20px auto;
+  }
+
+  .container {
+    padding: 5px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    /* Enable horizontal scrolling if content overflows */
+  }
+
+  h3 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+    color: #007bff;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #000;
+    border-radius: 8px;
+  }
+
+  th,
+  td {
+    padding: 7px;
+    text-align: center;
+    border: 1px solid #000;
+    white-space: nowrap;
+    font-size: 15px;
+  }
+
+  th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+
+  td.currency {
+    text-align: left;
+    display: flex;
+    align-items: center;
+  }
+
+  .flag {
+    margin-right: 10px;
+  }
+
+  .ticker-container {
+    overflow: hidden;
+    position: relative;
+    height: 1.5em;
+    margin-bottom: 20px;
+  }
+
+  .ticker {
+    white-space: nowrap;
+    animation: ticker-scroll 30s linear infinite;
+    font-size: 18px;
+  }
+
+  @keyframes ticker-scroll {
+    0% {
+      transform: translateX(100%);
+    }
+
+    100% {
+      transform: translateX(-100%);
+    }
+  }
