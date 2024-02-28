@@ -1,1 +1,3 @@
 User-agent: *
+
+Sitemap: https://grisma.info.np/sitemap.xml
