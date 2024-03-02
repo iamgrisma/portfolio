@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pension Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        label {
+            margin-bottom: 5px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        /* Responsive Styling */
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+    <script>
+        function calculatePension() {
+            var basicSalary = parseFloat(document.getElementById('basicSalary').value);
+            var lastSalary = parseFloat(document.getElementById('lastSalary').value);
+            var years = parseInt(document.getElementById('years').value);
+            var months = parseInt(document.getElementById('months').value);
+            var days = parseInt(document.getElementById('days').value);
+            var resultDiv = document.getElementById('result');
+
+            resultDiv.innerHTML = ''; // Clear previous result
+
+            // Validate inputs
+            if (isNaN(basicSalary) || isNaN(lastSalary) || isNaN(years) || isNaN(months) || isNaN(days)) {
+                resultDiv.innerHTML = 'Please enter valid numeric values.';
+                return;
+            }
+
+            if (lastSalary < basicSalary) {
+                resultDiv.innerHTML = 'Last salary cannot be less than basic salary.';
+                return;
+            }
+
+            if (years < 15) {
+                resultDiv.innerHTML = 'You are not yet eligible for pension.<br>If you are under any special legal framework, your monthly pension will be ' + (basicSalary / 2).toFixed(2);
+                return;
+            }
+
+            // Normalize months and days
+            months = Math.min(Math.max(months, 0), 11);
+            days = Math.min(Math.max(days, 0), 31);
+
+            // Calculate years worked
+            var yearsWorked = years + months / 12 + days / (30 * 12);
+
+            // Calculate pension
+            var pension = lastSalary * yearsWorked / 50;
+
+            // Check if pension exceeds half of basic salary
+            var halfBasic = basicSalary / 2;
+            if (years >= 15 && pension < halfBasic) {
+                pension = halfBasic;
+            }
+
+            // Check if pension exceeds basic salary
+            if (pension > basicSalary) {
+                pension = basicSalary;
+            }
+
+            // Display result
+            resultDiv.innerHTML = 'Your calculated pension is: ' + pension.toFixed(2);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Pension Calculator</h2>
+        <label for="basicSalary">Basic Salary:</label>
+        <input type="number" id="basicSalary" min="0" step="0.5">
+
+        <label for="lastSalary">Last Salary with Grade:</label>
+        <input type="number" id="lastSalary" min="0" step="0.5">
+
+        <label for="years">Years:</label>
+        <input type="number" id="years" min="0">
+
+        <label for="months">Months:</label>
+        <input type="number" id="months" min="0" max="11">
+
+        <label for="days">Days:</label>
+        <input type="number" id="days" min="0" max="29">
+
+        <button onclick="calculatePension()">Calculate</button>
+
+        <div id="result"></div>
+    </div>
+</body>
+</html>
