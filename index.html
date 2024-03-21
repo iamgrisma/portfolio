@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grisma - Portfolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.16/tailwind.min.css" />
     <style>
-      .section-title {
+      .tital {
         text-align: center;
         font-size: 2.5rem;
         margin-bottom: 2rem;
         color: #3B82F6;
       }
 
-      Edit Full Screen Copy code .service-card {
+      .scard {
         background-color: #fff;
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -23,19 +23,19 @@
         text-align: center;
       }
 
-      .service-card:hover {
+      .scard:hover {
         transform: translateY(-5px);
         transition: transform 0.3s ease;
       }
 
-      .tools-grid {
+      .tg {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 2rem;
         justify-content: center;
       }
 
-      .tool-card {
+      .tc {
         position: relative;
         overflow: hidden;
         border-radius: 10px;
@@ -43,17 +43,17 @@
         transition: all 0.3s ease;
       }
 
-      .tool-card:hover {
+      .tc:hover {
         box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
       }
 
-      .tool-card img {
+      .tc img {
         width: 100%;
         height: 200px;
         object-fit: cover;
       }
 
-      .tool-card-content {
+      .tcc {
         background-color: rgba(0, 0, 0, 0.5);
         position: absolute;
         bottom: 0;
@@ -66,11 +66,11 @@
         color: #fff;
       }
 
-      .tool-card:hover .tool-card-content {
+      .tc:hover .tcc {
         height: 100%;
       }
 
-      .tool-card-title {
+      .tct {
         margin-bottom: 0.5rem;
       }
     </style>
@@ -81,63 +81,63 @@
         <a href="/" class="text-2xl font-bold text-white">Grisma</a>
         <ul class="flex gap-5">
           <li>
-            <a href="#about" class="text-white hover:text-gray-200">About</a>
+            <a href="#ab" class="text-white hover:text-gray-200">About</a>
           </li>
           <li>
-            <a href="#services" class="text-white hover:text-gray-200">Services</a>
+            <a href="#sv" class="text-white hover:text-gray-200">Services</a>
           </li>
           <li>
-            <a href="#tools" class="text-white hover:text-gray-200">Tools</a>
+            <a href="#tl" class="text-white hover:text-gray-200">Tools</a>
           </li>
           <li>
-            <a href="#contact" class="text-white hover:text-gray-200">Contact</a>
+            <a href="#ct" class="text-white hover:text-gray-200">Contact</a>
           </li>
         </ul>
       </nav>
     </header>
-    <section id="hero" class="bg-cover bg-center" style="background-image: url('https://source.unsplash.com/random/?code,wordpress,design');">
+    <section id="he" class="bg-cover bg-center" style="background-image: url('https://source.unsplash.com/random/?code,wordpress,design')">
       <div class="container mx-auto text-center pt-20">
         <h1 class="text-5xl text-white">Grisma</h1>
         <p class="text-xl text-white mt-3">Blogging, SEO, and WordPress Design</p>
       </div>
     </section>
-    <section id="about" class="py-16">
+    <section id="ab" class="py-16">
       <div class="container mx-auto text-center">
-        <h2 class="section-title">About Grisma</h2>
+        <h2 class="tital">About Grisma</h2>
         <p class="text-gray-600 mb-10"> Grisma is a passionate blogger and SEO enthusiast. With extensive experience in writing, SEO, and WordPress design, Grisma offers a range of services to help you succeed online. </p>
         <p class="text-gray-600 mb-10"> Grisma's expertise lies in creating engaging content, implementing effective SEO strategies, and designing visually appealing WordPress sites. Whether you need informative articles, improved search engine visibility, or a stunning website, Grisma has got you covered. </p>
       </div>
     </section>
-    <section id="services" class="py-16">
+    <section id="sv" class="py-16">
       <div class="container mx-auto">
-        <h2 class="section-title">Services</h2>
+        <h2 class="tital">Services</h2>
         <div class="flex flex-wrap justify-center mt-10">
-          <div class="service-card w-full md:w-1/3 p-4">
+          <div class="scard w-full md:w-1/3 p-4">
             <i class="fas fa-edit text-5xl mb-5 text-gray-600"></i>
             <h3 class="text-xl mb-3">Blogging</h3>
             <p class="text-gray-600"> Grisma provides informative content for a global audience. With over 200 articles and blogs published, Grisma has a proven track record in producing high-quality content. </p>
           </div>
-          <div class="service-card w-full md:w-1/3 p-4">
+          <div class="scard w-full md:w-1/3 p-4">
             <i class="fas fa-search text-5xl mb-5 text-gray-600"></i>
-            <h3 class="text-xl mb-3">Search Engine Optimization (SEO)</h3>
+            <h3 class="text-xl mb-3">SEO</h3>
             <p class="text-gray-600"> Grisma offers SEO services to help your website rank higher in search engines and attract organic traffic. </p>
           </div>
-          <div class="service-card w-full md:w-1/3 p-4">
+          <div class="scard w-full md:w-1/3 p-4">
             <i class="fas fa-cogs text-5xl mb-5 text-gray-600"></i>
             <h3 class="text-xl mb-3">Content Writing</h3>
             <p class="text-gray-600"> Grisma specializes in writing about blogging, SEO, WordPress design, and other digital marketing topics. </p>
           </div>
-          <div class="service-card w-full md:w-1/3 p-4">
+          <div class="scard w-full md:w-1/3 p-4">
             <i class="fas fa-paint-brush text-5xl mb-5 text-gray-600"></i>
             <h3 class="text-xl mb-3">WordPress Design</h3>
             <p class="text-gray-600"> Grisma can customize and design WordPress sites using popular builders like Elementor and Gutenberg. </p>
           </div>
-          <div class="service-card w-full md:w-1/3 p-4">
+          <div class="scard w-full md:w-1/3 p-4">
             <i class="fas fa-mobile-alt text-5xl mb-5 text-gray-600"></i>
             <h3 class="text-xl mb-3">Website Maintenance</h3>
             <p class="text-gray-600"> Keep your website up-to-date and secure with Grisma's websitemaintenance services. </p>
           </div>
-          <div class="service-card w-full md:w-1/3 p-4">
+          <div class="scard w-full md:w-1/3p-4">
             <i class="fas fa-cloud text-5xl mb-5 text-gray-600"></i>
             <h3 class="text-xl mb-3">Website Hosting</h3>
             <p class="text-gray-600"> Grisma offers reliable and fast website hosting services, ensuring optimal website performance. </p>
@@ -145,44 +145,44 @@
         </div>
       </div>
     </section>
-    <section id="tools" class="py-16">
+    <section id="tl" class="py-16">
       <div class="container mx-auto">
-        <h2 class="section-title">Our Tools</h2>
-        <div class="tools-grid mt-10">
-          <a href="/tools/npr-to-forex" class="tool-card overflow-hidden">
+        <h2 class="tital">Our Tools</h2>
+        <div class="tg mt-10">
+          <a href="/tools/npr-to-forex" class="tc overflow-hidden">
             <img src="https://source.unsplash.com/random/?forex,currency,exchange,rate,trading,investment" alt="NPR to Forex Tool Image" />
-            <div class="tool-card-content">
-              <h3 class="text-xl tool-card-title">Foreign Exchange (Forex) Tool</h3>
+            <div class="tcc">
+              <h3 class="text-xl tct">Foreign Exchange (Forex) Tool</h3>
               <p class="mt-2"> Instantly convert Nepali Rupees (NPR) to various international currencies </p>
             </div>
           </a>
-          <a href="/tools/text-to-binary-and-binary-to-text-realtime-converter/" class="tool-card overflow-hidden">
+          <a href="/tools/text-to-binary-and-binary-to-text-realtime-converter/" class="tc overflow-hidden">
             <img src="https://source.unsplash.com/random/?binary,computer,technology,code,programming" alt="Text to Binary and Binary to Text Converter Tool Image" />
-            <div class="tool-card-content">
-              <h3 class="text-xl tool-card-title">Text to Binary and Binary to Text Converter</h3>
+            <div class="tcc">
+              <h3 class="text-xl tct"> Text to Binary and Binary to Text Converter </h3>
               <p class="mt-2"> Convert text to binary code and vice versa in real-time </p>
             </div>
           </a>
-          <a href="/tools/weather" class="tool-card overflow-hidden">
+          <a href="/tools/weather" class="tc overflow-hidden">
             <img src="https://source.unsplash.com/random/?weather,forecast,rain,sun,cloud,snow,wind" alt="Weather Forecast Tool Image" />
-            <div class="tool-card-content">
-              <h3 class="text-xl tool-card-title">Weather Forecast Tool</h3>
+            <div class="tcc">
+              <h3 class="text-xl tct">Weather Forecast Tool</h3>
               <p class="mt-2"> Check the weather forecast for any location in the world </p>
             </div>
           </a>
-          <a href="/tools/pension-calculator-nijamati" class="tool-card overflow-hidden">
+          <a href="/tools/pension-calculator-nijamati" class="tc overflow-hidden">
             <img src="https://source.unsplash.com/random/?calculator,finance,money,savings,pension,retirement" alt="Pension Calculator Tool Image" />
-            <div class="tool-card-content">
-              <h3 class="text-xl tool-card-title">Pension Calculator</h3>
+            <div class="tcc">
+              <h3 class="text-xl tct">Pension Calculator</h3>
               <p class="mt-2"> Calculate your potential pension amount based on your current salary </p>
             </div>
           </a>
         </div>
       </div>
     </section>
-    <section id="contact" class="py-16 bg-gray-200">
+    <section id="ct" class="py-16 bg-gray-200">
       <div class="container mx-auto">
-        <h2 class="section-title">Contact Grisma</h2>
+        <h2 class="tital">Contact Grisma</h2>
         <div class="flex flex-wrap flex-col md:flex-row mt-10 md:justify-center">
           <div class="md:w-1/3 p-5">
             <p class="text-gray-600 mb-5"> If you have any questions, suggestions, or would like to discuss a project, feel free to get in touch. </p>
@@ -202,10 +202,7 @@
             </div>
           </div>
           <div class="md:w-1/3 p-5 border-l md:border-l-0 md:border-t border-gray-300 flex items-center justify-center">
-            <div class="mb-2">
-              <p class="text-gray-600">Follow Grisma on:</p>
-            </div>
-            <div class="flex space-x-3">
+            <div class="mb-2 flex space-x-3">
               <a href="#" class="text-blue-500 text-2xl hover:underline">
                 <i class="fab fa-facebook-f"></i>
               </a>
