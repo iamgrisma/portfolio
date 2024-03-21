@@ -1,113 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grisma - Portfolio</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<link rel="stylesheet" href="/assets/styles.css">
-</head>
-<body>
-<header>
-  <nav>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#tools">Tools</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
-</header>
-<section id="hero">
-  <div class="container">
-    <h1>Grisma</h1>
-    <h2>Blogging, SEO, and WordPress Design</h2>
-  </div>
-</section>
-<section id="about">
-  <div class="container">
-    <h2>About Grisma</h2>
-    <p>Grisma is a passionate blogger and SEO enthusiast. With extensive experience in writing, SEO, and WordPress design, Grisma offers a range of services to help you succeed online.</p>
-    <p>Grisma's expertise lies in creating engaging content, implementing effective SEO strategies, and designing visually appealing WordPress sites. Whether you need informative articles, improved search engine visibility, or a stunning website, Grisma has got you covered.</p>
-  </div>
-</section>
-<section id="services">
-  <div class="container">
-    <h2>Services</h2>
-    <div class="services-grid">
-      <div class="service">
-        <i class="fas fa-pen"></i>
-        <h3>Blogging</h3>
-        <p>With over 200 articles and blogs published, Grisma provides informative content for a global audience.</p>
-      </div>
-      <div class="service">
-        <i class="fas fa-search"></i>
-        <h3>Search Engine Optimization (SEO)</h3>
-        <p>Grisma offers SEO services to help your website rank higher in search engines and attract organic traffic.</p>
-      </div>
-      <div class="service">
-        <i class="fas fa-edit"></i>
-        <h3>Content Writing</h3>
-        <p>Grisma specializes in writing about blogging, SEO, WordPress design, and other digital marketing topics.</p>
-      </div>
-      <div class="service">
-        <i class="fas fa-palette"></i>
-        <h3>WordPress Design</h3>
-        <p>Grisma can customize and design WordPress sites using popular builders like Elementor and Gutenberg.</p>
-      </div>
-    </div>
-  </div>
-</section>
-<section id="tools">
-  <div class="container">
-    <h2>Tools</h2>
-    <div class="grid">
-      <a href="/tools/npr-to-forex">
-        <div class="grid-item">
-          <img src="/assets/forex.jpg" alt="forex tool">
-          <div class="grid-item-overlay">
-            <h3>Foreign Exchange</h3>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grisma - Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+      /* Custom styles */
+      .container {
+        width: 90%;
+        margin: auto;
+        overflow: hidden;
+      }
+
+      Edit Full Screen Copy code .hero {
+        height: 100vh;
+        background-position: center;
+        background-size: cover;
+        background-image: url('https://source.unsplash.com/random/?technology,digital-marketing');
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #fff;
+      }
+
+      .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero h2 {
+        font-size: 1.5rem;
+      }
+
+      .services .service {
+        padding: 2rem;
+        border: 1px solid #ddd;
+        margin-bottom: 2rem;
+        text-align: center;
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .services .service:hover {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .services .service i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .tools .grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+      }
+
+      .tools .grid-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .tools .grid-item:hover {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .tools .grid-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .tools .grid-item-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .tools .grid-item:hover .grid-item-overlay {
+        opacity: 1;
+      }
+
+      .tools .grid-item-overlay h3 {
+        font-size: 1.2rem;
+        color: #fff;
+        padding: 10px 20px;
+      }
+
+      footer {
+        padding: 2rem 0;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+      }
+
+      footer p {
+        margin-bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="bg-gray-800 py-4">
+        <div class="container">
+          <div class="flex items-center justify-between">
+            <div>
+              <a href="/" class="text-2xl font-bold text-white">Grisma</a>
+            </div>
+            <ul class="flex space-x-4">
+              <li>
+                <a href="#" class="text-white hover:text-gray-300">Home</a>
+              </li>
+              <li>
+                <a href="#about" class="text-white hover:text-gray-300">About</a>
+              </li>
+              <li>
+                <a href="#services" class="text-white hover:text-gray-300">Services</a>
+              </li>
+              <li>
+                <a href="#tools" class="text-white hover:text-gray-300">Tools</a>
+              </li>
+              <li>
+                <a href="#contact" class="text-white hover:text-gray-300">Contact</a>
+              </li>
+            </ul>
           </div>
         </div>
-      </a>
-      <a href="/tools/text-to-binary-and-binary-to-text-realtime-converter/">
-        <div class="grid-item">
-          <img src="/assets/text to binary.jpg" alt="Text to Binary Converter Tool">
-          <div class="grid-item-overlay">
-            <h3>Text to Binary Code</h3>
+      </nav>
+    </header>
+    <section class="hero">
+      <div class="container">
+        <h1>Grisma</h1>
+        <h2>Blogging, SEO, and WordPress Design</h2>
+      </div>
+    </section>
+    <section id="about" class="bg-gray-100 py-12">
+      <div class="container">
+        <h2>About Grisma</h2>
+        <p class="text-gray-600">Grisma is a passionate blogger and SEO enthusiast. With extensive experience in writing, SEO, and WordPress design, Grisma offers a range of services to help you succeed online.</p>
+        <p class="text-gray-600">Grisma's expertise lies in creating engaging content, implementing effective SEO strategies, and designing visually appealing WordPress sites. Whether you need informative articles, improved search engine visibility, or a stunning website, Grisma has got you covered.</p>
+      </div>
+    </section>
+    <section id="services" class="py-12">
+      <div class="container">
+        <h2>Services</h2>
+        <div class="services grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="service bg-white p-6 rounded-lg shadow-md overflow-hidden">
+            <i class="fas fa-pen text-4xl"></i>
+            <h3 class="text-xl font-semibold">Blogging</h3>
+            <p class="text-gray-600">With over 200 articles and blogs published, Grisma provides informative content for a global audience.</p>
+          </div>
+          <div class="service bg-white p-6 rounded-lg shadow-md overflow-hidden">
+            <i class="fas fa-search text-4xl"></i>
+            <h3 class="text-xl font-semibold">Search Engine Optimization (SEO)</h3>
+            <p class="text-gray-600">Grisma offers SEO services to help your website rank higher in search engines and attract organic traffic.</p>
+          </div>
+          <div class="service bg-white p-6 rounded-lg shadow-md overflow-hidden">
+            <i class="fas fa-edit text-4xl"></i>
+            <h3 class="text-xl font-semibold">Content Writing</h3>
+            <p class="text-gray-600">Grisma specializes in writing about blogging, SEO, WordPress design, and other digital marketing topics.</p>
+          </div>
+          <div class="service bg-white p-6 rounded-lg shadow-md overflow-hidden">
+            <i class="fas fa-palette text-4xl"></i>
+            <h3 class="text-xl font-semibold">WordPress Design</h3>
+            <p class="text-gray-600">Grisma can customize and design WordPress sites using popular builders like Elementor and Gutenberg.</p>
           </div>
         </div>
-      </a>
-      <a href="/tools/weather">
-        <div class="grid-item">
-          <img src="/assets/weather.jpg" alt="Weather">
-          <div class="grid-item-overlay">
-            <h3>Weather View and Forecast Tool</h3>
-          </div>
+      </div>
+    </section>
+    <section id="tools" class="py-12">
+      <div class="container">
+        <h2>Tools</h2>
+        <div class="tools grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <a href="/tools/npr-to-forex" class="grid-item">
+            <div class="grid-item-inner">
+              <img src="https://source.unsplash.com/random/?forex" alt="Forex Tool">
+              <div class="grid-item-overlay">
+                <h3>Foreign Exchange</h3>
+              </div>
+            </div>
+          </a>
+          <a href="/tools/text-to-binary-and-binary-to-text-realtime-converter/" class="grid-item">
+            <div class="grid-item-inner">
+              <img src="https://source.unsplash.com/random/?text,binary" alt="Text to Binary Converter Tool">
+              <div class="grid-item-overlay">
+                <h3>Text to Binary Code</h3>
+              </div>
+            </div>
+          </a>
+          <a href="/tools/weather" class="grid-item">
+            <div class="grid-item-inner">
+              <img src="https://source.unsplash.com/random/?weather" alt="Weather">
+              <div class="grid-item-overlay">
+                <h3>Weather View and Forecast Tool</h3>
+              </div>
+            </div>
+          </a>
+          <a href="/tools/pension-calculator-nijamati" class="grid-item">
+            <div class="grid-item-inner">
+              <img src="https://source.unsplash.com/random/?pension" alt="Pension Calculator">
+              <div class="grid-item-overlay">
+                <h3>Pension Calculator</h3>
+              </div>
+            </div>
+          </a>
         </div>
-      </a>
-      <a href="/tools/pension-calculator-nijamati">
-        <div class="grid-item">
-          <img src="/assets/pension.jpg" alt="Pension Calculator">
-          <div class="grid-item-overlay">
-            <h3>Pension Calculator</h3>
-          </div>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-<section id="contact">
-  <div class="container">
-    <h2>Contact</h2>
-    <p>If you have any questions or would like to work together, feel free to get in touch:</p>
-  </div>
-</section>
-<footer>
-  <div class="container">
-    <p>© 2023 Grisma. All rights reserved.</p>
-  </div>
-</footer>
-</body>
+      </div>
+    </section>
+    <section id="contact" class="py-12">
+      <div class="container text-center">
+        <h2>Contact</h2>
+        <p>If you have any questions or would like to work together, feel free to get in touch.</p>
+      </div>
+    </section>
+    <footer>
+      <div class="container">
+        <p>&copy; 2023 Grisma. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
 </html>
