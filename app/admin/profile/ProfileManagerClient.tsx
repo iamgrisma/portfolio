@@ -365,11 +365,13 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
                     });
                     setEditingStatId(null);
                   }} className="flex-1 space-y-2">
-                    <input name="label" defaultValue={stat.label} className="admin-input text-sm p-2 w-full" required />
-                    <div className="flex gap-2 mt-2">
-                      <input name="value" defaultValue={stat.value} className="admin-input text-sm p-2 flex-1" required />
-                      <input name="icon" defaultValue={stat.icon} className="admin-input text-sm p-2 w-24" placeholder="Icon Name" required />
-                      <input name="order" type="number" defaultValue={stat.order} className="admin-input text-sm p-2 w-16" />
+                    <div className="grid grid-cols-2 gap-2">
+                      <input name="label" defaultValue={stat.label} className="admin-input text-sm p-2" placeholder="Label" required />
+                      <input name="value" defaultValue={stat.value} className="admin-input text-sm p-2" placeholder="Value" required />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      <input name="icon" defaultValue={stat.icon} className="admin-input text-sm p-2" placeholder="Icon Name" required />
+                      <input name="order" type="number" defaultValue={stat.order} className="admin-input text-sm p-2" placeholder="Order" />
                     </div>
                     <div className="flex justify-end gap-2 pt-1">
                       <button type="button" onClick={() => setEditingStatId(null)} className="p-1 text-dark-300 hover:text-white rounded">
@@ -410,11 +412,13 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
             });
             (document.getElementById('stat-form') as HTMLFormElement).reset();
           }} id="stat-form" className="space-y-3 pt-4 border-t border-white/5">
-            <input name="label" placeholder="Label (e.g. Animals Treated)" className="admin-input text-sm p-2.5" required />
-            <div className="flex gap-2 mt-1">
-              <input name="value" placeholder="Value (e.g. 1000+)" className="admin-input text-sm p-2.5 flex-1" required />
-              <input name="icon" placeholder="Icon (e.g. Heart)" className="admin-input text-sm p-2.5 w-28" defaultValue="Award" required />
-              <input name="order" type="number" placeholder="Order" className="admin-input text-sm p-2.5 w-20" defaultValue="0" />
+            <div className="grid grid-cols-2 gap-2">
+              <input name="label" placeholder="Label (e.g. Animals Treated)" className="admin-input text-sm p-2.5" required />
+              <input name="value" placeholder="Value (e.g. 1000+)" className="admin-input text-sm p-2.5" required />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <input name="icon" placeholder="Icon (e.g. Heart)" className="admin-input text-sm p-2.5" defaultValue="Award" required />
+              <input name="order" type="number" placeholder="Order (Priority)" className="admin-input text-sm p-2.5" defaultValue="0" />
             </div>
             <button type="submit" className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium text-white transition-colors flex items-center justify-center gap-2">
               <Plus className="w-4 h-4" /> Add Stat

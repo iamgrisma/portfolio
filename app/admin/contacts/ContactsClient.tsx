@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Mail, Trash2, Eye, EyeOff, MessageSquare, Search, Calendar, Phone, Dog, Syringe, Scissors, CheckCircle, Clock, XCircle, ChevronDown } from 'lucide-react';
-import { deleteContact, toggleContactRead, updateBookingStatus } from './actions';
+import { Mail, Trash2, Eye, EyeOff, MessageSquare, Search, Calendar, Phone, Dog, Syringe, Scissors, CheckCircle, Clock, XCircle, ChevronDown, Send } from 'lucide-react';
+import { deleteContact, toggleContactRead, updateBookingStatus, sendEmailReply } from './actions';
 
 type ContactRecord = {
   id: number;
@@ -27,6 +27,17 @@ export default function ContactsClient({ initialContacts }: { initialContacts: C
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'all' | 'contact' | 'booking'>('all');
   const [isPending, startTransition] = useTransition();
+
+  const [isReplying, setIsReplying] = useState(false);
+  const [replySubject, setReplySubject] = useState('');
+  const [replyMessage, setReplyMessage] = useState('');
+  const [isSendingReply, setIsSendingReply] = useState(false);
+
+  useEffect(() => {
+    setIsReplying(false);
+    setReplyMessage('');
+    setReplySubject('');
+  }, [selectedId]);
 
   const selected = initialContacts.find((m) => m.id === selectedId);
 
@@ -298,6 +309,75 @@ export default function ContactsClient({ initialContacts }: { initialContacts: C
               <div className="flex items-center gap-2 text-xs text-dark-400 border-t border-white/5 pt-6">
                 <Calendar className="w-3 h-3" />
                 Received on {selected.createdAt ? new Date(selected.createdAt).toLocaleString() : 'Unknown'}
+              </div>
+
+              {/* Email Reply Box */}
+              <div className="mt-8">
+                {!isReplying ? (
+                  <button 
+                    onClick={() => {
+                      setIsReplying(true);
+                      setReplySubject(`Re: ${selected.type === 'booking' ? 'Your Booking Request' : 'Your Contact Message'}`);
+                      setReplyMessage(`Hi ${selected.name},\n\n`);
+                    }}
+                    className="btn-primary py-2 px-4 flex items-center gap-2 text-sm w-full sm:w-auto justify-center"
+                  >
+                    <Mail className="w-4 h-4" /> Reply directly to {selected.name}
+                  </button>
+                ) : (
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-5 animate-fade-in-up">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-white font-bold text-sm">Compose Reply</h3>
+                      <button onClick={() => setIsReplying(false)} className="text-dark-300 hover:text-white p-1 transition-colors">
+                        <XCircle className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="space-y-3">
+                      <input 
+                        type="text" 
+                        value={replySubject} 
+                        onChange={(e) => setReplySubject(e.target.value)} 
+                        placeholder="Subject" 
+                        className="admin-input text-sm" 
+                        disabled={isSendingReply}
+                      />
+                      <textarea 
+                        value={replyMessage} 
+                        onChange={(e) => setReplyMessage(e.target.value)} 
+                        placeholder="Type your reply here..." 
+                        className="admin-input text-sm min-h-[150px]"
+                        disabled={isSendingReply}
+                      />
+                      <div className="flex justify-end gap-2 pt-2">
+                        <button 
+                          onClick={() => setIsReplying(false)} 
+                          className="px-4 py-2 text-sm text-dark-200 hover:text-white transition-colors"
+                          disabled={isSendingReply}
+                        >
+                          Cancel
+                        </button>
+                        <button 
+                          onClick={async () => {
+                            setIsSendingReply(true);
+                            try {
+                              await sendEmailReply(selected.email, selected.name, replySubject, replyMessage);
+                              alert("Email sent successfully!");
+                              setIsReplying(false);
+                            } catch (err: any) {
+                              alert(err.message || "Failed to send email.");
+                            } finally {
+                              setIsSendingReply(false);
+                            }
+                          }}
+                          disabled={isSendingReply || !replyMessage.trim()}
+                          className="btn-primary py-2 px-4 flex items-center gap-2 text-sm disabled:opacity-50"
+                        >
+                          {isSendingReply ? 'Sending...' : <><Send className="w-4 h-4" /> Send Email</>}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ) : (
