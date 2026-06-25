@@ -9,11 +9,26 @@ export async function POST(req: Request) {
     const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
     const db = getDb(env.DB);
 
-    const body = (await req.json()) as { name: string; email: string; message: string; turnstileToken: string };
-    const { name, email, message, turnstileToken } = body;
+    const body = (await req.json()) as { 
+      type?: string;
+      name: string; 
+      email: string; 
+      phone?: string;
+      service?: string;
+      animalType?: string;
+      date?: string;
+      time?: string;
+      message?: string; 
+      turnstileToken: string;
+    };
+    const { type = 'contact', name, email, phone, service, animalType, date, time, message, turnstileToken } = body;
 
-    if (!name || !email || !message) {
+    if (!name || !email) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    if (type === 'booking' && !phone) {
+      return NextResponse.json({ error: 'Phone number is required for bookings' }, { status: 400 });
     }
 
     if (!turnstileToken) {
@@ -31,8 +46,14 @@ export async function POST(req: Request) {
     }
 
     await db.insert(contacts).values({
+      type,
       name,
       email,
+      phone,
+      service,
+      animalType,
+      date,
+      time,
       message,
     });
 

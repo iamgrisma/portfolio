@@ -53,9 +53,16 @@ export const blogTags = sqliteTable('blog_tags', {
 // ===== CONTACTS =====
 export const contacts = sqliteTable('contacts', {
   id: integer('id').primaryKey({ autoIncrement: true }),
+  type: text('type').notNull().default('contact'), // 'contact' or 'booking'
   name: text('name').notNull(),
   email: text('email').notNull(),
-  message: text('message').notNull(),
+  phone: text('phone'),
+  service: text('service'),
+  animalType: text('animal_type'),
+  date: text('date'),
+  time: text('time'),
+  message: text('message'), // Made optional
+  status: text('status').notNull().default('pending'), // 'pending', 'confirmed', 'completed', 'cancelled'
   read: integer('read', { mode: 'boolean' }).notNull().default(false),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });

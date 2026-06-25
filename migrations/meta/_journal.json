@@ -15,6 +15,13 @@
       "when": 1782374589576,
       "tag": "0001_sturdy_shen",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1782377704508,
+      "tag": "0002_ambiguous_stephen_strange",
+      "breakpoints": true
     }
   ]
 }

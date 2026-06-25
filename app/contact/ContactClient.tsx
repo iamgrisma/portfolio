@@ -24,6 +24,7 @@ type ContactInfoProps = {
 
 export default function ContactClient({ currentAddress, phone, publicEmail, socials = [] }: ContactInfoProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [activeTab, setActiveTab] = useState<'contact' | 'booking'>('contact');
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,8 +32,14 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
 
     const formData = new FormData(e.currentTarget);
     const data = {
+      type: formData.get('type'),
       name: formData.get('name'),
       email: formData.get('email'),
+      phone: formData.get('phone'),
+      service: formData.get('service'),
+      animalType: formData.get('animalType'),
+      date: formData.get('date'),
+      time: formData.get('time'),
       message: formData.get('message'),
       turnstileToken: formData.get('cf-turnstile-response'),
     };
@@ -151,27 +158,44 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
             {/* Contact Form */}
             <AnimatedSection animation="slide-right" delay={200} className="lg:col-span-3">
               <div className="glass-card rounded-2xl p-8 sm:p-10">
-                <h2 className="text-2xl font-bold text-white font-[var(--font-heading)] mb-2">
-                  Send a Message
-                </h2>
-                <p className="text-sm text-dark-300 mb-8">Fill out the form below and I&apos;ll get back to you soon.</p>
+                <div className="flex flex-wrap items-center gap-6 border-b border-white/10 mb-8 pb-4">
+                  <button 
+                    onClick={() => { setActiveTab('contact'); setStatus('idle'); }} 
+                    className={`text-xl font-bold font-[var(--font-heading)] transition-colors ${activeTab === 'contact' ? 'text-white' : 'text-dark-300 hover:text-white'}`}
+                  >
+                    Send a Message
+                  </button>
+                  <button 
+                    onClick={() => { setActiveTab('booking'); setStatus('idle'); }} 
+                    className={`text-xl font-bold font-[var(--font-heading)] transition-colors ${activeTab === 'booking' ? 'text-accent-400' : 'text-dark-300 hover:text-white'}`}
+                  >
+                    Book Appointment
+                  </button>
+                </div>
 
                 {status === 'success' ? (
                   <div className="text-center py-12 space-y-4">
                     <div className="w-16 h-16 rounded-full bg-accent-500/10 flex items-center justify-center mx-auto">
                       <CheckCircle className="w-8 h-8 text-accent-400" />
                     </div>
-                    <h3 className="text-xl font-bold text-white font-[var(--font-heading)]">Message Sent!</h3>
-                    <p className="text-dark-200 text-sm">Thank you for reaching out. I&apos;ll respond as soon as possible.</p>
+                    <h3 className="text-xl font-bold text-white font-[var(--font-heading)]">
+                      {activeTab === 'booking' ? 'Booking Request Sent!' : 'Message Sent!'}
+                    </h3>
+                    <p className="text-dark-200 text-sm">
+                      {activeTab === 'booking' 
+                        ? "Thank you! I've received your appointment request and will get back to you shortly to confirm." 
+                        : "Thank you for reaching out. I'll respond as soon as possible."}
+                    </p>
                     <button
                       onClick={() => setStatus('idle')}
                       className="btn-secondary text-sm mt-4"
                     >
-                      Send Another Message
+                      {activeTab === 'booking' ? 'Book Another' : 'Send Another Message'}
                     </button>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    <input type="hidden" name="type" value={activeTab} />
                     <div className="grid sm:grid-cols-2 gap-6">
                       <div>
                         <label htmlFor="contact-name" className="block text-sm font-medium text-dark-100 mb-2">Full Name</label>
@@ -196,14 +220,62 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
                         />
                       </div>
                     </div>
+
+                    {activeTab === 'booking' && (
+                      <>
+                        <div className="grid sm:grid-cols-2 gap-6">
+                          <div>
+                            <label htmlFor="contact-phone" className="block text-sm font-medium text-dark-100 mb-2">Phone Number <span className="text-accent-400">*</span></label>
+                            <input type="tel" id="contact-phone" name="phone" required placeholder="+977..." className="admin-input" />
+                          </div>
+                          <div>
+                            <label htmlFor="contact-animal" className="block text-sm font-medium text-dark-100 mb-2">Animal Type</label>
+                            <select id="contact-animal" name="animalType" className="admin-input">
+                              <option value="Dog">Dog</option>
+                              <option value="Cat">Cat</option>
+                              <option value="Livestock">Livestock (Cow/Buffalo)</option>
+                              <option value="Poultry">Poultry</option>
+                              <option value="Goat/Sheep">Goat/Sheep</option>
+                              <option value="Other">Other</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="grid sm:grid-cols-3 gap-6">
+                          <div>
+                            <label htmlFor="contact-service" className="block text-sm font-medium text-dark-100 mb-2">Service</label>
+                            <select id="contact-service" name="service" className="admin-input">
+                              <option value="Consultation">Consultation</option>
+                              <option value="Vaccination">Vaccination</option>
+                              <option value="Surgery">Surgery</option>
+                              <option value="Farm Visit">Farm Visit</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label htmlFor="contact-date" className="block text-sm font-medium text-dark-100 mb-2">Preferred Date</label>
+                            <input type="date" id="contact-date" name="date" className="admin-input" />
+                          </div>
+                          <div>
+                            <label htmlFor="contact-time" className="block text-sm font-medium text-dark-100 mb-2">Time Slot</label>
+                            <select id="contact-time" name="time" className="admin-input">
+                              <option value="Morning">Morning</option>
+                              <option value="Afternoon">Afternoon</option>
+                              <option value="Evening">Evening</option>
+                            </select>
+                          </div>
+                        </div>
+                      </>
+                    )}
+
                     <div>
-                      <label htmlFor="contact-message" className="block text-sm font-medium text-dark-100 mb-2">Message</label>
+                      <label htmlFor="contact-message" className="block text-sm font-medium text-dark-100 mb-2">
+                        {activeTab === 'booking' ? 'Additional Notes (Optional)' : 'Message'}
+                      </label>
                       <textarea
                         id="contact-message"
                         name="message"
-                        rows={6}
-                        required
-                        placeholder="Tell me what's on your mind..."
+                        rows={activeTab === 'booking' ? 3 : 6}
+                        required={activeTab === 'contact'}
+                        placeholder={activeTab === 'booking' ? "Any specific symptoms or details?" : "Tell me what's on your mind..."}
                         className="admin-input resize-none"
                       />
                     </div>
@@ -211,7 +283,7 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
                     {status === 'error' && (
                       <div className="flex items-center gap-2 text-sm text-red-400 bg-red-500/10 p-3 rounded-lg border border-red-500/20">
                         <AlertCircle className="w-4 h-4 shrink-0" />
-                        Failed to send message. Please ensure the captcha is completed.
+                        Failed to submit. Please ensure the captcha is completed.
                       </div>
                     )}
 
@@ -223,7 +295,7 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
                       className="btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-2 text-sm disabled:opacity-50"
                     >
                       <Send className="w-4 h-4" />
-                      {status === 'loading' ? 'Sending...' : 'Send Message'}
+                      {status === 'loading' ? 'Submitting...' : activeTab === 'booking' ? 'Request Appointment' : 'Send Message'}
                     </button>
                   </form>
                 )}
