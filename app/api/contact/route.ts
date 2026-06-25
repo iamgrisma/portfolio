@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import { getDb } from '../../../src/db/index';
+import { getDb, CloudflareEnv } from '../../../src/db/index';
 import { contacts } from '../../../src/db/schema';
 
 export async function POST(req: Request) {
   try {
-    const { env } = await getCloudflareContext();
+    const { env } = await getCloudflareContext() as { env: CloudflareEnv };
     const db = getDb(env.DB);
 
     const body = await req.json();
