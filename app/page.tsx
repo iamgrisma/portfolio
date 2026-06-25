@@ -54,8 +54,32 @@ export default async function Home() {
   const db = getDb(env.DB);
 
   const profileRecord = await db.select().from(profiles).limit(1).get();
-  const educationsList = await db.select().from(educations).orderBy(educations.order);
-  const experiencesList = await db.select().from(experiences).orderBy(experiences.order);
+  const extractYear = (str: string) => {
+    const match = str.match(/(\d{4})\s*(AD|BS)/i);
+    if (match) {
+      let year = parseInt(match[1]);
+      if (match[2].toUpperCase() === 'BS') year -= 57;
+      return year;
+    }
+    const genericMatch = str.match(/\d{4}/);
+    if (genericMatch) {
+      let year = parseInt(genericMatch[0]);
+      if (year > 2040) year -= 57;
+      return year;
+    }
+    return 0;
+  };
+
+  const educationsRaw = await db.select().from(educations);
+  const educationsList = educationsRaw.sort((a, b) => extractYear(b.year) - extractYear(a.year));
+  const experiencesRaw = await db.select().from(experiences);
+  const experiencesList = experiencesRaw.sort((a, b) => {
+    const aPres = a.duration.toLowerCase().includes('present');
+    const bPres = b.duration.toLowerCase().includes('present');
+    if (aPres && !bPres) return -1;
+    if (!aPres && bPres) return 1;
+    return extractYear(b.duration) - extractYear(a.duration);
+  });
   const latestBlogs = await db.select().from(blogs).where(eq(blogs.published, true)).orderBy(desc(blogs.createdAt)).limit(3);
   const dynamicStats = await db.select().from(stats).orderBy(stats.order);
 

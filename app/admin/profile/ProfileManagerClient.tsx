@@ -31,13 +31,14 @@ function EducationYearInputs({ defaultValue = "", className = "admin-input text-
   const [bs, setBs] = useState(initBs);
 
   return (
-    <div className="flex gap-2 flex-1">
+    <div className="flex gap-2 flex-1 items-center">
       <input 
-        type="number" placeholder="Year (AD)" className={className} value={ad} required
+        type="number" placeholder="AD Year" className={`${className} min-w-[80px] w-full`} value={ad} required
         onChange={e => { setAd(e.target.value); if(e.target.value) setBs(String(Number(e.target.value) + 57)); }}
       />
+      <span className="text-dark-400 font-bold">/</span>
       <input 
-        type="number" placeholder="Year (BS)" className={className} value={bs} required
+        type="number" placeholder="BS Year" className={`${className} min-w-[80px] w-full`} value={bs} required
         onChange={e => { setBs(e.target.value); if(e.target.value) setAd(String(Number(e.target.value) - 57)); }}
       />
       <input type="hidden" name="year" value={ad && bs ? `${ad} AD / ${bs} BS` : defaultValue} />
@@ -79,16 +80,16 @@ function ExperienceDurationInputs({ defaultValue = "", className = "admin-input 
   return (
     <div className="flex gap-2 flex-1 items-center">
       <input 
-        type="number" placeholder="Start (AD)" className={className} value={startAd} required
+        type="number" placeholder="Start (AD)" className={`${className} min-w-[80px] w-full`} value={startAd} required
         onChange={e => setStartAd(e.target.value)}
       />
-      <span className="text-dark-400">-</span>
+      <span className="text-dark-400 font-bold">-</span>
       <input 
-        type="number" placeholder="End (AD)" className={className} value={endAd} disabled={isPresent}
+        type="number" placeholder="End (AD)" className={`${className} min-w-[80px] w-full`} value={endAd} disabled={isPresent}
         onChange={e => setEndAd(e.target.value)}
       />
       <label className="flex items-center gap-1 text-xs text-dark-200 cursor-pointer whitespace-nowrap">
-        <input type="checkbox" checked={isPresent} onChange={e => { setIsPresent(e.target.checked); if(e.target.checked) setEndAd(""); }} />
+        <input type="checkbox" className="w-4 h-4" checked={isPresent} onChange={e => { setIsPresent(e.target.checked); if(e.target.checked) setEndAd(""); }} />
         Present
       </label>
       <input type="hidden" name="duration" value={finalStr} />
@@ -210,9 +211,8 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
                   }} className="flex-1 space-y-2">
                     <input name="degree" defaultValue={edu.degree} className="admin-input text-xs p-1.5" required />
                     <input name="institution" defaultValue={edu.institution} className="admin-input text-xs p-1.5" required />
-                    <div className="flex gap-2">
-                      <EducationYearInputs defaultValue={edu.year} />
-                      <input name="order" type="number" defaultValue={edu.order} className="admin-input text-xs p-1.5 w-16" />
+                    <div className="flex gap-2 mt-2">
+                      <EducationYearInputs defaultValue={edu.year} className="admin-input text-xs p-2" />
                     </div>
                     <div className="flex justify-end gap-2 pt-1">
                       <button type="button" onClick={() => setEditingEduId(null)} className="p-1 text-dark-300 hover:text-white rounded">
@@ -255,9 +255,8 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
           }} id="edu-form" className="space-y-3 pt-4 border-t border-white/5">
             <input name="degree" placeholder="Degree (e.g. SLC)" className="admin-input text-sm" required />
             <input name="institution" placeholder="Institution" className="admin-input text-sm" required />
-            <div className="flex gap-2">
-              <EducationYearInputs className="admin-input text-sm p-2 flex-1" />
-              <input name="order" type="number" placeholder="Order" className="admin-input text-sm w-20" defaultValue="0" />
+            <div className="flex gap-2 mt-1">
+              <EducationYearInputs className="admin-input text-sm p-2" />
             </div>
             <button type="submit" className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium text-white transition-colors flex items-center justify-center gap-2">
               <Plus className="w-4 h-4" /> Add Education
@@ -289,9 +288,8 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
                   }} className="flex-1 space-y-2">
                     <input name="role" defaultValue={exp.role} className="admin-input text-xs p-1.5" required />
                     <input name="organization" defaultValue={exp.organization} className="admin-input text-xs p-1.5" required />
-                    <div className="flex gap-2">
-                      <ExperienceDurationInputs defaultValue={exp.duration} />
-                      <input name="order" type="number" defaultValue={exp.order} className="admin-input text-xs p-1.5 w-16" />
+                    <div className="flex gap-2 mt-2">
+                      <ExperienceDurationInputs defaultValue={exp.duration} className="admin-input text-xs p-2" />
                     </div>
                     <div className="flex justify-end gap-2 pt-1">
                       <button type="button" onClick={() => setEditingExpId(null)} className="p-1 text-dark-300 hover:text-white rounded">
@@ -334,9 +332,8 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
           }} id="exp-form" className="space-y-3 pt-4 border-t border-white/5">
             <input name="role" placeholder="Role (e.g. Vet Technician)" className="admin-input text-sm" required />
             <input name="organization" placeholder="Organization" className="admin-input text-sm" required />
-            <div className="flex gap-2">
-              <ExperienceDurationInputs className="admin-input text-sm p-2 flex-1" />
-              <input name="order" type="number" placeholder="Order" className="admin-input text-sm w-20" defaultValue="0" />
+            <div className="flex gap-2 mt-1">
+              <ExperienceDurationInputs className="admin-input text-sm p-2" />
             </div>
             <button type="submit" className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium text-white transition-colors flex items-center justify-center gap-2">
               <Plus className="w-4 h-4" /> Add Experience
