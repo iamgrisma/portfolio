@@ -10,7 +10,12 @@ export default async function AdminContactsPage() {
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const db = getDb(env.DB);
   
-  const contactsList = await db.select().from(contacts).orderBy(desc(contacts.createdAt));
+  const contactsList = await db.query.contacts.findMany({
+    with: {
+      replies: true,
+    },
+    orderBy: [desc(contacts.createdAt)],
+  });
   
-  return <ContactsClient initialContacts={contactsList} />;
+  return <ContactsClient initialContacts={contactsList as any} />;
 }

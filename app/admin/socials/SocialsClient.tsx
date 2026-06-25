@@ -93,9 +93,9 @@ export default function SocialsClient({ initialSocials }: { initialSocials: Soci
               onChange={(e) => setNewPlatform(e.target.value)}
               className="admin-input sm:w-48"
             >
-              <option value="">Select platform...</option>
+              <option value="" className="bg-dark-900 text-white">Select platform...</option>
               {PLATFORMS.map((p) => (
-                <option key={p} value={p}>{p}</option>
+                <option key={p} value={p} className="bg-dark-900 text-white">{p}</option>
               ))}
             </select>
             <input

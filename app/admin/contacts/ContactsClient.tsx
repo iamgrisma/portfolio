@@ -5,6 +5,13 @@ import { useRouter } from 'next/navigation';
 import { Mail, Trash2, Eye, EyeOff, MessageSquare, Search, Calendar, Phone, Dog, Syringe, Scissors, CheckCircle, Clock, XCircle, ChevronDown, Send } from 'lucide-react';
 import { deleteContact, toggleContactRead, updateBookingStatus, sendEmailReply } from './actions';
 
+type ContactReply = {
+  id: number;
+  subject: string;
+  message: string;
+  createdAt: Date | null;
+};
+
 type ContactRecord = {
   id: number;
   type: string;
@@ -19,6 +26,7 @@ type ContactRecord = {
   status: string;
   read: boolean;
   createdAt: Date | null;
+  replies?: ContactReply[];
 };
 
 export default function ContactsClient({ initialContacts }: { initialContacts: ContactRecord[] }) {
@@ -306,6 +314,25 @@ export default function ContactsClient({ initialContacts }: { initialContacts: C
                 </div>
               )}
 
+              {/* Threaded Replies */}
+              {selected.replies && selected.replies.length > 0 && (
+                <div className="mb-8 space-y-4 border-l-2 border-white/10 pl-4 ml-2">
+                  <h4 className="text-sm font-bold text-dark-200">Conversation History</h4>
+                  {selected.replies.map(reply => (
+                    <div key={reply.id} className="bg-dark-800 p-4 rounded-xl border border-white/5">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-white">You</span>
+                        <span className="text-[10px] text-dark-400">
+                          {reply.createdAt ? new Date(reply.createdAt).toLocaleString() : ''}
+                        </span>
+                      </div>
+                      <p className="text-xs text-dark-300 mb-2 border-b border-white/5 pb-2">Subj: {reply.subject}</p>
+                      <p className="text-sm text-dark-200 whitespace-pre-wrap">{reply.message}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               <div className="flex items-center gap-2 text-xs text-dark-400 border-t border-white/5 pt-6">
                 <Calendar className="w-3 h-3" />
                 Received on {selected.createdAt ? new Date(selected.createdAt).toLocaleString() : 'Unknown'}
@@ -360,7 +387,7 @@ export default function ContactsClient({ initialContacts }: { initialContacts: C
                           onClick={async () => {
                             setIsSendingReply(true);
                             try {
-                              await sendEmailReply(selected.email, selected.name, replySubject, replyMessage);
+                              await sendEmailReply(selected.id, selected.email, selected.name, replySubject, replyMessage);
                               alert("Email sent successfully!");
                               setIsReplying(false);
                             } catch (err: any) {

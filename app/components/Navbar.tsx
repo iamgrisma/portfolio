@@ -72,9 +72,15 @@ export default function Navbar() {
             })}
             <Link
               href="/login"
-              className="ml-4 px-5 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-accent-500 to-teal-500 text-white hover:shadow-lg hover:shadow-accent-500/25 transition-all duration-300 hover:-translate-y-0.5"
+              className="ml-4 px-4 py-2 text-sm font-medium rounded-lg text-dark-200 hover:text-white transition-colors"
             >
-              Dashboard
+              Admin
+            </Link>
+            <Link
+              href="/contact?tab=booking"
+              className="ml-2 px-5 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-accent-500 to-teal-500 text-white hover:shadow-lg hover:shadow-accent-500/25 transition-all duration-300 hover:-translate-y-0.5"
+            >
+              Book Appointment
             </Link>
           </nav>
 
@@ -113,10 +119,16 @@ export default function Navbar() {
             );
           })}
           <Link
-            href="/login"
+            href="/contact?tab=booking"
             className="block text-center mt-3 px-4 py-3 rounded-lg text-sm font-semibold bg-gradient-to-r from-accent-500 to-teal-500 text-white"
           >
-            Dashboard
+            Book Appointment
+          </Link>
+          <Link
+            href="/login"
+            className="block text-center mt-2 px-4 py-3 rounded-lg text-sm font-medium text-dark-200 hover:text-white bg-white/5"
+          >
+            Admin Dashboard
           </Link>
         </nav>
       </div>

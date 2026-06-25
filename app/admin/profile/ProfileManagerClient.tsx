@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, Trash2, Save, User, GraduationCap, Briefcase, Heart, Edit2, X, BarChart } from "lucide-react";
 import { updateProfile, addEducation, deleteEducation, updateEducation, addExperience, deleteExperience, updateExperience, addInterest, deleteInterest, addStat, updateStat, deleteStat } from "./actions";
+import IconPicker from "@/src/components/IconPicker";
 
 type ProfileData = {
   profile: any;
@@ -370,7 +371,7 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
                       <input name="value" defaultValue={stat.value} className="admin-input text-sm p-2" placeholder="Value" required />
                     </div>
                     <div className="grid grid-cols-2 gap-2 mt-2">
-                      <input name="icon" defaultValue={stat.icon} className="admin-input text-sm p-2" placeholder="Icon Name" required />
+                      <IconPicker name="icon" defaultValue={stat.icon} />
                       <input name="order" type="number" defaultValue={stat.order} className="admin-input text-sm p-2" placeholder="Order" />
                     </div>
                     <div className="flex justify-end gap-2 pt-1">
@@ -417,7 +418,7 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
               <input name="value" placeholder="Value (e.g. 1000+)" className="admin-input text-sm p-2.5" required />
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <input name="icon" placeholder="Icon (e.g. Heart)" className="admin-input text-sm p-2.5" defaultValue="Award" required />
+              <IconPicker name="icon" defaultValue="Award" />
               <input name="order" type="number" placeholder="Order (Priority)" className="admin-input text-sm p-2.5" defaultValue="0" />
             </div>
             <button type="submit" className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium text-white transition-colors flex items-center justify-center gap-2">

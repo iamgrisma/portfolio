@@ -67,6 +67,15 @@ export const contacts = sqliteTable('contacts', {
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
+// ===== CONTACT REPLIES =====
+export const contactReplies = sqliteTable('contact_replies', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  contactId: integer('contact_id').notNull().references(() => contacts.id, { onDelete: 'cascade' }),
+  subject: text('subject').notNull(),
+  message: text('message').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
 // ===== SOCIAL PROFILES =====
 export const socialProfiles = sqliteTable('social_profiles', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -162,5 +171,16 @@ export const blogTagsRelations = relations(blogTags, ({ one }) => ({
   tag: one(tags, {
     fields: [blogTags.tagId],
     references: [tags.id],
+  }),
+}));
+
+export const contactsRelations = relations(contacts, ({ many }) => ({
+  replies: many(contactReplies),
+}));
+
+export const contactRepliesRelations = relations(contactReplies, ({ one }) => ({
+  contact: one(contacts, {
+    fields: [contactReplies.contactId],
+    references: [contacts.id],
   }),
 }));

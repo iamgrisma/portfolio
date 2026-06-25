@@ -174,8 +174,8 @@ export default async function Home() {
 
               <AnimatedSection animation="fade-up" delay={400}>
                 <div className="flex flex-wrap gap-4 pt-2">
-                  <Link href="/contact" className="btn-primary inline-flex items-center gap-2 text-sm">
-                    <Mail className="w-4 h-4" /> Get in Touch
+                  <Link href="/contact?tab=booking" className="btn-primary inline-flex items-center gap-2 text-sm">
+                    <Calendar className="w-4 h-4" /> Book Appointment
                   </Link>
                   <Link href="/about" className="btn-secondary inline-flex items-center gap-2 text-sm">
                     <BookOpen className="w-4 h-4" /> Learn More
@@ -412,10 +412,10 @@ export default async function Home() {
               </p>
               <div className="flex flex-wrap justify-center gap-4 pt-4">
                 <Link
-                  href="/contact"
+                  href="/contact?tab=booking"
                   className="inline-flex items-center gap-2 px-8 py-3 bg-white text-accent-700 font-bold rounded-xl hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
-                  <Mail className="w-4 h-4" /> Send a Message
+                  <Calendar className="w-4 h-4" /> Book Appointment
                 </Link>
                 <Link
                   href="/about"
