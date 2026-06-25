@@ -11,6 +11,7 @@
 			"database_name": "portfolio",
 			"database_id": "a3f61014-754c-465c-97bd-da97c8590dd7",
 			"migrations_dir": "migrations"
+		}
 	],
 	"vars": {
 		"APP_ENV": "production"
