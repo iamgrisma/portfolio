@@ -4,7 +4,7 @@ import { contacts } from '@/src/db/schema';
 import { desc } from 'drizzle-orm';
 import ContactsClient from './ContactsClient';
 
-export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
 export default async function AdminContactsPage() {
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };

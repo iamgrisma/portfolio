@@ -57,6 +57,48 @@ export async function POST(req: Request) {
       message,
     });
 
+    // Send email via Brevo
+    const brevoKey = env.BREVO_API_KEY || process.env.BREVO_API_KEY;
+    if (brevoKey) {
+      try {
+        const subject = type === 'booking' ? `New Booking Request from ${name}` : `New Contact Message from ${name}`;
+        
+        let htmlContent = `<h2>${subject}</h2>`;
+        htmlContent += `<p><strong>Name:</strong> ${name}</p>`;
+        htmlContent += `<p><strong>Email:</strong> ${email}</p>`;
+        if (phone) htmlContent += `<p><strong>Phone:</strong> ${phone}</p>`;
+        if (service) htmlContent += `<p><strong>Service:</strong> ${service}</p>`;
+        if (animalType) htmlContent += `<p><strong>Animal Type:</strong> ${animalType}</p>`;
+        if (date) htmlContent += `<p><strong>Date:</strong> ${date}</p>`;
+        if (time) htmlContent += `<p><strong>Time:</strong> ${time}</p>`;
+        if (message) htmlContent += `<br /><p><strong>Message:</strong></p><p>${message}</p>`;
+
+        const payload = {
+          sender: { email: 'contact@kamalpb.com.np', name: 'Portfolio Contact Form' },
+          to: [{ email: 'baralkamal2054@gmail.com', name: 'Kamal Baral' }],
+          replyTo: { email, name },
+          subject,
+          htmlContent
+        };
+
+        const emailRes = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: {
+            'accept': 'application/json',
+            'api-key': brevoKey,
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!emailRes.ok) {
+          console.error('Brevo API error:', await emailRes.text());
+        }
+      } catch (err) {
+        console.error('Failed to send email:', err);
+      }
+    }
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error saving contact message:', error);
