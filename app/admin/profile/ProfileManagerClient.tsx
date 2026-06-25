@@ -464,6 +464,7 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
           </button>
         </form>
       </div>
+      </div>
 
     </div>
   );
