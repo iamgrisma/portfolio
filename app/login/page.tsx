@@ -1,12 +1,16 @@
 "use client";
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Lock, Mail, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { Lock, Mail, ArrowLeft, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { signIn } from 'next-auth/react';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const error = searchParams.get('error');
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -15,17 +19,19 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate login delay
-    setTimeout(() => {
-      router.push('/admin');
-    }, 800);
+    // Credentials login would go here, but we are using Google Auth
+    alert("Email login is disabled. Please sign in with Google.");
+    setLoading(false);
   };
 
   const handleGoogleLogin = async () => {
     setLoading(true);
-    setTimeout(() => {
-      router.push('/admin');
-    }, 800);
+    try {
+      await signIn('google', { callbackUrl: '/admin' });
+    } catch (error) {
+      console.error('Google login error:', error);
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,11 +65,18 @@ export default function LoginPage() {
             <p className="text-dark-300 text-sm mt-1">Sign in to access your dashboard</p>
           </div>
 
+          {error === 'AccessDenied' && (
+            <div className="mb-6 bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex gap-3 text-red-400 items-start">
+              <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+              <p className="text-sm">Access denied. You do not have permission to log in to this portfolio dashboard.</p>
+            </div>
+          )}
+
           {/* Google Sign In */}
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 py-3 rounded-xl glass text-sm font-medium text-white hover:bg-white/10 transition-all duration-300 mb-6 disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-3 py-3 rounded-xl glass text-sm font-medium text-white hover:bg-white/10 transition-all duration-300 mb-6 disabled:opacity-50 cursor-pointer relative z-20"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
@@ -117,7 +130,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-400 hover:text-white transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-400 hover:text-white transition-colors cursor-pointer z-20"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -127,7 +140,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full text-sm mt-2 disabled:opacity-50"
+              className="btn-primary w-full text-sm mt-2 disabled:opacity-50 cursor-pointer relative z-20"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -141,7 +154,7 @@ export default function LoginPage() {
           </form>
 
           <p className="text-center text-xs text-dark-400 mt-6">
-            Demo mode — any credentials will work
+            Authentication powered by Auth.js & Google
           </p>
         </div>
       </div>

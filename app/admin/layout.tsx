@@ -39,8 +39,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         <div className="flex items-center gap-4">
           <span className="text-sm text-dark-200 hidden sm:inline">Admin</span>
           <button
-            onClick={() => router.push('/')}
-            className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm text-dark-200 hover:text-white glass hover:border-red-500/30 transition-all duration-300"
+            onClick={() => signOut({ callbackUrl: '/login' })}
+            className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm text-dark-200 hover:text-white glass hover:border-red-500/30 transition-all duration-300 cursor-pointer relative z-20"
           >
             <LogOut className="w-4 h-4" />
             <span className="hidden sm:inline">Logout</span>
