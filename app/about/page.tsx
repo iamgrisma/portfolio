@@ -1,46 +1,29 @@
-"use client";
-
 import {
   GraduationCap, Briefcase, Heart, Stethoscope, MapPin,
-  Award, BookOpen, Users, Target, Leaf, Calendar
+  Award, BookOpen, Users, Target, Leaf, Calendar, Music, Map, Book
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import AnimatedSection from '../components/AnimatedSection';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { getDb, CloudflareEnv } from '@/src/db';
+import { profiles, educations, experiences, interests } from '@/src/db/schema';
 
-const EXPERIENCE_YEARS = new Date().getFullYear() - 2018;
+// Helper to map icon names based on string
+const getIcon = (name: string) => {
+  const lName = name.toLowerCase();
+  if (lName.includes('literature') || lName.includes('reading') || lName.includes('book')) return Book;
+  if (lName.includes('music') || lName.includes('song')) return Music;
+  if (lName.includes('travel') || lName.includes('map')) return Map;
+  if (lName.includes('vet') || lName.includes('animal') || lName.includes('health')) return Stethoscope;
+  if (lName.includes('welfare') || lName.includes('heart')) return Heart;
+  if (lName.includes('gov') || lName.includes('admin') || lName.includes('poli')) return Briefcase;
+  if (lName.includes('edu') || lName.includes('school') || lName.includes('degree')) return GraduationCap;
+  if (lName.includes('rural') || lName.includes('community')) return Users;
+  return Award;
+};
 
-const TIMELINE = [
-  {
-    year: 'Education',
-    title: 'Junior Technical Assistant (JTA)',
-    description: 'Completed foundational veterinary training with hands-on skills in animal health diagnostics, basic treatment procedures, and laboratory techniques.',
-    icon: Award,
-    color: 'from-amber-500 to-orange-500',
-  },
-  {
-    year: 'Education',
-    title: 'Diploma in Veterinary Science',
-    description: 'Advanced studies in veterinary medicine covering animal surgery, pharmacology, parasitology, pathology, and livestock management practices.',
-    icon: Stethoscope,
-    color: 'from-accent-500 to-teal-500',
-  },
-  {
-    year: 'Education',
-    title: 'Bachelor in Political Science',
-    description: 'Broadened perspective through political science studies — understanding governance structures, public policy, constitutional law, and democratic processes.',
-    icon: GraduationCap,
-    color: 'from-blue-500 to-purple-500',
-  },
-  {
-    year: '2018 — Present',
-    title: 'Veterinary Technician — Government of Nepal',
-    description: `Serving at the Government of Nepal in Sindhuli district for ${EXPERIENCE_YEARS}+ years. Responsible for animal health services, disease surveillance, vaccination campaigns, and community awareness programs.`,
-    icon: Briefcase,
-    color: 'from-rose-500 to-pink-500',
-  },
-];
-
+// Define predefined skills 
 const SKILLS = [
   { name: 'Animal Health & Diagnosis', level: 95 },
   { name: 'Veterinary Surgery', level: 85 },
@@ -50,16 +33,42 @@ const SKILLS = [
   { name: 'Policy Implementation', level: 78 },
 ];
 
-const INTERESTS = [
-  { label: 'Animal Welfare', icon: Heart, color: 'text-rose-400' },
-  { label: 'Rural Development', icon: MapPin, color: 'text-blue-400' },
-  { label: 'Agriculture', icon: Leaf, color: 'text-green-400' },
-  { label: 'Education', icon: BookOpen, color: 'text-amber-400' },
-  { label: 'Community Service', icon: Users, color: 'text-purple-400' },
-  { label: 'Good Governance', icon: Target, color: 'text-teal-400' },
-];
+export default async function AboutPage() {
+  const { env } = (await getCloudflareContext()) as unknown as { env: CloudflareEnv };
+  const db = getDb(env.DB);
 
-export default function AboutPage() {
+  const profileRecord = await db.select().from(profiles).limit(1).get();
+  const educationsList = await db.select().from(educations).orderBy(educations.order);
+  const experiencesList = await db.select().from(experiences).orderBy(experiences.order);
+  const interestsList = await db.select().from(interests);
+
+  const EXPERIENCE_YEARS = new Date().getFullYear() - 2018;
+
+  // Build Timeline dynamically
+  const TIMELINE = [
+    ...educationsList.map(edu => ({
+      year: edu.year,
+      title: edu.degree,
+      description: edu.institution,
+      icon: getIcon(edu.degree),
+      color: 'from-accent-500 to-teal-500',
+    })),
+    ...experiencesList.map(exp => ({
+      year: exp.duration,
+      title: exp.role,
+      description: `${exp.organization}${exp.description ? ` - ${exp.description}` : ''}`,
+      icon: getIcon(exp.role),
+      color: 'from-rose-500 to-pink-500',
+    }))
+  ];
+
+  const DYNAMIC_INTERESTS = interestsList.map((interest, i) => ({
+    label: interest.name,
+    category: interest.category,
+    icon: getIcon(interest.name),
+    color: ['text-rose-400', 'text-blue-400', 'text-green-400', 'text-amber-400', 'text-purple-400', 'text-teal-400'][i % 6],
+  }));
+
   return (
     <main className="min-h-screen bg-dark-900 overflow-hidden">
       <Navbar />
@@ -75,12 +84,8 @@ export default function AboutPage() {
               <Users className="w-3 h-3 mr-2" /> About Me
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white font-[var(--font-heading)] leading-tight">
-              Dedicated to <span className="gradient-text">Service</span> & <span className="gradient-text">Community</span>
+              {profileRecord?.tagline || <span>Dedicated to <span className="gradient-text">Service</span> & <span className="gradient-text">Community</span></span>}
             </h1>
-            <p className="text-lg text-dark-200 mt-6 leading-relaxed">
-              A veterinary professional and public servant driven by the belief that
-              healthy animals and informed communities are the foundation of a thriving society.
-            </p>
           </AnimatedSection>
         </div>
       </section>
@@ -94,30 +99,17 @@ export default function AboutPage() {
               <h2 className="text-3xl font-bold text-white font-[var(--font-heading)]">
                 My Story
               </h2>
-              <div className="space-y-4 text-dark-200 leading-relaxed">
-                <p>
-                  I am <span className="text-white font-semibold">Kamal Baral</span>, a veterinary technician
-                  currently serving at the Government of Nepal in Sindhuli district. My journey in veterinary
-                  science began with a passion for animal welfare and a deep connection to the rural
-                  communities of Nepal.
-                </p>
-                <p>
-                  After completing my <span className="text-accent-400">JTA (Junior Technical Assistant)</span> qualification,
-                  I pursued a <span className="text-accent-400">Diploma in Veterinary Science</span>, which gave me the
-                  clinical skills to diagnose and treat a wide range of animal diseases. My hands-on experience
-                  covers livestock management, vaccination campaigns, and emergency veterinary care.
-                </p>
-                <p>
-                  To broaden my understanding of governance and policy, I also earned a
-                  <span className="text-accent-400"> Bachelor&apos;s degree in Political Science</span>. This unique
-                  combination allows me to bridge the gap between technical veterinary services and the
-                  administrative framework that supports public health initiatives.
-                </p>
-                <p>
-                  Since <span className="text-white font-semibold">2018</span>, I have been serving as a
-                  Veterinary Technician, treating over a thousand animals and conducting numerous community
-                  awareness programs on animal health, zoonotic diseases, and sustainable livestock practices.
-                </p>
+              <div className="space-y-4 text-dark-200 leading-relaxed whitespace-pre-wrap">
+                {profileRecord?.bio ? (
+                  <p>{profileRecord.bio}</p>
+                ) : (
+                  <p>
+                    I am <span className="text-white font-semibold">{profileRecord?.name || 'Kamal Baral'}</span>, a veterinary technician
+                    currently serving at the Government of Nepal in Sindhuli district. My journey in veterinary
+                    science began with a passion for animal welfare and a deep connection to the rural
+                    communities of Nepal.
+                  </p>
+                )}
               </div>
             </AnimatedSection>
 
@@ -131,8 +123,8 @@ export default function AboutPage() {
                   <div className="flex items-start gap-3">
                     <Briefcase className="w-5 h-5 text-accent-400 mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-sm text-white font-medium">Veterinary Technician</p>
-                      <p className="text-xs text-dark-300">Government of Nepal</p>
+                      <p className="text-sm text-white font-medium">{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].role : 'Professional'}</p>
+                      <p className="text-xs text-dark-300">{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].organization : 'Government of Nepal'}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -152,8 +144,8 @@ export default function AboutPage() {
                   <div className="flex items-start gap-3">
                     <GraduationCap className="w-5 h-5 text-accent-400 mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-sm text-white font-medium">3 Qualifications</p>
-                      <p className="text-xs text-dark-300">JTA, Diploma, Bachelor&apos;s</p>
+                      <p className="text-sm text-white font-medium">{educationsList.length} Qualifications</p>
+                      <p className="text-xs text-dark-300">Diverse educational background</p>
                     </div>
                   </div>
                 </div>
@@ -185,7 +177,7 @@ export default function AboutPage() {
 
           <div className="space-y-8">
             {TIMELINE.map((item, i) => (
-              <AnimatedSection key={item.title} animation={i % 2 === 0 ? 'slide-left' : 'slide-right'} delay={i * 100}>
+              <AnimatedSection key={i + item.title} animation={i % 2 === 0 ? 'slide-left' : 'slide-right'} delay={i * 100}>
                 <div className="glass-card rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 group">
                   <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300`}>
                     <item.icon className="w-7 h-7 text-white" />
@@ -249,11 +241,12 @@ export default function AboutPage() {
           </AnimatedSection>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {INTERESTS.map((interest, i) => (
-              <AnimatedSection key={interest.label} animation="scale" delay={i * 80}>
-                <div className="glass-card rounded-2xl p-6 text-center group cursor-default">
+            {DYNAMIC_INTERESTS.map((interest, i) => (
+              <AnimatedSection key={i + interest.label} animation="scale" delay={i * 80}>
+                <div className="glass-card rounded-2xl p-6 text-center group cursor-default h-full flex flex-col justify-center items-center">
                   <interest.icon className={`w-8 h-8 ${interest.color} mx-auto mb-3 group-hover:scale-125 transition-transform duration-300`} />
                   <p className="text-sm text-white font-medium">{interest.label}</p>
+                  {interest.category && <p className="text-xs text-dark-300 mt-1">{interest.category}</p>}
                 </div>
               </AnimatedSection>
             ))}

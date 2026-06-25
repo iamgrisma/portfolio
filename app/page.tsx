@@ -1,40 +1,30 @@
-"use client";
-
 import Link from 'next/link';
 import {
   BookOpen, Briefcase, Mail, MapPin, Award, GraduationCap,
   Heart, Stethoscope, Users, ArrowRight, Calendar, Sparkles,
-  ChevronRight, Clock
+  ChevronRight, Clock, Music, Map, Book
 } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import AnimatedSection from './components/AnimatedSection';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { getDb, CloudflareEnv } from '@/src/db';
+import { profiles, educations, experiences, blogs } from '@/src/db/schema';
+import { eq, desc } from 'drizzle-orm';
 
-const EXPERIENCE_YEARS = new Date().getFullYear() - 2018;
-
-const EDUCATION = [
-  {
-    degree: 'Junior Technical Assistant (JTA)',
-    field: 'Veterinary Science',
-    icon: Award,
-    color: 'from-amber-500 to-orange-500',
-    tagColor: 'tag-amber',
-  },
-  {
-    degree: 'Diploma in Veterinary Science',
-    field: 'Animal Health & Medicine',
-    icon: Stethoscope,
-    color: 'from-accent-500 to-teal-500',
-    tagColor: 'tag',
-  },
-  {
-    degree: 'Bachelor in Political Science',
-    field: 'Governance & Public Policy',
-    icon: GraduationCap,
-    color: 'from-blue-500 to-purple-500',
-    tagColor: 'tag-blue',
-  },
-];
+// Helper to map icon names based on string
+const getIcon = (name: string) => {
+  const lName = name.toLowerCase();
+  if (lName.includes('literature') || lName.includes('reading') || lName.includes('book')) return Book;
+  if (lName.includes('music') || lName.includes('song')) return Music;
+  if (lName.includes('travel') || lName.includes('map')) return Map;
+  if (lName.includes('vet') || lName.includes('animal') || lName.includes('health')) return Stethoscope;
+  if (lName.includes('welfare') || lName.includes('heart')) return Heart;
+  if (lName.includes('gov') || lName.includes('admin') || lName.includes('poli')) return Briefcase;
+  if (lName.includes('edu') || lName.includes('school') || lName.includes('degree')) return GraduationCap;
+  if (lName.includes('rural') || lName.includes('community')) return Users;
+  return Award;
+};
 
 const EXPERTISE = [
   {
@@ -57,44 +47,32 @@ const EXPERTISE = [
   },
 ];
 
-const BLOG_POSTS = [
-  {
-    id: 1,
-    title: 'Digital Governance in Local Municipalities',
-    excerpt: 'Exploring how local governments can leverage digital tools to improve public service delivery and citizen engagement.',
-    date: '2023-10-15',
-    slug: 'digital-governance',
-    category: 'Governance',
-    readingTime: '5 min read',
-  },
-  {
-    id: 2,
-    title: 'Community Outreach Strategies for 2024',
-    excerpt: 'Effective methods for reaching diverse community groups and ensuring all voices are heard in local decision-making.',
-    date: '2023-11-02',
-    slug: 'community-outreach',
-    category: 'Community',
-    readingTime: '4 min read',
-  },
-  {
-    id: 3,
-    title: 'The Future of Public Administration',
-    excerpt: 'How modern technology and data-driven approaches are reshaping the landscape of public administration in Nepal.',
-    date: '2023-12-10',
-    slug: 'future-public-administration',
-    category: 'Policy',
-    readingTime: '6 min read',
-  },
-];
+export default async function Home() {
+  const { env } = (await getCloudflareContext()) as unknown as { env: CloudflareEnv };
+  const db = getDb(env.DB);
 
-const STATS = [
-  { value: `${EXPERIENCE_YEARS}+`, label: 'Years Experience', icon: Calendar },
-  { value: '1000+', label: 'Animals Treated', icon: Heart },
-  { value: '50+', label: 'Community Programs', icon: Users },
-  { value: '3', label: 'Qualifications', icon: GraduationCap },
-];
+  const profileRecord = await db.select().from(profiles).limit(1).get();
+  const educationsList = await db.select().from(educations).orderBy(educations.order);
+  const experiencesList = await db.select().from(experiences).orderBy(experiences.order);
+  const latestBlogs = await db.select().from(blogs).where(eq(blogs.published, true)).orderBy(desc(blogs.createdAt)).limit(3);
 
-export default function Home() {
+  const EXPERIENCE_YEARS = new Date().getFullYear() - 2018;
+
+  const DYNAMIC_EDUCATION = educationsList.map((edu, i) => ({
+    degree: edu.degree,
+    field: edu.institution,
+    icon: getIcon(edu.degree),
+    color: ['from-amber-500 to-orange-500', 'from-accent-500 to-teal-500', 'from-blue-500 to-purple-500', 'from-rose-500 to-pink-500'][i % 4],
+    tagColor: ['tag-amber', 'tag', 'tag-blue', 'tag-purple'][i % 4],
+  }));
+
+  const STATS = [
+    { value: `${EXPERIENCE_YEARS}+`, label: 'Years Experience', icon: Calendar },
+    { value: '1000+', label: 'Animals Treated', icon: Heart },
+    { value: '50+', label: 'Community Programs', icon: Users },
+    { value: `${educationsList.length}`, label: 'Qualifications', icon: GraduationCap },
+  ];
+
   return (
     <main className="min-h-screen bg-dark-900 overflow-hidden">
       <Navbar />
@@ -127,22 +105,28 @@ export default function Home() {
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold font-[var(--font-heading)] leading-[1.1] tracking-tight">
                   <span className="text-white">Hi, I&apos;m</span>
                   <br />
-                  <span className="gradient-text">Kamal Baral</span>
+                  <span className="gradient-text">{profileRecord?.name || 'Kamal Baral'}</span>
                 </h1>
               </AnimatedSection>
 
               <AnimatedSection animation="fade-up" delay={200}>
                 <p className="text-lg sm:text-xl text-dark-200 leading-relaxed max-w-xl">
-                  <span className="text-white font-semibold">Veterinary Technician</span> with {EXPERIENCE_YEARS}+ years of
-                  dedicated service at the Government of Nepal, Sindhuli. Passionate about
-                  animal welfare, public health, and community empowerment.
+                  {profileRecord?.bio ? (
+                    profileRecord.bio.substring(0, 200) + '...'
+                  ) : (
+                    <span>
+                      <span className="text-white font-semibold">{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].role : 'Professional'}</span> with {EXPERIENCE_YEARS}+ years of
+                      dedicated service at the {experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].organization : 'Government of Nepal'}. Passionate about
+                      animal welfare, public health, and community empowerment.
+                    </span>
+                  )}
                 </p>
               </AnimatedSection>
 
               <AnimatedSection animation="fade-up" delay={300}>
                 <div className="flex flex-wrap gap-3">
-                  {['JTA', 'Dip. Vet Science', 'BSc Political Science'].map((tag) => (
-                    <span key={tag} className="tag">{tag}</span>
+                  {DYNAMIC_EDUCATION.slice(0, 3).map((edu) => (
+                    <span key={edu.degree} className="tag">{edu.degree}</span>
                   ))}
                 </div>
               </AnimatedSection>
@@ -254,7 +238,7 @@ export default function Home() {
           </AnimatedSection>
 
           <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-            {EDUCATION.map((edu, i) => (
+            {DYNAMIC_EDUCATION.map((edu, i) => (
               <AnimatedSection key={edu.degree} animation="fade-up" delay={i * 150}>
                 <div className="glass-card rounded-2xl p-8 h-full relative group">
                   <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${edu.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
@@ -333,14 +317,14 @@ export default function Home() {
           </AnimatedSection>
 
           <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-            {BLOG_POSTS.map((post, i) => (
+            {latestBlogs.map((post, i) => (
               <AnimatedSection key={post.id} animation="fade-up" delay={i * 150}>
                 <Link href={`/blog/${post.slug}`} className="block h-full">
                   <article className="glass-card rounded-2xl p-6 h-full flex flex-col group">
                     <div className="flex items-center justify-between mb-4">
-                      <span className="tag text-[10px]">{post.category}</span>
+                      <span className="tag text-[10px]">Article</span>
                       <span className="text-xs text-dark-300 flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {post.readingTime}
+                        <Clock className="w-3 h-3" /> {post.readingTime || '5 min read'}
                       </span>
                     </div>
                     <h3 className="text-lg font-bold text-white font-[var(--font-heading)] mb-3 group-hover:text-accent-400 transition-colors duration-300">
@@ -350,7 +334,7 @@ export default function Home() {
                     <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
                       <span className="text-xs text-dark-300 flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
-                        {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        {post.createdAt ? new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent'}
                       </span>
                       <span className="text-sm text-accent-400 flex items-center gap-1 group-hover:gap-2 transition-all">
                         Read <ArrowRight className="w-3 h-3" />

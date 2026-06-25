@@ -6,11 +6,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import {
   LayoutDashboard, FileText, FolderOpen, MessageSquare,
-  Share2, LogOut, ChevronRight
+  Share2, LogOut, ChevronRight, User
 } from 'lucide-react';
 
 const SIDEBAR_LINKS = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard },
+  { href: '/admin/profile', label: 'Profile', icon: User },
   { href: '/admin/blogs', label: 'Blog Posts', icon: FileText },
   { href: '/admin/categories', label: 'Categories', icon: FolderOpen },
   { href: '/admin/contacts', label: 'Messages', icon: MessageSquare },

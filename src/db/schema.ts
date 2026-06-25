@@ -69,6 +69,46 @@ export const socialProfiles = sqliteTable('social_profiles', {
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
+// ===== PROFILES =====
+export const profiles = sqliteTable('profiles', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull(),
+  nickname: text('nickname'),
+  bio: text('bio'),
+  tagline: text('tagline'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
+// ===== EDUCATIONS =====
+export const educations = sqliteTable('educations', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  degree: text('degree').notNull(),
+  institution: text('institution').notNull(),
+  year: text('year').notNull(), // e.g. "2012 AD / 2069 BS"
+  order: integer('order').notNull().default(0),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
+// ===== EXPERIENCES =====
+export const experiences = sqliteTable('experiences', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  role: text('role').notNull(),
+  organization: text('organization').notNull(),
+  duration: text('duration').notNull(), // e.g. "2078-2080 BS" or "2021-2023 AD"
+  description: text('description'),
+  order: integer('order').notNull().default(0),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
+// ===== INTERESTS =====
+export const interests = sqliteTable('interests', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull(),
+  category: text('category'), // e.g., 'Literature', 'Music'
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
 // ===== RELATIONS =====
 export const usersRelations = relations(users, ({ many }) => ({
   blogs: many(blogs),

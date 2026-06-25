@@ -1,0 +1,210 @@
+"use client";
+
+import { useState } from "react";
+import { Plus, Trash2, Save, User, GraduationCap, Briefcase, Heart } from "lucide-react";
+import { updateProfile, addEducation, deleteEducation, addExperience, deleteExperience, addInterest, deleteInterest } from "./actions";
+
+type ProfileData = {
+  profile: any;
+  educations: any[];
+  experiences: any[];
+  interests: any[];
+};
+
+export default function ProfileManagerClient({ data }: { data: ProfileData }) {
+  const [profileForm, setProfileForm] = useState({
+    name: data.profile?.name || "",
+    nickname: data.profile?.nickname || "",
+    tagline: data.profile?.tagline || "",
+    bio: data.profile?.bio || "",
+  });
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleProfileSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    await updateProfile(data.profile?.id, profileForm);
+    setIsSaving(false);
+    alert("Profile saved!");
+  };
+
+  return (
+    <div className="space-y-8 max-w-5xl mx-auto pb-12">
+      <div>
+        <h1 className="text-3xl font-bold text-white mb-2">Profile Manager</h1>
+        <p className="text-dark-200">Manage your personal information, education, experience, and interests.</p>
+      </div>
+
+      {/* BASIC INFO */}
+      <div className="glass-card p-6 rounded-2xl">
+        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+          <div className="p-2 bg-accent-500/10 rounded-lg text-accent-400">
+            <User className="w-5 h-5" />
+          </div>
+          <h2 className="text-xl font-bold text-white">Basic Information</h2>
+        </div>
+        
+        <form onSubmit={handleProfileSave} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-dark-200">Full Name</label>
+              <input type="text" className="admin-input" required value={profileForm.name} onChange={e => setProfileForm({...profileForm, name: e.target.value})} />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-dark-200">Nickname</label>
+              <input type="text" className="admin-input" value={profileForm.nickname} onChange={e => setProfileForm({...profileForm, nickname: e.target.value})} />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-dark-200">Tagline / Title</label>
+            <input type="text" className="admin-input" value={profileForm.tagline} onChange={e => setProfileForm({...profileForm, tagline: e.target.value})} />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-dark-200">Bio</label>
+            <textarea className="admin-input min-h-[120px]" value={profileForm.bio} onChange={e => setProfileForm({...profileForm, bio: e.target.value})}></textarea>
+          </div>
+          <div className="flex justify-end pt-2">
+            <button type="submit" disabled={isSaving} className="btn-primary flex items-center gap-2 text-sm">
+              <Save className="w-4 h-4" />
+              {isSaving ? "Saving..." : "Save Profile"}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* EDUCATION */}
+        <div className="glass-card p-6 rounded-2xl flex flex-col">
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+            <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400">
+              <GraduationCap className="w-5 h-5" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Education</h2>
+          </div>
+          
+          <div className="space-y-3 mb-6 flex-1">
+            {data.educations.map((edu) => (
+              <div key={edu.id} className="p-3 bg-white/5 rounded-lg border border-white/5 flex justify-between items-start gap-4">
+                <div>
+                  <h3 className="font-semibold text-white text-sm">{edu.degree}</h3>
+                  <p className="text-xs text-dark-200 mt-1">{edu.institution}</p>
+                  <p className="text-xs text-accent-400 mt-1">{edu.year}</p>
+                </div>
+                <button onClick={() => deleteEducation(edu.id)} className="p-1.5 text-dark-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <form action={async (formData) => {
+            await addEducation({
+              degree: formData.get("degree") as string,
+              institution: formData.get("institution") as string,
+              year: formData.get("year") as string,
+              order: Number(formData.get("order") || 0)
+            });
+            (document.getElementById('edu-form') as HTMLFormElement).reset();
+          }} id="edu-form" className="space-y-3 pt-4 border-t border-white/5">
+            <input name="degree" placeholder="Degree (e.g. SLC)" className="admin-input text-sm" required />
+            <input name="institution" placeholder="Institution" className="admin-input text-sm" required />
+            <div className="flex gap-2">
+              <input name="year" placeholder="Year (e.g. 2012 AD / 2069 BS)" className="admin-input text-sm flex-1" required />
+              <input name="order" type="number" placeholder="Order" className="admin-input text-sm w-20" defaultValue="0" />
+            </div>
+            <button type="submit" className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium text-white transition-colors flex items-center justify-center gap-2">
+              <Plus className="w-4 h-4" /> Add Education
+            </button>
+          </form>
+        </div>
+
+        {/* EXPERIENCE */}
+        <div className="glass-card p-6 rounded-2xl flex flex-col">
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+            <div className="p-2 bg-amber-500/10 rounded-lg text-amber-400">
+              <Briefcase className="w-5 h-5" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Experience</h2>
+          </div>
+          
+          <div className="space-y-3 mb-6 flex-1">
+            {data.experiences.map((exp) => (
+              <div key={exp.id} className="p-3 bg-white/5 rounded-lg border border-white/5 flex justify-between items-start gap-4">
+                <div>
+                  <h3 className="font-semibold text-white text-sm">{exp.role}</h3>
+                  <p className="text-xs text-dark-200 mt-1">{exp.organization}</p>
+                  <p className="text-xs text-amber-400 mt-1">{exp.duration}</p>
+                </div>
+                <button onClick={() => deleteExperience(exp.id)} className="p-1.5 text-dark-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <form action={async (formData) => {
+            await addExperience({
+              role: formData.get("role") as string,
+              organization: formData.get("organization") as string,
+              duration: formData.get("duration") as string,
+              order: Number(formData.get("order") || 0)
+            });
+            (document.getElementById('exp-form') as HTMLFormElement).reset();
+          }} id="exp-form" className="space-y-3 pt-4 border-t border-white/5">
+            <input name="role" placeholder="Role (e.g. Vet Technician)" className="admin-input text-sm" required />
+            <input name="organization" placeholder="Organization" className="admin-input text-sm" required />
+            <div className="flex gap-2">
+              <input name="duration" placeholder="Duration (e.g. 2080 BS - Present)" className="admin-input text-sm flex-1" required />
+              <input name="order" type="number" placeholder="Order" className="admin-input text-sm w-20" defaultValue="0" />
+            </div>
+            <button type="submit" className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium text-white transition-colors flex items-center justify-center gap-2">
+              <Plus className="w-4 h-4" /> Add Experience
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {/* INTERESTS */}
+      <div className="glass-card p-6 rounded-2xl">
+        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+          <div className="p-2 bg-rose-500/10 rounded-lg text-rose-400">
+            <Heart className="w-5 h-5" />
+          </div>
+          <h2 className="text-xl font-bold text-white">Interests & Hobbies</h2>
+        </div>
+        
+        <div className="flex flex-wrap gap-3 mb-6">
+          {data.interests.map((int) => (
+            <div key={int.id} className="px-3 py-1.5 bg-white/5 rounded-full border border-white/10 flex items-center gap-2">
+              <span className="text-sm text-white">{int.name}</span>
+              {int.category && <span className="text-xs text-dark-300">({int.category})</span>}
+              <button onClick={() => deleteInterest(int.id)} className="text-dark-400 hover:text-red-400 ml-1">
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <form action={async (formData) => {
+          await addInterest({
+            name: formData.get("name") as string,
+            category: formData.get("category") as string,
+          });
+          (document.getElementById('int-form') as HTMLFormElement).reset();
+        }} id="int-form" className="flex gap-3 items-end max-w-xl border-t border-white/5 pt-4">
+          <div className="flex-1 space-y-1">
+            <input name="name" placeholder="Interest (e.g. Literature)" className="admin-input text-sm" required />
+          </div>
+          <div className="flex-1 space-y-1">
+            <input name="category" placeholder="Category (e.g. Reading)" className="admin-input text-sm" />
+          </div>
+          <button type="submit" className="px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium text-white transition-colors flex items-center gap-2 shrink-0">
+            <Plus className="w-4 h-4" /> Add
+          </button>
+        </form>
+      </div>
+
+    </div>
+  );
+}
