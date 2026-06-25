@@ -13,8 +13,8 @@
     "cf:preview": "opennextjs-cloudflare preview",
     "cf:deploy": "opennextjs-cloudflare deploy",
     "db:generate": "drizzle-kit generate",
-    "db:migrate:local": "wrangler d1 migrations apply portfolio-db --local",
-    "db:migrate:remote": "wrangler d1 migrations apply portfolio-db --remote",
+    "db:migrate:local": "wrangler d1 migrations apply portfolio --local",
+    "db:migrate:remote": "wrangler d1 migrations apply portfolio --remote",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
