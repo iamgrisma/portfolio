@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
-// The allowed admin email address. Only this user can log in.
-const ADMIN_EMAIL = "kamalbaral@mail.com";
+// The allowed admin email address. Set this in your .env / .dev.vars file!
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "[EMAIL_ADDRESS]";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
