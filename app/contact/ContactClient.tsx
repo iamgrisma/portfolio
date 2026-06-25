@@ -167,16 +167,16 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
             {/* Contact Form */}
             <AnimatedSection animation="slide-right" delay={200} className="lg:col-span-3">
               <div className="glass-card rounded-2xl p-8 sm:p-10">
-                <div className="flex flex-wrap items-center gap-6 border-b border-white/10 mb-8 pb-4">
+                <div className="flex flex-wrap items-center gap-4 bg-dark-800/50 p-1.5 rounded-xl border border-white/10 mb-8 w-fit mx-auto sm:mx-0">
                   <button 
                     onClick={() => { setActiveTab('contact'); setStatus('idle'); }} 
-                    className={`text-xl font-bold font-[var(--font-heading)] transition-colors ${activeTab === 'contact' ? 'text-white' : 'text-dark-300 hover:text-white'}`}
+                    className={`px-6 py-2.5 rounded-lg text-sm font-bold font-[var(--font-heading)] transition-all duration-300 ${activeTab === 'contact' ? 'bg-white text-dark-900 shadow-md' : 'text-dark-300 hover:text-white hover:bg-white/5'}`}
                   >
                     Send a Message
                   </button>
                   <button 
                     onClick={() => { setActiveTab('booking'); setStatus('idle'); }} 
-                    className={`text-xl font-bold font-[var(--font-heading)] transition-colors ${activeTab === 'booking' ? 'text-accent-400' : 'text-dark-300 hover:text-white'}`}
+                    className={`px-6 py-2.5 rounded-lg text-sm font-bold font-[var(--font-heading)] transition-all duration-300 ${activeTab === 'booking' ? 'bg-gradient-to-r from-accent-500 to-teal-500 text-white shadow-md shadow-accent-500/20' : 'text-dark-300 hover:text-white hover:bg-white/5'}`}
                   >
                     Book Appointment
                   </button>

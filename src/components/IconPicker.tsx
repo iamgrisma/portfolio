@@ -42,7 +42,10 @@ export default function IconPicker({ name, defaultValue = 'Award', className = '
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [selectedIcon, setSelectedIcon] = useState(defaultValue);
+  const [currentPage, setCurrentPage] = useState(0);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  
+  const ITEMS_PER_PAGE = 100; // 10x10 grid
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -60,6 +63,14 @@ export default function IconPicker({ name, defaultValue = 'Award', className = '
     return COMMON_ICONS.filter(icon => icon.toLowerCase().includes(search.toLowerCase()));
   }, [search]);
 
+  // Reset page when search changes
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [search]);
+
+  const totalPages = Math.ceil(filteredIcons.length / ITEMS_PER_PAGE);
+  const paginatedIcons = filteredIcons.slice(currentPage * ITEMS_PER_PAGE, (currentPage + 1) * ITEMS_PER_PAGE);
+
   // Handle selected icon component dynamically
   const SelectedIconComponent = (LucideIcons as any)[selectedIcon] || LucideIcons.HelpCircle;
 
@@ -74,13 +85,13 @@ export default function IconPicker({ name, defaultValue = 'Award', className = '
       >
         <div className="flex items-center gap-2 truncate">
           <SelectedIconComponent className="w-4 h-4 text-accent-400 shrink-0" />
-          <span className="truncate">{selectedIcon}</span>
+          <span className="truncate text-white">{selectedIcon}</span>
         </div>
         <ChevronDown className={`w-4 h-4 text-dark-300 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 mt-1 w-64 p-2 bg-dark-800 border border-white/10 rounded-xl shadow-2xl shadow-black/50">
+        <div className="absolute z-50 mt-1 w-[320px] sm:w-[360px] p-2 bg-dark-800 border border-white/10 rounded-xl shadow-2xl shadow-black/50 right-0 sm:left-0">
           <div className="relative mb-2">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-dark-400" />
             <input
@@ -93,8 +104,8 @@ export default function IconPicker({ name, defaultValue = 'Award', className = '
             />
           </div>
           
-          <div className="max-h-60 overflow-y-auto grid grid-cols-5 gap-1 pr-1 custom-scrollbar">
-            {filteredIcons.map((iconName) => {
+          <div className="grid grid-cols-10 gap-1 pr-1 custom-scrollbar">
+            {paginatedIcons.map((iconName) => {
               const IconComponent = (LucideIcons as any)[iconName];
               if (!IconComponent) return null;
               
@@ -109,22 +120,47 @@ export default function IconPicker({ name, defaultValue = 'Award', className = '
                     setSearch('');
                   }}
                   title={iconName}
-                  className={`flex items-center justify-center p-2 rounded-lg transition-colors
+                  className={`flex items-center justify-center p-1.5 rounded transition-colors
                     ${isSelected 
                       ? 'bg-accent-500 text-white' 
-                      : 'text-dark-300 hover:text-white hover:bg-white/5'
+                      : 'text-dark-100 hover:text-white hover:bg-white/10'
                     }`}
                 >
-                  <IconComponent className="w-5 h-5" />
+                  <IconComponent className="w-4 h-4" />
                 </button>
               );
             })}
             {filteredIcons.length === 0 && (
-              <div className="col-span-5 text-center py-4 text-sm text-dark-400">
+              <div className="col-span-10 text-center py-4 text-sm text-dark-400">
                 No icons found
               </div>
             )}
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setCurrentPage(p => Math.max(0, p - 1)); }}
+                disabled={currentPage === 0}
+                className="text-xs px-2 py-1 bg-white/5 rounded text-dark-200 hover:text-white disabled:opacity-30"
+              >
+                Prev
+              </button>
+              <span className="text-xs text-dark-400">
+                {currentPage + 1} / {totalPages}
+              </span>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setCurrentPage(p => Math.min(totalPages - 1, p + 1)); }}
+                disabled={currentPage === totalPages - 1}
+                className="text-xs px-2 py-1 bg-white/5 rounded text-dark-200 hover:text-white disabled:opacity-30"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
