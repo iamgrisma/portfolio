@@ -1,82 +1,141 @@
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { FileText, MessageSquare, Share2, TrendingUp, Eye, Clock, ArrowRight, Plus } from 'lucide-react';
+import AnimatedSection from '../components/AnimatedSection';
+
+const STATS = [
+  { label: 'Blog Posts', value: '6', change: '+2 this month', icon: FileText, color: 'from-blue-500 to-indigo-500', href: '/admin/blogs' },
+  { label: 'Messages', value: '12', change: '3 unread', icon: MessageSquare, color: 'from-accent-500 to-teal-500', href: '/admin/contacts' },
+  { label: 'Social Links', value: '3', change: 'All active', icon: Share2, color: 'from-purple-500 to-pink-500', href: '/admin/socials' },
+  { label: 'Page Views', value: '1.2K', change: '+15% this week', icon: Eye, color: 'from-amber-500 to-orange-500', href: '/admin' },
+];
+
+const RECENT_ACTIVITY = [
+  { text: 'Published "Digital Governance in Local Municipalities"', time: '2 hours ago', type: 'blog' },
+  { text: 'New message from Sita Sharma', time: '5 hours ago', type: 'message' },
+  { text: 'Updated social media links', time: '1 day ago', type: 'social' },
+  { text: 'Draft saved: "Livestock Disease Prevention"', time: '2 days ago', type: 'blog' },
+  { text: 'New message from Ram Karki', time: '3 days ago', type: 'message' },
+];
 
 export default function AdminDashboard() {
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-
   return (
-    <main className="min-h-screen bg-slate-50 font-sans flex flex-col overflow-hidden">
-      <header className="px-8 py-4 bg-white border-b border-slate-200 flex items-center justify-between shadow-sm shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-800 rounded flex items-center justify-center text-white font-bold text-xl">KB</div>
+    <div className="max-w-6xl space-y-8">
+      {/* Welcome */}
+      <AnimatedSection animation="fade-up">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-lg font-bold leading-tight text-slate-900">Admin Dashboard</h1>
-            <p className="text-xs text-slate-500 uppercase tracking-widest">Management Console</p>
+            <h1 className="text-2xl lg:text-3xl font-bold text-white font-[var(--font-heading)]">
+              Welcome Back, <span className="gradient-text">Kamal</span>
+            </h1>
+            <p className="text-dark-200 text-sm mt-1">Here&apos;s what&apos;s happening with your portfolio today.</p>
           </div>
+          <Link href="/admin/blogs/new" className="btn-primary inline-flex items-center gap-2 text-sm shrink-0">
+            <Plus className="w-4 h-4" /> New Post
+          </Link>
         </div>
-        <div className="flex items-center gap-6">
-          <span className="text-sm text-slate-600 hidden sm:inline">Admin User</span>
-          <button 
-            onClick={() => router.push('/')}
-            className="px-4 py-1.5 bg-slate-100 rounded-full border border-slate-200 hover:bg-slate-200 transition-colors text-sm font-medium text-slate-600"
-          >
-            Logout
-          </button>
-        </div>
-      </header>
-      
-      <div className="flex-1 flex flex-col md:flex-row w-full overflow-auto">
-        <aside className="w-full md:w-64 shrink-0 flex flex-col gap-2 p-4 md:p-8 bg-white border-r border-slate-200">
-          <Link href="/admin" className="block px-4 py-2 bg-blue-50 text-blue-800 text-sm font-medium rounded-md border border-blue-100">Overview</Link>
-          <Link href="/admin/blogs" className="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md transition-colors">Manage Blogs</Link>
-          <Link href="/admin/socials" className="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md transition-colors">Social Profiles</Link>
-          <Link href="/admin/contacts" className="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md transition-colors">Messages</Link>
-        </aside>
-        
-        <section className="flex-1 p-6 md:p-8 flex flex-col">
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">Overview</h2>
-          
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-8 max-w-4xl">
-            <h3 className="text-lg font-bold text-slate-900 mb-2">Welcome Back</h3>
-            <p className="text-slate-600">
-              This is your portfolio management dashboard. From here you can manage your blog posts, update your social links, and view messages sent through your contact form.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-              <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Blog Posts</h3>
-              <p className="text-4xl font-bold text-slate-900">3</p>
-              <div className="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center text-sm">
-                <span className="text-slate-500">Published</span>
-                <Link href="/admin/blogs" className="text-blue-600 font-medium hover:text-blue-800">Manage &rarr;</Link>
+      </AnimatedSection>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {STATS.map((stat, i) => (
+          <AnimatedSection key={stat.label} animation="fade-up" delay={i * 80}>
+            <Link href={stat.href} className="block group">
+              <div className="admin-card p-6 rounded-xl group-hover:border-white/10">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                    <stat.icon className="w-5 h-5 text-white" />
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-dark-400 group-hover:text-accent-400 group-hover:translate-x-1 transition-all duration-300" />
+                </div>
+                <p className="text-3xl font-bold text-white font-[var(--font-heading)]">{stat.value}</p>
+                <p className="text-sm text-dark-300 mt-1">{stat.label}</p>
+                <div className="mt-3 pt-3 border-t border-white/5 flex items-center gap-1">
+                  <TrendingUp className="w-3 h-3 text-accent-400" />
+                  <span className="text-xs text-accent-400">{stat.change}</span>
+                </div>
               </div>
-            </div>
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-              <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Messages</h3>
-              <p className="text-4xl font-bold text-slate-900">2</p>
-              <div className="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center text-sm">
-                <span className="text-slate-500">Total Received</span>
-                <Link href="/admin/contacts" className="text-blue-600 font-medium hover:text-blue-800">View &rarr;</Link>
-              </div>
-            </div>
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-              <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Social Links</h3>
-              <p className="text-4xl font-bold text-slate-900">3</p>
-              <div className="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center text-sm">
-                <span className="text-slate-500">Active</span>
-                <Link href="/admin/socials" className="text-blue-600 font-medium hover:text-blue-800">Edit &rarr;</Link>
-              </div>
-            </div>
-          </div>
-        </section>
+            </Link>
+          </AnimatedSection>
+        ))}
       </div>
-    </main>
+
+      {/* Content Row */}
+      <div className="grid lg:grid-cols-5 gap-6">
+        {/* Recent Activity */}
+        <AnimatedSection animation="slide-left" delay={200} className="lg:col-span-3">
+          <div className="admin-card rounded-xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-bold text-white font-[var(--font-heading)]">Recent Activity</h2>
+              <Clock className="w-4 h-4 text-dark-300" />
+            </div>
+            <div className="space-y-4">
+              {RECENT_ACTIVITY.map((activity, i) => (
+                <div key={i} className="flex items-start gap-3 group">
+                  <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${
+                    activity.type === 'blog' ? 'bg-blue-400' :
+                    activity.type === 'message' ? 'bg-accent-400' : 'bg-purple-400'
+                  }`} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-dark-100 truncate">{activity.text}</p>
+                    <p className="text-xs text-dark-400 mt-0.5">{activity.time}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </AnimatedSection>
+
+        {/* Quick Actions */}
+        <AnimatedSection animation="slide-right" delay={300} className="lg:col-span-2">
+          <div className="admin-card rounded-xl p-6">
+            <h2 className="text-lg font-bold text-white font-[var(--font-heading)] mb-6">Quick Actions</h2>
+            <div className="space-y-3">
+              <Link href="/admin/blogs/new" className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors group">
+                <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-blue-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-white font-medium">Write a Post</p>
+                  <p className="text-xs text-dark-400">Create new blog content</p>
+                </div>
+                <ArrowRight className="w-4 h-4 text-dark-400 group-hover:text-white group-hover:translate-x-1 transition-all" />
+              </Link>
+              <Link href="/admin/contacts" className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors group">
+                <div className="w-10 h-10 rounded-lg bg-accent-500/10 flex items-center justify-center">
+                  <MessageSquare className="w-5 h-5 text-accent-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-white font-medium">View Messages</p>
+                  <p className="text-xs text-dark-400">3 unread messages</p>
+                </div>
+                <ArrowRight className="w-4 h-4 text-dark-400 group-hover:text-white group-hover:translate-x-1 transition-all" />
+              </Link>
+              <Link href="/admin/categories" className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors group">
+                <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                  <Share2 className="w-5 h-5 text-purple-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-white font-medium">Manage Categories</p>
+                  <p className="text-xs text-dark-400">Organize your content</p>
+                </div>
+                <ArrowRight className="w-4 h-4 text-dark-400 group-hover:text-white group-hover:translate-x-1 transition-all" />
+              </Link>
+              <a href="/" target="_blank" className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors group">
+                <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                  <Eye className="w-5 h-5 text-amber-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-white font-medium">View Site</p>
+                  <p className="text-xs text-dark-400">See your live portfolio</p>
+                </div>
+                <ArrowRight className="w-4 h-4 text-dark-400 group-hover:text-white group-hover:translate-x-1 transition-all" />
+              </a>
+            </div>
+          </div>
+        </AnimatedSection>
+      </div>
+    </div>
   );
 }
