@@ -3,6 +3,7 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import {
   LayoutDashboard, FileText, FolderOpen, MessageSquare,
   Share2, LogOut, ChevronRight

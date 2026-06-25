@@ -5,10 +5,10 @@ import { contacts } from '../../../src/db/schema';
 
 export async function POST(req: Request) {
   try {
-    const { env } = await getCloudflareContext() as { env: CloudflareEnv };
+    const { env } = (await getCloudflareContext()) as unknown as { env: CloudflareEnv };
     const db = getDb(env.DB);
 
-    const body = await req.json();
+    const body = (await req.json()) as { name: string; email: string; message: string };
     const { name, email, message } = body;
 
     if (!name || !email || !message) {
