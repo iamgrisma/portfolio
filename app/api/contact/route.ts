@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
-import { db } from '../../../src/db/index';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { getDb } from '../../../src/db/index';
 import { contacts } from '../../../src/db/schema';
 
 export async function POST(req: Request) {
   try {
+    const { env } = await getCloudflareContext();
+    const db = getDb(env.DB);
+
     const body = await req.json();
     const { name, email, message } = body;
 
