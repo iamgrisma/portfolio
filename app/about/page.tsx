@@ -132,8 +132,8 @@ export default async function AboutPage() {
                   <div className="flex items-start gap-3">
                     <MapPin className="w-5 h-5 text-accent-400 mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-sm text-white font-medium">Sindhuli, Nepal</p>
-                      <p className="text-xs text-dark-300">Bagmati Province</p>
+                      <p className="text-sm text-white font-medium">{profileRecord?.currentAddress || 'Sindhuli, Nepal'}</p>
+                      <p className="text-xs text-dark-300">{profileRecord?.permanentAddress || 'Bagmati Province'}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">

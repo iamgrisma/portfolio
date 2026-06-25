@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash2, Save, User, GraduationCap, Briefcase, Heart, Edit2, X } from "lucide-react";
-import { updateProfile, addEducation, deleteEducation, updateEducation, addExperience, deleteExperience, updateExperience, addInterest, deleteInterest } from "./actions";
+import { Plus, Trash2, Save, User, GraduationCap, Briefcase, Heart, Edit2, X, BarChart } from "lucide-react";
+import { updateProfile, addEducation, deleteEducation, updateEducation, addExperience, deleteExperience, updateExperience, addInterest, deleteInterest, addStat, updateStat, deleteStat } from "./actions";
 
 type ProfileData = {
   profile: any;
   educations: any[];
   experiences: any[];
   interests: any[];
+  stats: any[];
 };
 
 export default function ProfileManagerClient({ data }: { data: ProfileData }) {
@@ -17,11 +18,16 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
     nickname: data.profile?.nickname || "",
     tagline: data.profile?.tagline || "",
     bio: data.profile?.bio || "",
+    currentAddress: data.profile?.currentAddress || "",
+    permanentAddress: data.profile?.permanentAddress || "",
+    phone: data.profile?.phone || "",
+    publicEmail: data.profile?.publicEmail || "",
   });
 
   const [isSaving, setIsSaving] = useState(false);
   const [editingEduId, setEditingEduId] = useState<number | null>(null);
   const [editingExpId, setEditingExpId] = useState<number | null>(null);
+  const [editingStatId, setEditingStatId] = useState<number | null>(null);
 
   const handleProfileSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,6 +67,26 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
           <div className="space-y-2">
             <label className="text-sm font-medium text-dark-200">Tagline / Title</label>
             <input type="text" className="admin-input" value={profileForm.tagline} onChange={e => setProfileForm({...profileForm, tagline: e.target.value})} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-dark-200">Current Address</label>
+              <input type="text" className="admin-input" value={profileForm.currentAddress} onChange={e => setProfileForm({...profileForm, currentAddress: e.target.value})} placeholder="e.g. Kathmandu, Nepal" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-dark-200">Permanent Address</label>
+              <input type="text" className="admin-input" value={profileForm.permanentAddress} onChange={e => setProfileForm({...profileForm, permanentAddress: e.target.value})} placeholder="e.g. Sindhuli, Nepal" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-dark-200">Phone Number</label>
+              <input type="text" className="admin-input" value={profileForm.phone} onChange={e => setProfileForm({...profileForm, phone: e.target.value})} placeholder="+977..." />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-dark-200">Public Email</label>
+              <input type="email" className="admin-input" value={profileForm.publicEmail} onChange={e => setProfileForm({...profileForm, publicEmail: e.target.value})} placeholder="hello@example.com" />
+            </div>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-dark-200">Bio</label>
@@ -234,6 +260,86 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
           </form>
         </div>
       </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* STATS (Career Snapshot) */}
+        <div className="glass-card p-6 rounded-2xl flex flex-col">
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+            <div className="p-2 bg-teal-500/10 rounded-lg text-teal-400">
+              <BarChart className="w-5 h-5" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Career Snapshot (Stats)</h2>
+          </div>
+          
+          <div className="space-y-3 mb-6 flex-1">
+            {data.stats.map((stat) => (
+              <div key={stat.id} className="p-3 bg-white/5 rounded-lg border border-white/5 flex justify-between items-start gap-4">
+                {editingStatId === stat.id ? (
+                  <form action={async (formData) => {
+                    await updateStat(stat.id, {
+                      label: formData.get("label") as string,
+                      value: formData.get("value") as string,
+                      icon: formData.get("icon") as string,
+                      order: Number(formData.get("order") || 0)
+                    });
+                    setEditingStatId(null);
+                  }} className="flex-1 space-y-2">
+                    <input name="label" defaultValue={stat.label} className="admin-input text-xs p-1.5" required />
+                    <div className="flex gap-2">
+                      <input name="value" defaultValue={stat.value} className="admin-input text-xs p-1.5 flex-1" required />
+                      <input name="icon" defaultValue={stat.icon} className="admin-input text-xs p-1.5 w-24" placeholder="Icon Name" required />
+                      <input name="order" type="number" defaultValue={stat.order} className="admin-input text-xs p-1.5 w-16" />
+                    </div>
+                    <div className="flex justify-end gap-2 pt-1">
+                      <button type="button" onClick={() => setEditingStatId(null)} className="p-1 text-dark-300 hover:text-white rounded">
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                      <button type="submit" className="p-1 text-accent-400 hover:text-accent-300 rounded">
+                        <Save className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-white text-sm">{stat.value}</h3>
+                      <p className="text-xs text-dark-200 mt-1">{stat.label}</p>
+                      <p className="text-xs text-teal-400 mt-1">Icon: {stat.icon}</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => setEditingStatId(stat.id)} className="p-1.5 text-dark-400 hover:text-teal-400 hover:bg-teal-400/10 rounded transition-colors">
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                      <button onClick={() => deleteStat(stat.id)} className="p-1.5 text-dark-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <form action={async (formData) => {
+            await addStat({
+              label: formData.get("label") as string,
+              value: formData.get("value") as string,
+              icon: formData.get("icon") as string,
+              order: Number(formData.get("order") || 0)
+            });
+            (document.getElementById('stat-form') as HTMLFormElement).reset();
+          }} id="stat-form" className="space-y-3 pt-4 border-t border-white/5">
+            <input name="label" placeholder="Label (e.g. Animals Treated)" className="admin-input text-sm" required />
+            <div className="flex gap-2">
+              <input name="value" placeholder="Value (e.g. 1000+)" className="admin-input text-sm flex-1" required />
+              <input name="icon" placeholder="Icon (e.g. Heart)" className="admin-input text-sm w-24" defaultValue="Award" required />
+              <input name="order" type="number" placeholder="Order" className="admin-input text-sm w-20" defaultValue="0" />
+            </div>
+            <button type="submit" className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium text-white transition-colors flex items-center justify-center gap-2">
+              <Plus className="w-4 h-4" /> Add Stat
+            </button>
+          </form>
+        </div>
 
       {/* INTERESTS */}
       <div className="glass-card p-6 rounded-2xl">

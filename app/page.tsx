@@ -9,7 +9,7 @@ import Footer from './components/Footer';
 import AnimatedSection from './components/AnimatedSection';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from '@/src/db';
-import { profiles, educations, experiences, blogs } from '@/src/db/schema';
+import { profiles, educations, experiences, blogs, stats } from '@/src/db/schema';
 import { eq, desc } from 'drizzle-orm';
 
 // Helper to map icon names based on string
@@ -57,6 +57,7 @@ export default async function Home() {
   const educationsList = await db.select().from(educations).orderBy(educations.order);
   const experiencesList = await db.select().from(experiences).orderBy(experiences.order);
   const latestBlogs = await db.select().from(blogs).where(eq(blogs.published, true)).orderBy(desc(blogs.createdAt)).limit(3);
+  const dynamicStats = await db.select().from(stats).orderBy(stats.order);
 
   const EXPERIENCE_YEARS = new Date().getFullYear() - 2018;
 
@@ -68,7 +69,11 @@ export default async function Home() {
     tagColor: ['tag-amber', 'tag', 'tag-blue', 'tag-purple'][i % 4],
   }));
 
-  const STATS = [
+  const STATS = dynamicStats.length > 0 ? dynamicStats.map(s => ({
+    value: s.value,
+    label: s.label,
+    icon: getIcon(s.icon)
+  })) : [
     { value: `${EXPERIENCE_YEARS}+`, label: 'Years Experience', icon: Calendar },
     { value: '1000+', label: 'Animals Treated', icon: Heart },
     { value: '50+', label: 'Community Programs', icon: Users },
@@ -148,12 +153,12 @@ export default async function Home() {
                 <div className="flex items-center gap-3 pt-4">
                   <div className="flex items-center gap-2 text-sm text-dark-200">
                     <MapPin className="w-4 h-4 text-accent-500" />
-                    <span>Sindhuli, Nepal</span>
+                    <span>{profileRecord?.currentAddress || 'Sindhuli, Nepal'}</span>
                   </div>
                   <span className="text-dark-400">•</span>
                   <div className="flex items-center gap-2 text-sm text-dark-200">
                     <Briefcase className="w-4 h-4 text-accent-500" />
-                    <span>Government of Nepal</span>
+                    <span>{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].organization : 'Government of Nepal'}</span>
                   </div>
                 </div>
               </AnimatedSection>

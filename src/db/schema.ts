@@ -76,8 +76,21 @@ export const profiles = sqliteTable('profiles', {
   nickname: text('nickname'),
   bio: text('bio'),
   tagline: text('tagline'),
+  currentAddress: text('current_address'),
+  permanentAddress: text('permanent_address'),
+  phone: text('phone'),
+  publicEmail: text('public_email'),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
+// ===== STATS =====
+export const stats = sqliteTable('stats', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  label: text('label').notNull(), // e.g. "Animals Treated"
+  value: text('value').notNull(), // e.g. "1000+"
+  icon: text('icon').notNull().default('Award'), // e.g. "Heart", "Users"
+  order: integer('order').notNull().default(0),
 });
 
 // ===== EDUCATIONS =====
