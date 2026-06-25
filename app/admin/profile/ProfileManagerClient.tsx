@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash2, Save, User, GraduationCap, Briefcase, Heart } from "lucide-react";
-import { updateProfile, addEducation, deleteEducation, addExperience, deleteExperience, addInterest, deleteInterest } from "./actions";
+import { Plus, Trash2, Save, User, GraduationCap, Briefcase, Heart, Edit2, X } from "lucide-react";
+import { updateProfile, addEducation, deleteEducation, updateEducation, addExperience, deleteExperience, updateExperience, addInterest, deleteInterest } from "./actions";
 
 type ProfileData = {
   profile: any;
@@ -20,6 +20,8 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
   });
 
   const [isSaving, setIsSaving] = useState(false);
+  const [editingEduId, setEditingEduId] = useState<number | null>(null);
+  const [editingExpId, setEditingExpId] = useState<number | null>(null);
 
   const handleProfileSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,14 +88,48 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
           <div className="space-y-3 mb-6 flex-1">
             {data.educations.map((edu) => (
               <div key={edu.id} className="p-3 bg-white/5 rounded-lg border border-white/5 flex justify-between items-start gap-4">
-                <div>
-                  <h3 className="font-semibold text-white text-sm">{edu.degree}</h3>
-                  <p className="text-xs text-dark-200 mt-1">{edu.institution}</p>
-                  <p className="text-xs text-accent-400 mt-1">{edu.year}</p>
-                </div>
-                <button onClick={() => deleteEducation(edu.id)} className="p-1.5 text-dark-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors">
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                {editingEduId === edu.id ? (
+                  <form action={async (formData) => {
+                    await updateEducation(edu.id, {
+                      degree: formData.get("degree") as string,
+                      institution: formData.get("institution") as string,
+                      year: formData.get("year") as string,
+                      order: Number(formData.get("order") || 0)
+                    });
+                    setEditingEduId(null);
+                  }} className="flex-1 space-y-2">
+                    <input name="degree" defaultValue={edu.degree} className="admin-input text-xs p-1.5" required />
+                    <input name="institution" defaultValue={edu.institution} className="admin-input text-xs p-1.5" required />
+                    <div className="flex gap-2">
+                      <input name="year" defaultValue={edu.year} className="admin-input text-xs p-1.5 flex-1" required />
+                      <input name="order" type="number" defaultValue={edu.order} className="admin-input text-xs p-1.5 w-16" />
+                    </div>
+                    <div className="flex justify-end gap-2 pt-1">
+                      <button type="button" onClick={() => setEditingEduId(null)} className="p-1 text-dark-300 hover:text-white rounded">
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                      <button type="submit" className="p-1 text-accent-400 hover:text-accent-300 rounded">
+                        <Save className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-white text-sm">{edu.degree}</h3>
+                      <p className="text-xs text-dark-200 mt-1">{edu.institution}</p>
+                      <p className="text-xs text-accent-400 mt-1">{edu.year}</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => setEditingEduId(edu.id)} className="p-1.5 text-dark-400 hover:text-accent-400 hover:bg-accent-400/10 rounded transition-colors">
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                      <button onClick={() => deleteEducation(edu.id)} className="p-1.5 text-dark-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             ))}
           </div>
@@ -131,14 +167,48 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
           <div className="space-y-3 mb-6 flex-1">
             {data.experiences.map((exp) => (
               <div key={exp.id} className="p-3 bg-white/5 rounded-lg border border-white/5 flex justify-between items-start gap-4">
-                <div>
-                  <h3 className="font-semibold text-white text-sm">{exp.role}</h3>
-                  <p className="text-xs text-dark-200 mt-1">{exp.organization}</p>
-                  <p className="text-xs text-amber-400 mt-1">{exp.duration}</p>
-                </div>
-                <button onClick={() => deleteExperience(exp.id)} className="p-1.5 text-dark-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors">
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                {editingExpId === exp.id ? (
+                  <form action={async (formData) => {
+                    await updateExperience(exp.id, {
+                      role: formData.get("role") as string,
+                      organization: formData.get("organization") as string,
+                      duration: formData.get("duration") as string,
+                      order: Number(formData.get("order") || 0)
+                    });
+                    setEditingExpId(null);
+                  }} className="flex-1 space-y-2">
+                    <input name="role" defaultValue={exp.role} className="admin-input text-xs p-1.5" required />
+                    <input name="organization" defaultValue={exp.organization} className="admin-input text-xs p-1.5" required />
+                    <div className="flex gap-2">
+                      <input name="duration" defaultValue={exp.duration} className="admin-input text-xs p-1.5 flex-1" required />
+                      <input name="order" type="number" defaultValue={exp.order} className="admin-input text-xs p-1.5 w-16" />
+                    </div>
+                    <div className="flex justify-end gap-2 pt-1">
+                      <button type="button" onClick={() => setEditingExpId(null)} className="p-1 text-dark-300 hover:text-white rounded">
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                      <button type="submit" className="p-1 text-accent-400 hover:text-accent-300 rounded">
+                        <Save className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-white text-sm">{exp.role}</h3>
+                      <p className="text-xs text-dark-200 mt-1">{exp.organization}</p>
+                      <p className="text-xs text-amber-400 mt-1">{exp.duration}</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => setEditingExpId(exp.id)} className="p-1.5 text-dark-400 hover:text-amber-400 hover:bg-amber-400/10 rounded transition-colors">
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                      <button onClick={() => deleteExperience(exp.id)} className="p-1.5 text-dark-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             ))}
           </div>

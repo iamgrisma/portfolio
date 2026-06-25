@@ -48,6 +48,13 @@ export async function deleteEducation(id: number) {
   revalidatePath("/about");
 }
 
+export async function updateEducation(id: number, data: { degree: string; institution: string; year: string; order: number }) {
+  const db = await getDbInstance();
+  await db.update(educations).set(data).where(eq(educations.id, id));
+  revalidatePath("/admin/profile");
+  revalidatePath("/about");
+}
+
 // === EXPERIENCE ===
 export async function addExperience(data: { role: string; organization: string; duration: string; description?: string; order: number }) {
   const db = await getDbInstance();
@@ -59,6 +66,13 @@ export async function addExperience(data: { role: string; organization: string; 
 export async function deleteExperience(id: number) {
   const db = await getDbInstance();
   await db.delete(experiences).where(eq(experiences.id, id));
+  revalidatePath("/admin/profile");
+  revalidatePath("/about");
+}
+
+export async function updateExperience(id: number, data: { role: string; organization: string; duration: string; description?: string; order: number }) {
+  const db = await getDbInstance();
+  await db.update(experiences).set(data).where(eq(experiences.id, id));
   revalidatePath("/admin/profile");
   revalidatePath("/about");
 }

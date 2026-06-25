@@ -4,20 +4,20 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save, Eye, Tag, ImageIcon } from 'lucide-react';
-import { createBlog } from '../actions';
+import { updateBlog } from '../actions';
 
 const CATEGORIES = ['Governance', 'Community', 'Policy', 'Veterinary', 'Health'];
 const AVAILABLE_TAGS = ['Digital', 'Government', 'Technology', 'Nepal', 'Outreach', 'Inclusion', 'Planning', 'Future', 'Innovation', 'Livestock', 'Disease', 'Prevention', 'Zoonotic', 'Public Health', 'Rural', 'Empowerment'];
 
-export default function NewBlogPost() {
+export default function EditBlogClient({ initialBlog }: { initialBlog: any }) {
   const router = useRouter();
-  const [title, setTitle] = useState('');
-  const [slug, setSlug] = useState('');
-  const [category, setCategory] = useState('');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [content, setContent] = useState('');
-  const [excerpt, setExcerpt] = useState('');
-  const [published, setPublished] = useState(false);
+  const [title, setTitle] = useState(initialBlog.title || '');
+  const [slug, setSlug] = useState(initialBlog.slug || '');
+  const [category, setCategory] = useState(initialBlog.categoryName || '');
+  const [selectedTags, setSelectedTags] = useState<string[]>(initialBlog.tagNames || []);
+  const [content, setContent] = useState(initialBlog.content || '');
+  const [excerpt, setExcerpt] = useState(initialBlog.excerpt || '');
+  const [published, setPublished] = useState(initialBlog.published || false);
 
   const generateSlug = (title: string) => {
     return title
@@ -45,7 +45,7 @@ export default function NewBlogPost() {
         alert("Title and content are required.");
         return;
       }
-      await createBlog({
+      await updateBlog(initialBlog.id, {
         title,
         slug,
         content,
@@ -54,10 +54,10 @@ export default function NewBlogPost() {
         categoryName: category,
         tagNames: selectedTags
       });
-      alert('Post saved successfully!');
+      alert('Post updated successfully!');
       router.push('/admin/blogs');
     } catch (error: any) {
-      alert(error.message || "Failed to save post");
+      alert(error.message || "Failed to update post");
     }
   };
 
@@ -70,16 +70,16 @@ export default function NewBlogPost() {
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-white font-[var(--font-heading)]">New Blog Post</h1>
-            <p className="text-sm text-dark-300 mt-0.5">Create and publish a new article</p>
+            <h1 className="text-2xl font-bold text-white font-[var(--font-heading)]">Edit Blog Post</h1>
+            <p className="text-sm text-dark-300 mt-0.5">Update your existing article</p>
           </div>
         </div>
         <div className="flex gap-3">
-          <button className="btn-secondary text-sm inline-flex items-center gap-2">
+          <Link href={`/blog/${slug}`} target="_blank" className="btn-secondary text-sm inline-flex items-center gap-2">
             <Eye className="w-4 h-4" /> Preview
-          </button>
+          </Link>
           <button onClick={handleSave} className="btn-primary text-sm inline-flex items-center gap-2">
-            <Save className="w-4 h-4" /> {published ? 'Publish' : 'Save Draft'}
+            <Save className="w-4 h-4" /> {published ? 'Update & Publish' : 'Save Draft'}
           </button>
         </div>
       </div>
