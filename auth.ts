@@ -1,8 +1,9 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-
-// The allowed admin email address. Set this in your .env / .dev.vars file!
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "[EMAIL_ADDRESS]";
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { getDb, CloudflareEnv } from './src/db/index';
+import { users } from './src/db/schema';
+import { eq } from 'drizzle-orm';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -17,15 +18,43 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     // This callback controls whether a user is allowed to sign in.
     async signIn({ user }) {
-      if (user.email === ADMIN_EMAIL) {
-        return true; // Allow sign in
+      try {
+        const { env } = (await getCloudflareContext()) as unknown as { env: CloudflareEnv };
+        const db = getDb(env.DB);
+
+        if (!user.email) return false;
+
+        // 1. Check if this specific user is already in the database
+        const existingUser = await db.select().from(users).where(eq(users.email, user.email)).get();
+        if (existingUser) {
+          // Only allow them in if they are an admin
+          return existingUser.role === 'admin';
+        }
+
+        // 2. If user doesn't exist, check if the database has ANY users at all
+        const anyUser = await db.select().from(users).limit(1).get();
+        if (!anyUser) {
+          // This is the VERY FIRST user logging in. Make them the admin!
+          await db.insert(users).values({
+            uid: user.id || crypto.randomUUID(),
+            email: user.email,
+            role: 'admin'
+          });
+          return true; // Allow sign in
+        }
+
+        // 3. If users exist but this person isn't one of them, reject them
+        return false;
+      } catch (e) {
+        console.error("Sign in error:", e);
+        return false;
       }
-      return false; // Deny sign in for everyone else
     },
     // Adding user details to the token
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.email === ADMIN_EMAIL ? "admin" : "user";
+        // If they successfully signed in through the logic above, they are an admin
+        token.role = "admin";
       }
       return token;
     },
