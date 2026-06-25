@@ -104,6 +104,15 @@ export default async function Home() {
     { value: `${educationsList.length}`, label: 'Qualifications', icon: GraduationCap },
   ];
 
+  const getStatCardClass = (index: number, total: number) => {
+    let base = "glass rounded-xl p-4 text-center group hover:border-accent-500/30 transition-all duration-300 relative overflow-hidden flex flex-col justify-center items-center";
+    
+    if (total % 2 !== 0 && index === 0) {
+      return `${base} col-span-2 py-8 bg-gradient-to-br from-accent-500/10 to-teal-500/10 border-accent-500/20 shadow-[0_0_30px_rgba(16,185,129,0.1)]`;
+    }
+    return base;
+  };
+
   return (
     <main className="min-h-screen bg-dark-900 overflow-hidden">
       <Navbar />
@@ -194,7 +203,7 @@ export default async function Home() {
                 {/* Main Card */}
                 <div className="glass-card rounded-3xl p-8 space-y-6">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center shadow-lg shadow-accent-500/20">
                       <Stethoscope className="w-6 h-6 text-white" />
                     </div>
                     <div>
@@ -207,11 +216,14 @@ export default async function Home() {
                     {STATS.map((stat, i) => (
                       <div
                         key={stat.label}
-                        className="glass rounded-xl p-4 text-center group hover:border-accent-500/30 transition-all duration-300"
+                        className={getStatCardClass(i, STATS.length)}
                       >
-                        <stat.icon className="w-5 h-5 text-accent-400 mx-auto mb-2 group-hover:scale-110 transition-transform duration-300" />
-                        <p className="text-2xl font-bold text-white font-[var(--font-heading)]">{stat.value}</p>
-                        <p className="text-xs text-dark-200 mt-1">{stat.label}</p>
+                        {STATS.length % 2 !== 0 && i === 0 && (
+                          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        )}
+                        <stat.icon className={`text-accent-400 mb-2 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300 ${STATS.length % 2 !== 0 && i === 0 ? 'w-8 h-8' : 'w-5 h-5'}`} />
+                        <p className={`font-bold text-white font-[var(--font-heading)] ${STATS.length % 2 !== 0 && i === 0 ? 'text-4xl' : 'text-2xl'}`}>{stat.value}</p>
+                        <p className={`text-dark-200 mt-1 ${STATS.length % 2 !== 0 && i === 0 ? 'text-sm font-medium' : 'text-xs'}`}>{stat.label}</p>
                       </div>
                     ))}
                   </div>
@@ -241,11 +253,11 @@ export default async function Home() {
       {/* ===== STATS BAR (Mobile) ===== */}
       <section className="lg:hidden py-8 px-6">
         <div className="grid grid-cols-2 gap-3">
-          {STATS.map((stat) => (
-            <div key={stat.label} className="glass-card rounded-xl p-4 text-center">
-              <stat.icon className="w-5 h-5 text-accent-400 mx-auto mb-2" />
-              <p className="text-2xl font-bold text-white font-[var(--font-heading)]">{stat.value}</p>
-              <p className="text-xs text-dark-200">{stat.label}</p>
+          {STATS.map((stat, i) => (
+            <div key={stat.label} className={getStatCardClass(i, STATS.length)}>
+              <stat.icon className={`text-accent-400 mb-2 ${STATS.length % 2 !== 0 && i === 0 ? 'w-7 h-7' : 'w-5 h-5'}`} />
+              <p className={`font-bold text-white font-[var(--font-heading)] ${STATS.length % 2 !== 0 && i === 0 ? 'text-3xl' : 'text-2xl'}`}>{stat.value}</p>
+              <p className={`text-dark-200 mt-1 ${STATS.length % 2 !== 0 && i === 0 ? 'text-sm' : 'text-xs'}`}>{stat.label}</p>
             </div>
           ))}
         </div>
