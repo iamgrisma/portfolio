@@ -7,7 +7,7 @@ import Footer from '../components/Footer';
 import AnimatedSection from '../components/AnimatedSection';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from '@/src/db';
-import { profiles, educations, experiences, interests } from '@/src/db/schema';
+import { profiles, educations, experiences, interests, socialProfiles } from '@/src/db/schema';
 
 // Helper to map icon names based on string
 const getIcon = (name: string) => {
@@ -69,6 +69,7 @@ export default async function AboutPage() {
   });
   
   const interestsList = await db.select().from(interests);
+  const socials = await db.select().from(socialProfiles);
 
   const EXPERIENCE_YEARS = new Date().getFullYear() - 2018;
 
@@ -282,7 +283,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer socials={socials} />
     </main>
   );
 }

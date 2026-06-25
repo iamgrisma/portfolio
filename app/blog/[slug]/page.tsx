@@ -2,6 +2,9 @@ import Link from 'next/link';
 import { Calendar, ArrowLeft, Clock, Tag, Share2, ArrowRight, BookOpen } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { getDb, CloudflareEnv } from '@/src/db';
+import { socialProfiles } from '@/src/db/schema';
 
 const BLOG_CONTENT: Record<string, {
   title: string;
@@ -61,6 +64,10 @@ const RELATED_POSTS = [
 ];
 
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
+  const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
+  const db = getDb(env.DB);
+  const socials = await db.select().from(socialProfiles);
+
   const resolvedParams = await params;
   const post = BLOG_CONTENT[resolvedParams.slug];
 
@@ -78,7 +85,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
             </Link>
           </div>
         </section>
-        <Footer />
+        <Footer socials={socials} />
       </main>
     );
   }
@@ -179,7 +186,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         </div>
       </section>
 
-      <Footer />
+      <Footer socials={socials} />
     </main>
   );
 }

@@ -1,13 +1,20 @@
 import { Shield } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { getDb, CloudflareEnv } from '@/src/db';
+import { socialProfiles } from '@/src/db/schema';
 
 export const metadata = {
   title: 'Privacy Policy — Kamal Baral',
   description: 'Privacy policy for Kamal Baral\'s portfolio website. Learn how we handle your data.',
 };
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
+  const db = getDb(env.DB);
+  const socials = await db.select().from(socialProfiles);
+
   return (
     <main className="min-h-screen bg-dark-900 overflow-hidden">
       <Navbar />
@@ -109,7 +116,7 @@ export default function PrivacyPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer socials={socials} />
     </main>
   );
 }

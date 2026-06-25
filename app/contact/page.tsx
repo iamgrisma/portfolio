@@ -1,6 +1,6 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from '@/src/db';
-import { profiles } from '@/src/db/schema';
+import { profiles, socialProfiles } from '@/src/db/schema';
 import ContactClient from './ContactClient';
 
 export const dynamic = 'force-dynamic';
@@ -15,12 +15,14 @@ export default async function ContactPage() {
   const db = getDb(env.DB);
   
   const profileRecord = await db.select().from(profiles).limit(1).get();
+  const socials = await db.select().from(socialProfiles);
 
   return (
     <ContactClient
       currentAddress={profileRecord?.currentAddress || ''}
       phone={profileRecord?.phone || ''}
       publicEmail={profileRecord?.publicEmail || ''}
+      socials={socials}
     />
   );
 }

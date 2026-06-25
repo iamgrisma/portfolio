@@ -5,6 +5,7 @@ import * as schema from './schema';
 export interface CloudflareEnv {
   DB: D1Database;
   APP_ENV?: string;
+  TURNSTILE_SECRET_KEY?: string;
 }
 
 /**

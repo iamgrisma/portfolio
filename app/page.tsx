@@ -9,7 +9,7 @@ import Footer from './components/Footer';
 import AnimatedSection from './components/AnimatedSection';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from '@/src/db';
-import { profiles, educations, experiences, blogs, stats } from '@/src/db/schema';
+import { profiles, educations, experiences, blogs, stats, socialProfiles } from '@/src/db/schema';
 import { eq, desc } from 'drizzle-orm';
 
 // Helper to map icon names based on string
@@ -82,6 +82,7 @@ export default async function Home() {
   });
   const latestBlogs = await db.select().from(blogs).where(eq(blogs.published, true)).orderBy(desc(blogs.createdAt)).limit(3);
   const dynamicStats = await db.select().from(stats).orderBy(stats.order);
+  const socials = await db.select().from(socialProfiles);
 
   const EXPERIENCE_YEARS = new Date().getFullYear() - 2018;
 
@@ -428,7 +429,7 @@ export default async function Home() {
         </AnimatedSection>
       </section>
 
-      <Footer />
+      <Footer socials={socials} />
     </main>
   );
 }
