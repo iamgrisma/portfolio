@@ -1,0 +1,19 @@
+{
+  "name": "portfolio",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-06-01",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "portfolio",
+      "database_id": "4a8de2f9-0d61-46e1-a0c5-5136d0c235f0",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "APP_ENV": "production"
+  }
+}

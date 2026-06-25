@@ -1,68 +1,75 @@
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import { relations } from 'drizzle-orm';
-import { boolean, integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 
-export const users = pgTable('users', {
-  id: serial('id').primaryKey(),
+// ===== USERS =====
+export const users = sqliteTable('users', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
   uid: text('uid').notNull().unique(),
   email: text('email').notNull(),
   role: text('role').notNull().default('user'), // 'admin' or 'user'
-  createdAt: timestamp('created_at').defaultNow(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
-export const categories = pgTable('categories', {
-  id: serial('id').primaryKey(),
+// ===== CATEGORIES =====
+export const categories = sqliteTable('categories', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull().unique(),
   slug: text('slug').notNull().unique(),
   color: text('color').notNull().default('#10b981'),
-  createdAt: timestamp('created_at').defaultNow(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
-export const blogs = pgTable('blogs', {
-  id: serial('id').primaryKey(),
+// ===== BLOGS =====
+export const blogs = sqliteTable('blogs', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
   slug: text('slug').notNull().unique(),
   title: text('title').notNull(),
   excerpt: text('excerpt'),
   content: text('content').notNull(),
   featuredImage: text('featured_image'),
   readingTime: text('reading_time'),
-  published: boolean('published').notNull().default(false),
-  authorId: integer('author_id').references(() => users.id).notNull(),
+  published: integer('published', { mode: 'boolean' }).notNull().default(false),
+  authorId: integer('author_id').notNull().references(() => users.id),
   categoryId: integer('category_id').references(() => categories.id),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
-export const tags = pgTable('tags', {
-  id: serial('id').primaryKey(),
+// ===== TAGS =====
+export const tags = sqliteTable('tags', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull().unique(),
   slug: text('slug').notNull().unique(),
-  createdAt: timestamp('created_at').defaultNow(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
-export const blogTags = pgTable('blog_tags', {
-  id: serial('id').primaryKey(),
-  blogId: integer('blog_id').references(() => blogs.id).notNull(),
-  tagId: integer('tag_id').references(() => tags.id).notNull(),
+// ===== BLOG TAGS (junction) =====
+export const blogTags = sqliteTable('blog_tags', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  blogId: integer('blog_id').notNull().references(() => blogs.id),
+  tagId: integer('tag_id').notNull().references(() => tags.id),
 });
 
-export const contacts = pgTable('contacts', {
-  id: serial('id').primaryKey(),
+// ===== CONTACTS =====
+export const contacts = sqliteTable('contacts', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
   email: text('email').notNull(),
   message: text('message').notNull(),
-  read: boolean('read').notNull().default(false),
-  createdAt: timestamp('created_at').defaultNow(),
+  read: integer('read', { mode: 'boolean' }).notNull().default(false),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
-export const socialProfiles = pgTable('social_profiles', {
-  id: serial('id').primaryKey(),
+// ===== SOCIAL PROFILES =====
+export const socialProfiles = sqliteTable('social_profiles', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
   platform: text('platform').notNull(),
   url: text('url').notNull(),
-  icon: text('icon').notNull(), // standard lucide icon name
-  createdAt: timestamp('created_at').defaultNow(),
+  icon: text('icon').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
-// Relations
+// ===== RELATIONS =====
 export const usersRelations = relations(users, ({ many }) => ({
   blogs: many(blogs),
 }));
