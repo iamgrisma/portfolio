@@ -5,8 +5,17 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from '@/src/db';
 import { contacts, contactReplies } from '@/src/db/schema';
 import { eq } from 'drizzle-orm';
+import { auth } from '@/auth';
+
+async function verifyAdmin() {
+  const session = await auth();
+  if (!session?.user || (session.user as any).role !== "admin") {
+    throw new Error("Unauthorized");
+  }
+}
 
 export async function deleteContact(id: number) {
+  await verifyAdmin();
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const db = getDb(env.DB);
 
@@ -15,6 +24,7 @@ export async function deleteContact(id: number) {
 }
 
 export async function toggleContactRead(id: number, currentReadStatus: boolean) {
+  await verifyAdmin();
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const db = getDb(env.DB);
 
@@ -23,6 +33,7 @@ export async function toggleContactRead(id: number, currentReadStatus: boolean) 
 }
 
 export async function updateBookingStatus(id: number, status: string) {
+  await verifyAdmin();
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const db = getDb(env.DB);
 
@@ -31,6 +42,7 @@ export async function updateBookingStatus(id: number, status: string) {
 }
 
 export async function sendEmailReply(contactId: number, to: string, name: string, subject: string, message: string) {
+  await verifyAdmin();
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const brevoKey = env.BREVO_API_KEY || process.env.BREVO_API_KEY;
   if (!brevoKey) throw new Error("Brevo API key is not configured.");
