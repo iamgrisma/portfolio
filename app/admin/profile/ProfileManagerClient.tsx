@@ -12,6 +12,90 @@ type ProfileData = {
   stats: any[];
 };
 
+function EducationYearInputs({ defaultValue = "", className = "admin-input text-xs p-1.5" }: { defaultValue?: string, className?: string }) {
+  const adMatch = defaultValue.match(/(\d{4})\s*AD/i);
+  const bsMatch = defaultValue.match(/(\d{4})\s*BS/i);
+  // If no AD match but there is a 4 digit number, assume it might be BS or AD depending on value
+  const genericMatch = defaultValue.match(/^(\d{4})$/);
+  
+  let initAd = adMatch ? adMatch[1] : "";
+  let initBs = bsMatch ? bsMatch[1] : "";
+
+  if (genericMatch && !initAd && !initBs) {
+    const val = Number(genericMatch[1]);
+    if (val > 2040) { initBs = String(val); initAd = String(val - 57); }
+    else { initAd = String(val); initBs = String(val + 57); }
+  }
+
+  const [ad, setAd] = useState(initAd);
+  const [bs, setBs] = useState(initBs);
+
+  return (
+    <div className="flex gap-2 flex-1">
+      <input 
+        type="number" placeholder="Year (AD)" className={className} value={ad} required
+        onChange={e => { setAd(e.target.value); if(e.target.value) setBs(String(Number(e.target.value) + 57)); }}
+      />
+      <input 
+        type="number" placeholder="Year (BS)" className={className} value={bs} required
+        onChange={e => { setBs(e.target.value); if(e.target.value) setAd(String(Number(e.target.value) - 57)); }}
+      />
+      <input type="hidden" name="year" value={ad && bs ? `${ad} AD / ${bs} BS` : defaultValue} />
+    </div>
+  );
+}
+
+function ExperienceDurationInputs({ defaultValue = "", className = "admin-input text-xs p-1.5" }: { defaultValue?: string, className?: string }) {
+  const adMatches = [...defaultValue.matchAll(/(\d{4})/g)];
+  let initialStart = "";
+  let initialEnd = "";
+  
+  if (adMatches.length > 0) {
+    const val1 = Number(adMatches[0][1]);
+    initialStart = val1 > 2040 ? String(val1 - 57) : String(val1); // Convert BS to AD if it looks like BS
+  }
+  if (adMatches.length > 1) {
+    const val2 = Number(adMatches[1][1]);
+    initialEnd = val2 > 2040 ? String(val2 - 57) : String(val2);
+  }
+
+  const [startAd, setStartAd] = useState(initialStart);
+  const [endAd, setEndAd] = useState(initialEnd);
+  const [isPresent, setIsPresent] = useState(defaultValue.toLowerCase().includes("present"));
+
+  let finalStr = defaultValue;
+  if (startAd) {
+    const startBs = Number(startAd) + 57;
+    if (isPresent) {
+      finalStr = `${startAd} AD / ${startBs} BS - Present`;
+    } else if (endAd) {
+      const endBs = Number(endAd) + 57;
+      finalStr = `${startAd}-${endAd} AD / ${startBs}-${endBs} BS`;
+    } else {
+      finalStr = `${startAd} AD / ${startBs} BS`;
+    }
+  }
+
+  return (
+    <div className="flex gap-2 flex-1 items-center">
+      <input 
+        type="number" placeholder="Start (AD)" className={className} value={startAd} required
+        onChange={e => setStartAd(e.target.value)}
+      />
+      <span className="text-dark-400">-</span>
+      <input 
+        type="number" placeholder="End (AD)" className={className} value={endAd} disabled={isPresent}
+        onChange={e => setEndAd(e.target.value)}
+      />
+      <label className="flex items-center gap-1 text-xs text-dark-200 cursor-pointer whitespace-nowrap">
+        <input type="checkbox" checked={isPresent} onChange={e => { setIsPresent(e.target.checked); if(e.target.checked) setEndAd(""); }} />
+        Present
+      </label>
+      <input type="hidden" name="duration" value={finalStr} />
+    </div>
+  );
+}
+
 export default function ProfileManagerClient({ data }: { data: ProfileData }) {
   const [profileForm, setProfileForm] = useState({
     name: data.profile?.name || "",
@@ -127,7 +211,7 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
                     <input name="degree" defaultValue={edu.degree} className="admin-input text-xs p-1.5" required />
                     <input name="institution" defaultValue={edu.institution} className="admin-input text-xs p-1.5" required />
                     <div className="flex gap-2">
-                      <input name="year" defaultValue={edu.year} className="admin-input text-xs p-1.5 flex-1" required />
+                      <EducationYearInputs defaultValue={edu.year} />
                       <input name="order" type="number" defaultValue={edu.order} className="admin-input text-xs p-1.5 w-16" />
                     </div>
                     <div className="flex justify-end gap-2 pt-1">
@@ -172,7 +256,7 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
             <input name="degree" placeholder="Degree (e.g. SLC)" className="admin-input text-sm" required />
             <input name="institution" placeholder="Institution" className="admin-input text-sm" required />
             <div className="flex gap-2">
-              <input name="year" placeholder="Year (e.g. 2012 AD / 2069 BS)" className="admin-input text-sm flex-1" required />
+              <EducationYearInputs className="admin-input text-sm p-2 flex-1" />
               <input name="order" type="number" placeholder="Order" className="admin-input text-sm w-20" defaultValue="0" />
             </div>
             <button type="submit" className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium text-white transition-colors flex items-center justify-center gap-2">
@@ -206,7 +290,7 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
                     <input name="role" defaultValue={exp.role} className="admin-input text-xs p-1.5" required />
                     <input name="organization" defaultValue={exp.organization} className="admin-input text-xs p-1.5" required />
                     <div className="flex gap-2">
-                      <input name="duration" defaultValue={exp.duration} className="admin-input text-xs p-1.5 flex-1" required />
+                      <ExperienceDurationInputs defaultValue={exp.duration} />
                       <input name="order" type="number" defaultValue={exp.order} className="admin-input text-xs p-1.5 w-16" />
                     </div>
                     <div className="flex justify-end gap-2 pt-1">
@@ -251,7 +335,7 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
             <input name="role" placeholder="Role (e.g. Vet Technician)" className="admin-input text-sm" required />
             <input name="organization" placeholder="Organization" className="admin-input text-sm" required />
             <div className="flex gap-2">
-              <input name="duration" placeholder="Duration (e.g. 2080 BS - Present)" className="admin-input text-sm flex-1" required />
+              <ExperienceDurationInputs className="admin-input text-sm p-2 flex-1" />
               <input name="order" type="number" placeholder="Order" className="admin-input text-sm w-20" defaultValue="0" />
             </div>
             <button type="submit" className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium text-white transition-colors flex items-center justify-center gap-2">

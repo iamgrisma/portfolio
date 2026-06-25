@@ -48,8 +48,8 @@ export default function ContactClient({ currentAddress, phone, publicEmail }: Co
     {
       icon: Mail,
       label: 'Email',
-      value: publicEmail || 'kamalbaral@mail.com',
-      href: `mailto:${publicEmail || 'kamalbaral@mail.com'}`,
+      value: publicEmail || 'contact@kamalpb.com.np',
+      href: `mailto:${publicEmail || 'contact@kamalpb.com.np'}`,
       color: 'from-blue-500 to-indigo-500',
     },
     {
