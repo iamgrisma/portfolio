@@ -19,7 +19,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // This callback controls whether a user is allowed to sign in.
     async signIn({ user }) {
       try {
-        const { env } = (await getCloudflareContext()) as unknown as { env: CloudflareEnv };
+        const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
         const db = getDb(env.DB);
 
         if (!user.email) return false;

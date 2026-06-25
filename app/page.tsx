@@ -47,8 +47,10 @@ const EXPERTISE = [
   },
 ];
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
-  const { env } = (await getCloudflareContext()) as unknown as { env: CloudflareEnv };
+  const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const db = getDb(env.DB);
 
   const profileRecord = await db.select().from(profiles).limit(1).get();

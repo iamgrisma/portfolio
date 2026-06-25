@@ -7,8 +7,10 @@ export const metadata = {
   title: "Profile Manager | Admin",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function ProfilePage() {
-  const { env } = (await getCloudflareContext()) as unknown as { env: CloudflareEnv };
+  const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const db = getDb(env.DB);
 
   // Fetch all data

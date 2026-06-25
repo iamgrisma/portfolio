@@ -16,7 +16,7 @@ async function verifyAdmin() {
 
 async function getDbInstance() {
   await verifyAdmin();
-  const { env } = (await getCloudflareContext()) as unknown as { env: CloudflareEnv };
+  const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   return getDb(env.DB);
 }
 

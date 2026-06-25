@@ -33,8 +33,10 @@ const SKILLS = [
   { name: 'Policy Implementation', level: 78 },
 ];
 
+export const dynamic = 'force-dynamic';
+
 export default async function AboutPage() {
-  const { env } = (await getCloudflareContext()) as unknown as { env: CloudflareEnv };
+  const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const db = getDb(env.DB);
 
   const profileRecord = await db.select().from(profiles).limit(1).get();
