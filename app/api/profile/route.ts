@@ -53,7 +53,7 @@ export async function PUT(req: Request) {
             return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
         }
 
-        const body = await req.json();
+        const body: any = await req.json();
         const { name, email, image, password } = body;
         
         const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };

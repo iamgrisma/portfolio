@@ -42,7 +42,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         const id = parseInt((await params).id);
         if (isNaN(id)) return NextResponse.json({ success: false, error: 'Invalid ID' }, { status: 400 });
 
-        const body = await req.json();
+        const body: any = await req.json();
         
         const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
         const db = getDb(env.DB);

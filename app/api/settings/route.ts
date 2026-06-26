@@ -33,7 +33,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
         }
 
-        const body = await req.json();
+        const body: any = await req.json();
         
         const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
         const db = getDb(env.DB);
