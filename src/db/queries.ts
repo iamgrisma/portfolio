@@ -153,7 +153,7 @@ export const getCachedRelatedBlogs = async (dbBinding: any, currentPostId: numbe
     async () => {
       const db = getDb(dbBinding);
       
-      let relatedPosts = [];
+      let relatedPosts: any[] = [];
       if (categoryId) {
         relatedPosts = await db.query.blogs.findMany({
           where: (blogs, { and, eq, not }) => and(
