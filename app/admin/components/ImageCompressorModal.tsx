@@ -25,28 +25,39 @@ export default function ImageCompressorModal({ file, onConfirm, onCancel }: Imag
 
     const originalImageRef = useRef<HTMLImageElement | null>(null);
 
+    const processImageRef = useRef<(() => void) | null>(null);
+
+    // Keep processImageRef updated with the latest processImage
+    useEffect(() => {
+        processImageRef.current = processImage;
+    });
+
     // Load original image into memory
     useEffect(() => {
+        let isMounted = true;
         const objectUrl = URL.createObjectURL(file);
         setPreviewUrl(objectUrl);
 
         const img = new Image();
-        img.src = objectUrl;
         img.onload = () => {
-            originalImageRef.current = img;
-            processImage(); // Initial process
+            if (isMounted) {
+                originalImageRef.current = img;
+                if (processImageRef.current) processImageRef.current();
+            }
         };
+        img.src = objectUrl;
 
-        return () => URL.revokeObjectURL(objectUrl);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        return () => {
+            isMounted = false;
+            URL.revokeObjectURL(objectUrl);
+        };
     }, [file]);
 
     // Process image when quality, format toggle, or EXIF toggle changes
     useEffect(() => {
-        if (originalImageRef.current) {
-            processImage();
+        if (originalImageRef.current && processImageRef.current) {
+            processImageRef.current();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quality, convertToWebp, keepExif]);
 
     const processImage = () => {
@@ -56,10 +67,6 @@ export default function ImageCompressorModal({ file, onConfirm, onCancel }: Imag
         setIsProcessing(true);
 
         if (keepExif) {
-            // If they want to keep EXIF, we don't use canvas (canvas strips EXIF)
-            // We just pass the original file if no other changes were requested.
-            // Note: In browser, preserving EXIF while compressing requires complex binary manipulation (like piexifjs). 
-            // We will just bypass compression if they insist on keeping EXIF, to be safe.
             setCompressedFile(file);
             setIsProcessing(false);
             return;

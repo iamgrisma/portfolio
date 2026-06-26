@@ -4,24 +4,24 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save, Eye, Tag, ImageIcon, Image as ImageIconSolid, X } from 'lucide-react';
-import { updateBlog } from '../actions';
+import { createBlog } from '../actions';
 import MediaPicker from '../../components/MediaPicker';
-type EditBlogClientProps = {
-  initialBlog: any;
+
+type NewBlogClientProps = {
   availableCategories: string[];
   availableTags: string[];
 };
 
-export default function EditBlogClient({ initialBlog, availableCategories, availableTags }: EditBlogClientProps) {
+export default function NewBlogClient({ availableCategories, availableTags }: NewBlogClientProps) {
   const router = useRouter();
-  const [title, setTitle] = useState(initialBlog.title || '');
-  const [slug, setSlug] = useState(initialBlog.slug || '');
-  const [category, setCategory] = useState(initialBlog.categoryName || '');
-  const [selectedTags, setSelectedTags] = useState<string[]>(initialBlog.tagNames || []);
-  const [content, setContent] = useState(initialBlog.content || '');
-  const [excerpt, setExcerpt] = useState(initialBlog.excerpt || '');
-  const [published, setPublished] = useState(initialBlog.published || false);
-  const [featuredImage, setFeaturedImage] = useState(initialBlog.featuredImage || '');
+  const [title, setTitle] = useState('');
+  const [slug, setSlug] = useState('');
+  const [category, setCategory] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [content, setContent] = useState('');
+  const [excerpt, setExcerpt] = useState('');
+  const [published, setPublished] = useState(false);
+  const [featuredImage, setFeaturedImage] = useState('');
   
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
   const [mediaPickerTarget, setMediaPickerTarget] = useState<'featured' | 'content' | null>(null);
@@ -52,7 +52,7 @@ export default function EditBlogClient({ initialBlog, availableCategories, avail
         alert("Title and content are required.");
         return;
       }
-      await updateBlog(initialBlog.id, {
+      await createBlog({
         title,
         slug,
         content,
@@ -62,10 +62,10 @@ export default function EditBlogClient({ initialBlog, availableCategories, avail
         categoryName: category,
         tagNames: selectedTags
       });
-      alert('Post updated successfully!');
+      alert('Post saved successfully!');
       router.push('/admin/blogs');
     } catch (error: any) {
-      alert(error.message || "Failed to update post");
+      alert(error.message || "Failed to save post");
     }
   };
 
@@ -78,16 +78,16 @@ export default function EditBlogClient({ initialBlog, availableCategories, avail
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-white font-[var(--font-heading)]">Edit Blog Post</h1>
-            <p className="text-sm text-dark-300 mt-0.5">Update your existing article</p>
+            <h1 className="text-2xl font-bold text-white font-[var(--font-heading)]">New Blog Post</h1>
+            <p className="text-sm text-dark-300 mt-0.5">Create and publish a new article</p>
           </div>
         </div>
         <div className="flex gap-3">
-          <Link href={`/blog/${slug}`} target="_blank" className="btn-secondary text-sm inline-flex items-center gap-2">
+          <button className="btn-secondary text-sm inline-flex items-center gap-2">
             <Eye className="w-4 h-4" /> Preview
-          </Link>
+          </button>
           <button onClick={handleSave} className="btn-primary text-sm inline-flex items-center gap-2">
-            <Save className="w-4 h-4" /> {published ? 'Update & Publish' : 'Save Draft'}
+            <Save className="w-4 h-4" /> {published ? 'Publish' : 'Save Draft'}
           </button>
         </div>
       </div>

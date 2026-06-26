@@ -1,13 +1,13 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { getDb, CloudflareEnv } from "@/src/db";
-import { categories, tags } from "@/src/db/schema";
-import NewBlogClient from "./NewBlogClient";
+import { tags, blogTags } from "@/src/db/schema";
+import TagsClient from "./TagsClient";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
 
-export default async function NewBlogPage() {
+export default async function AdminTagsPage() {
   const session = await auth();
   if (!session?.user || (session.user as any).role !== "admin") {
     redirect("/login");
@@ -16,11 +16,18 @@ export default async function NewBlogPage() {
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const db = getDb(env.DB);
 
-  const allCategories = await db.select().from(categories);
   const allTags = await db.select().from(tags);
+  const allBlogTags = await db.select().from(blogTags);
 
-  const categoryNamesList = allCategories.map(c => c.name);
-  const tagNamesList = allTags.map(t => t.name);
+  const initialTags = allTags.map(tag => {
+    const count = allBlogTags.filter(bt => bt.tagId === tag.id).length;
+    return {
+      id: tag.id,
+      name: tag.name,
+      slug: tag.slug,
+      count
+    };
+  });
 
-  return <NewBlogClient availableCategories={categoryNamesList} availableTags={tagNamesList} />;
+  return <TagsClient initialTags={initialTags} />;
 }

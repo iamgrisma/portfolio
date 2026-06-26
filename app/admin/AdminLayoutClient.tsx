@@ -6,15 +6,23 @@ import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import {
   LayoutDashboard, FileText, FolderOpen, MessageSquare,
-  Share2, LogOut, ChevronRight, User, Image, Settings
+  Share2, LogOut, ChevronRight, ChevronDown, User, Image, Settings, Tag
 } from 'lucide-react';
+import { useState } from 'react';
 
 const SIDEBAR_LINKS = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard },
   { href: '/admin/profile', label: 'Profile', icon: User },
   { href: '/admin/media', label: 'Media Gallery', icon: Image },
   { href: '/admin/blogs', label: 'Blog Posts', icon: FileText },
-  { href: '/admin/categories', label: 'Categories', icon: FolderOpen },
+  {
+    label: 'Taxonomy',
+    icon: FolderOpen,
+    subItems: [
+      { href: '/admin/categories', label: 'Categories', icon: FolderOpen },
+      { href: '/admin/tags', label: 'Tags', icon: Tag },
+    ]
+  },
   { href: '/admin/contacts', label: 'Messages', icon: MessageSquare },
   { href: '/admin/socials', label: 'Social Links', icon: Share2 },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
@@ -22,6 +30,13 @@ const SIDEBAR_LINKS = [
 
 export default function AdminLayoutClient({ children, unreadCount }: { children: ReactNode, unreadCount: number }) {
   const pathname = usePathname();
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({
+    'Taxonomy': true // Default open
+  });
+
+  const toggleMenu = (label: string) => {
+    setOpenMenus(prev => ({ ...prev, [label]: !prev[label] }));
+  };
 
   return (
     <div className="min-h-screen bg-dark-900 flex flex-col">
@@ -56,11 +71,59 @@ export default function AdminLayoutClient({ children, unreadCount }: { children:
         <aside className="w-16 lg:w-64 shrink-0 border-r border-white/5 bg-dark-800/50 flex flex-col py-6 overflow-y-auto">
           <nav className="space-y-1 px-3">
             {SIDEBAR_LINKS.map((link) => {
-              const isActive = pathname === link.href || (link.href !== '/admin' && pathname.startsWith(link.href));
+              if (link.subItems) {
+                const isActive = link.subItems.some(sub => pathname === sub.href || pathname.startsWith(`${sub.href}/`));
+                const isOpen = openMenus[link.label];
+                
+                return (
+                  <div key={link.label} className="space-y-1">
+                    <button
+                      onClick={() => toggleMenu(link.label)}
+                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 group relative ${
+                        isActive
+                          ? 'text-white'
+                          : 'text-dark-200 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      <link.icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-accent-400' : 'text-dark-300 group-hover:text-white'} transition-colors`} />
+                      <span className="hidden lg:inline flex-1 text-left">{link.label}</span>
+                      {isOpen ? (
+                        <ChevronDown className="hidden lg:block w-4 h-4 text-dark-400" />
+                      ) : (
+                        <ChevronRight className="hidden lg:block w-4 h-4 text-dark-400" />
+                      )}
+                    </button>
+                    
+                    {isOpen && (
+                      <div className="hidden lg:block pl-9 pr-3 space-y-1">
+                        {link.subItems.map((sub) => {
+                          const isSubActive = pathname === sub.href || pathname.startsWith(`${sub.href}/`);
+                          return (
+                            <Link
+                              key={sub.href}
+                              href={sub.href}
+                              className={`flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 ${
+                                isSubActive
+                                  ? 'bg-accent-500/10 text-accent-400 border border-accent-500/20'
+                                  : 'text-dark-300 hover:text-white hover:bg-white/5 border border-transparent'
+                              }`}
+                            >
+                              <sub.icon className={`w-3.5 h-3.5 shrink-0 ${isSubActive ? 'text-accent-400' : 'text-dark-400'}`} />
+                              <span>{sub.label}</span>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              const isActive = pathname === link.href || (link.href !== '/admin' && link.href && pathname.startsWith(link.href));
               return (
                 <Link
-                  key={link.href}
-                  href={link.href}
+                  key={link.href || link.label}
+                  href={link.href!}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 group relative ${
                     isActive
                       ? 'bg-accent-500/10 text-accent-400 border border-accent-500/20'

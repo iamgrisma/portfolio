@@ -43,5 +43,11 @@ export default async function EditBlogPage({ params }: { params: Promise<{ id: s
     tagNames,
   };
 
-  return <EditBlogClient initialBlog={enhancedBlog} />;
+  const allCategories = await db.select().from(categories);
+  const allTags = await db.select().from(tags);
+
+  const categoryNamesList = allCategories.map(c => c.name);
+  const tagNamesList = allTags.map(t => t.name);
+
+  return <EditBlogClient initialBlog={enhancedBlog} availableCategories={categoryNamesList} availableTags={tagNamesList} />;
 }
