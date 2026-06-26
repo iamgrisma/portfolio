@@ -84,6 +84,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           await db.insert(users).values({
             uid: user.id || crypto.randomUUID(),
             email: user.email,
+            name: user.name || '',
+            image: user.image || '',
             role: 'admin'
           });
           return true; // Allow sign in
@@ -92,7 +94,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // 3. If users exist but this person isn't one of them, reject them
         return false;
       } catch (e) {
-        console.error("Sign in error:", e);
+        console.error("Sign in error: You are not authorized user", e);
         return false;
       }
     },

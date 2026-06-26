@@ -46,6 +46,11 @@ function EducationYearInputs({ defaultValue = "", className = "admin-input text-
   const [ad, setAd] = useState(initAd);
   const [bs, setBs] = useState(initBs);
 
+  useEffect(() => {
+    setAd(initAd);
+    setBs(initBs);
+  }, [defaultValue, initAd, initBs]);
+
   return (
     <div className="flex gap-2 flex-1 items-center">
       <input 
@@ -79,6 +84,12 @@ function ExperienceDurationInputs({ defaultValue = "", className = "admin-input 
   const [startAd, setStartAd] = useState(initialStart);
   const [endAd, setEndAd] = useState(initialEnd);
   const [isPresent, setIsPresent] = useState(defaultValue.toLowerCase().includes("present"));
+
+  useEffect(() => {
+    setStartAd(initialStart);
+    setEndAd(initialEnd);
+    setIsPresent(defaultValue.toLowerCase().includes("present"));
+  }, [defaultValue, initialStart, initialEnd]);
 
   let finalStr = defaultValue;
   if (startAd) {
