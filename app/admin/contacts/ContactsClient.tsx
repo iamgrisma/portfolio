@@ -19,7 +19,7 @@ type ContactRecord = {
   email: string;
   phone: string | null;
   service: string | null;
-  animalType: string | null;
+  projectType: string | null;
   date: string | null;
   time: string | null;
   message: string | null;
@@ -270,8 +270,8 @@ export default function ContactsClient({ initialContacts }: { initialContacts: C
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-dark-400 uppercase tracking-wider font-bold mb-1">Animal</p>
-                    <p className="text-sm text-white font-medium">{selected.animalType || 'Not specified'}</p>
+                    <p className="text-xs text-dark-400 uppercase tracking-wider font-bold mb-1">Project Type</p>
+                    <p className="text-sm text-white font-medium">{selected.projectType || 'Not specified'}</p>
                   </div>
                   <div>
                     <p className="text-xs text-dark-400 uppercase tracking-wider font-bold mb-1">Preferred Date</p>

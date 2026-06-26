@@ -1,0 +1,1 @@
+ALTER TABLE contacts RENAME COLUMN animal_type TO project_type;

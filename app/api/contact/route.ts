@@ -15,13 +15,13 @@ export async function POST(req: Request) {
       email: string; 
       phone?: string;
       service?: string;
-      animalType?: string;
+      projectType?: string;
       date?: string;
       time?: string;
       message?: string; 
       turnstileToken: string;
     };
-    const { type = 'contact', name, email, phone, service, animalType, date, time, message, turnstileToken } = body;
+    const { type = 'contact', name, email, phone, service, projectType, date, time, message, turnstileToken } = body;
 
     if (!name || !email) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
       email,
       phone,
       service,
-      animalType,
+      projectType,
       date,
       time,
       message,
@@ -68,14 +68,14 @@ export async function POST(req: Request) {
         htmlContent += `<p><strong>Email:</strong> ${email}</p>`;
         if (phone) htmlContent += `<p><strong>Phone:</strong> ${phone}</p>`;
         if (service) htmlContent += `<p><strong>Service:</strong> ${service}</p>`;
-        if (animalType) htmlContent += `<p><strong>Animal Type:</strong> ${animalType}</p>`;
+        if (projectType) htmlContent += `<p><strong>Project Type:</strong> ${projectType}</p>`;
         if (date) htmlContent += `<p><strong>Date:</strong> ${date}</p>`;
         if (time) htmlContent += `<p><strong>Time:</strong> ${time}</p>`;
         if (message) htmlContent += `<br /><p><strong>Message:</strong></p><p>${message}</p>`;
 
         const payload = {
-          sender: { email: 'contact@kamalpb.com.np', name: 'Portfolio Contact Form' },
-          to: [{ email: 'baralkamal2054@gmail.com', name: 'Raksha' }],
+          sender: { email: 'contact@raksha.com.np', name: 'Raksha Portfolio' },
+          to: [{ email: 'contact@raksha.com.np', name: 'Raksha' }],
           replyTo: { email, name },
           subject,
           htmlContent

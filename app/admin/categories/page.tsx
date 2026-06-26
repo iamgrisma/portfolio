@@ -7,7 +7,7 @@ const INITIAL_CATEGORIES = [
   { id: 1, name: 'Governance', slug: 'governance', count: 1, color: '#3b82f6' },
   { id: 2, name: 'Community', slug: 'community', count: 2, color: '#10b981' },
   { id: 3, name: 'Policy', slug: 'policy', count: 1, color: '#8b5cf6' },
-  { id: 4, name: 'Software Engineering', slug: 'Software Engineering', count: 1, color: '#f59e0b' },
+  { id: 4, name: 'IT Systems', slug: 'IT Systems', count: 1, color: '#f59e0b' },
   { id: 5, name: 'Health', slug: 'health', count: 1, color: '#ef4444' },
 ];
 

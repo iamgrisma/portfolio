@@ -414,7 +414,7 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
             (document.getElementById('stat-form') as HTMLFormElement).reset();
           }} id="stat-form" className="space-y-3 pt-4 border-t border-white/5">
             <div className="grid grid-cols-2 gap-2">
-              <input name="label" placeholder="Label (e.g. Animals Treated)" className="admin-input text-sm p-2.5" required />
+              <input name="label" placeholder="Label (e.g. Projects Completed)" className="admin-input text-sm p-2.5" required />
               <input name="value" placeholder="Value (e.g. 1000+)" className="admin-input text-sm p-2.5" required />
             </div>
             <div className="grid grid-cols-2 gap-2">

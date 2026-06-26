@@ -8,6 +8,7 @@ import { Menu, X } from 'lucide-react';
 const NAV_LINKS = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
   { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' },
   { href: '/privacy', label: 'Privacy' },
@@ -41,11 +42,11 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center text-white font-bold text-lg font-[var(--font-heading)] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
-              KB
+              RM
             </div>
             <div className="hidden sm:block">
               <h1 className="text-sm font-bold text-white tracking-wide font-[var(--font-heading)]">Raksha</h1>
-              <p className="text-[10px] text-dark-200 uppercase tracking-[0.2em]">Vet Technician</p>
+              <p className="text-[10px] text-dark-200 uppercase tracking-[0.2em]">IT Professional</p>
             </div>
           </Link>
 
@@ -80,7 +81,7 @@ export default function Navbar() {
               href="/contact?tab=booking"
               className="ml-2 px-5 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-accent-500 to-teal-500 text-white hover:shadow-lg hover:shadow-accent-500/25 transition-all duration-300 hover:-translate-y-0.5"
             >
-              Book Appointment
+              Start Project
             </Link>
           </nav>
 
@@ -122,7 +123,7 @@ export default function Navbar() {
             href="/contact?tab=booking"
             className="block text-center mt-3 px-4 py-3 rounded-lg text-sm font-semibold bg-gradient-to-r from-accent-500 to-teal-500 text-white"
           >
-            Book Appointment
+            Start Project
           </Link>
           <Link
             href="/login"

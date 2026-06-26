@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Blog | Raksha',
-  description: 'Articles about Software Engineering science, governance, and community development.',
+  description: 'Articles about IT Systems, tech trends, and web development.',
 };
 
 export default async function BlogPage() {

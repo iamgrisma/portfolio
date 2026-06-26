@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, Save, Eye, Tag, ImageIcon } from 'lucide-react';
 import { createBlog } from '../actions';
 
-const CATEGORIES = ['Governance', 'Community', 'Policy', 'Software Engineering', 'Health'];
+const CATEGORIES = ['Governance', 'Community', 'Policy', 'IT Systems', 'Health'];
 const AVAILABLE_TAGS = ['Digital', 'Government', 'Technology', 'Nepal', 'Outreach', 'Inclusion', 'Planning', 'Future', 'Innovation', 'Livestock', 'Disease', 'Prevention', 'Zoonotic', 'Public Health', 'Rural', 'Empowerment'];
 
 export default function NewBlogPost() {

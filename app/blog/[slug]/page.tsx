@@ -20,7 +20,7 @@ const BLOG_CONTENT: Record<string, {
       'Public administration is undergoing a massive shift towards digital governance. By embracing digital tools, local municipalities can significantly improve service delivery, transparency, and citizen engagement.',
       'In Nepal, the transition to digital governance presents both opportunities and challenges. Rural municipalities like those in Remote district are gradually adopting technology for citizen services, land records, and public health tracking.',
       'This shift requires not only technological investment but also a cultural change within government institutions. Training public servants to effectively use new systems is just as important as the systems themselves.',
-      'Key areas where digital governance can make an immediate impact include: birth and death registration, property tax collection, Software Engineering service scheduling, and public health reporting. Each of these services, when digitized, reduces paperwork, speeds up processing, and increases accessibility for citizens.',
+      'Key areas where digital governance can make an immediate impact include: birth and death registration, property tax collection, IT service scheduling, and public health reporting. Each of these services, when digitized, reduces paperwork, speeds up processing, and increases accessibility for citizens.',
       'Looking ahead, the integration of mobile platforms and cloud-based solutions will further democratize access to government services, especially for communities in remote hill districts of Nepal.',
     ],
     date: '2023-10-15',

@@ -58,7 +58,7 @@ export const contacts = sqliteTable('contacts', {
   email: text('email').notNull(),
   phone: text('phone'),
   service: text('service'),
-  animalType: text('animal_type'),
+  projectType: text('project_type'),
   date: text('date'),
   time: text('time'),
   message: text('message'), // Made optional
@@ -184,3 +184,15 @@ export const contactRepliesRelations = relations(contactReplies, ({ one }) => ({
     references: [contacts.id],
   }),
 }));
+
+// ===== PROJECTS =====
+export const projects = sqliteTable('projects', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+  organization: text('organization'),
+  techStack: text('tech_stack'), // comma separated
+  order: integer('order').notNull().default(0),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+

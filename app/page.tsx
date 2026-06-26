@@ -84,7 +84,7 @@ export default async function Home() {
   const dynamicStats = await db.select().from(stats).orderBy(stats.order);
   const socials = await db.select().from(socialProfiles);
 
-  const EXPERIENCE_YEARS = new Date().getFullYear() - 2018;
+  const EXPERIENCE_YEARS = new Date().getFullYear() - 2022;
 
   const DYNAMIC_EDUCATION = educationsList.map((edu, i) => ({
     degree: edu.degree,
@@ -156,9 +156,9 @@ export default async function Home() {
                     profileRecord.bio.substring(0, 200) + '...'
                   ) : (
                     <span>
-                      <span className="text-white font-semibold">{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].role : 'IT Professional'}</span> with {EXPERIENCE_YEARS}+ years of
+                      <span className="text-white font-semibold">{experiencesList.length > 0 ? experiencesList[0].role : 'IT Professional'}</span> with {EXPERIENCE_YEARS}+ years of
                       dedicated service in the tech industry. Passionate about
-                      software engineering, cloud infrastructure, and modern web development.
+                      IT systems, cloud infrastructure, and modern web development.
                     </span>
                   )}
                 </p>
@@ -174,8 +174,8 @@ export default async function Home() {
 
               <AnimatedSection animation="fade-up" delay={400}>
                 <div className="flex flex-wrap gap-4 pt-2">
-                  <Link href="/contact?tab=booking" className="btn-primary inline-flex items-center gap-2 text-sm">
-                    <Calendar className="w-4 h-4" /> Book Appointment
+                  <Link href="/contact" className="btn-primary inline-flex items-center gap-2 text-sm">
+                    <Briefcase className="w-4 h-4" /> Start Project
                   </Link>
                   <Link href="/about" className="btn-secondary inline-flex items-center gap-2 text-sm">
                     <BookOpen className="w-4 h-4" /> Learn More
@@ -192,7 +192,7 @@ export default async function Home() {
                   <span className="text-dark-400">•</span>
                   <div className="flex items-center gap-2 text-sm text-dark-200">
                     <Briefcase className="w-4 h-4 text-accent-500" />
-                    <span>{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].organization : 'Tech Industry'}</span>
+                    <span>{experiencesList.length > 0 ? experiencesList[0].organization : 'Tech Industry'}</span>
                   </div>
                 </div>
               </AnimatedSection>
@@ -230,7 +230,7 @@ export default async function Home() {
                   </div>
 
                   <div className="pt-4 border-t border-white/5">
-                    <p className="text-xs text-dark-300 text-center">Coding since 2018</p>
+                    <p className="text-xs text-dark-300 text-center">Working since 2022</p>
                   </div>
                 </div>
 
@@ -277,7 +277,7 @@ export default async function Home() {
               Academic <span className="gradient-text">Journey</span>
             </h2>
             <p className="text-dark-200 mt-4 max-w-xl mx-auto">
-              A blend of software engineering and design — building expertise in scalable systems and intuitive interfaces.
+              A blend of IT expertise and design — building scalable systems and intuitive interfaces.
             </p>
           </AnimatedSection>
 
@@ -353,7 +353,7 @@ export default async function Home() {
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white font-[var(--font-heading)] mt-4">
                 Latest <span className="gradient-text-blue">Insights</span>
               </h2>
-              <p className="text-dark-200 mt-3">Thoughts on software engineering, web development, and tech trends.</p>
+              <p className="text-dark-200 mt-3">Thoughts on IT systems, web development, and tech trends.</p>
             </div>
             <Link href="/blog" className="btn-secondary text-sm inline-flex items-center gap-2 shrink-0">
               View All Posts <ArrowRight className="w-4 h-4" />

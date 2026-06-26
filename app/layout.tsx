@@ -3,13 +3,15 @@ import { ReactNode } from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Raksha — Software Developer',
-  description: 'Portfolio of Raksha — Software Developer with experience in building web applications. Bachelor in Information Management.',
-  keywords: ['Raksha', 'Software Developer', 'Nepal', 'Remote', 'Tech Industry', 'Portfolio'],
-  authors: [{ name: 'Raksha' }],
+  metadataBase: new URL('https://raksha.com.np'),
+  title: 'Raksha — IT Professional',
+  description: 'Portfolio of Raksha — IT Professional with experience in building and supporting robust web applications and government systems.',
+  keywords: ['Raksha', 'IT Professional', 'Nepal', 'Lalitpur', 'Tech Industry', 'Portfolio', 'EFT', 'Government Systems'],
+  authors: [{ name: 'Raksha Mishra' }],
   openGraph: {
-    title: 'Raksha — Software Developer',
-    description: 'Portfolio of Raksha — Software Developer with experience in building web applications.',
+    title: 'Raksha — IT Professional',
+    description: 'Portfolio of Raksha — IT Professional with experience in building and supporting robust web applications and government systems.',
+    url: 'https://raksha.com.np',
     type: 'website',
     locale: 'en_US',
   },

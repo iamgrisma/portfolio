@@ -32,8 +32,8 @@ export default function Footer({ socials = [] }: { socials?: SocialLink[] }) {
                 </div>
               </div>
               <p className="text-dark-200 text-sm leading-relaxed max-w-sm">
-                Dedicated Software Engineering professional serving the community of Remote.
-                Passionate about animal welfare, public health, and community development.
+                Dedicated IT professional serving the community of Remote.
+                Passionate about building scalable web applications and intuitive user experiences.
               </p>
               <div className="flex flex-wrap gap-3 pt-2">
                 {socials.map((social) => (

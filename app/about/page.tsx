@@ -1,6 +1,5 @@
 import {
-  GraduationCap, Briefcase, Heart, Stethoscope, MapPin,
-  Award, BookOpen, Users, Target, Leaf, Calendar, Music, Map, Book
+  Award, BookOpen, Users, Target, Leaf, Calendar, Music, Map, Book, Code, Terminal, Monitor, Laptop, Briefcase, MapPin, GraduationCap
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -15,22 +14,22 @@ const getIcon = (name: string) => {
   if (lName.includes('literature') || lName.includes('reading') || lName.includes('book')) return Book;
   if (lName.includes('music') || lName.includes('song')) return Music;
   if (lName.includes('travel') || lName.includes('map')) return Map;
-  if (lName.includes('vet') || lName.includes('animal') || lName.includes('health')) return Stethoscope;
-  if (lName.includes('welfare') || lName.includes('heart')) return Heart;
-  if (lName.includes('gov') || lName.includes('admin') || lName.includes('poli')) return Briefcase;
-  if (lName.includes('edu') || lName.includes('school') || lName.includes('degree')) return GraduationCap;
-  if (lName.includes('rural') || lName.includes('community')) return Users;
-  return Award;
+  if (lName.includes('dev') || lName.includes('code') || lName.includes('software')) return Code;
+  if (lName.includes('tech') || lName.includes('system') || lName.includes('it')) return Terminal;
+  if (lName.includes('design') || lName.includes('ui') || lName.includes('web')) return Monitor;
+  if (lName.includes('edu') || lName.includes('school') || lName.includes('degree')) return BookOpen;
+  if (lName.includes('manage') || lName.includes('lead')) return Users;
+  return Briefcase;
 };
 
 // Define predefined skills 
 const SKILLS = [
-  { name: 'Animal Health & Diagnosis', level: 95 },
-  { name: 'Software Engineering Surgery', level: 85 },
-  { name: 'Livestock Management', level: 90 },
-  { name: 'Public Administration', level: 80 },
-  { name: 'Community Outreach', level: 92 },
-  { name: 'Policy Implementation', level: 78 },
+  { name: 'Frontend Development (React, Next.js)', level: 95 },
+  { name: 'Backend Development (Node.js, Python)', level: 90 },
+  { name: 'UI/UX Design', level: 85 },
+  { name: 'Cloud Architecture & DevOps', level: 80 },
+  { name: 'Database Management (SQL, NoSQL)', level: 85 },
+  { name: 'System Design & Architecture', level: 75 },
 ];
 
 export const dynamic = 'force-dynamic';
@@ -71,7 +70,7 @@ export default async function AboutPage() {
   const interestsList = await db.select().from(interests);
   const socials = await db.select().from(socialProfiles);
 
-  const EXPERIENCE_YEARS = new Date().getFullYear() - 2018;
+  const EXPERIENCE_YEARS = new Date().getFullYear() - 2022;
 
   // Build Timeline dynamically
   const TIMELINE = [
@@ -133,10 +132,9 @@ export default async function AboutPage() {
                   <p>{profileRecord.bio}</p>
                 ) : (
                   <p>
-                    I am <span className="text-white font-semibold">{profileRecord?.name || 'Raksha'}</span>, a IT Professional
-                    currently serving at the Tech Industry in Remote district. My journey in Software Engineering
-                    science began with a passion for animal welfare and a deep connection to the rural
-                    communities of Nepal.
+                    I am <span className="text-white font-semibold">{profileRecord?.name || 'Raksha'}</span>, an IT Professional
+                    passionate about crafting robust and functional IT solutions. My journey in the IT Profession
+                    began with a curiosity for how things work and a deep desire to build tools that empower people and businesses.
                   </p>
                 )}
               </div>
@@ -152,8 +150,8 @@ export default async function AboutPage() {
                   <div className="flex items-start gap-3">
                     <Briefcase className="w-5 h-5 text-accent-400 mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-sm text-white font-medium">{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].role : 'Professional'}</p>
-                      <p className="text-xs text-dark-300">{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].organization : 'Tech Industry'}</p>
+                      <p className="text-sm text-white font-medium">{experiencesList.length > 0 ? experiencesList[0].role : 'Professional'}</p>
+                      <p className="text-xs text-dark-300">{experiencesList.length > 0 ? experiencesList[0].organization : 'Tech Industry'}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -166,7 +164,7 @@ export default async function AboutPage() {
                   <div className="flex items-start gap-3">
                     <Calendar className="w-5 h-5 text-accent-400 mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-sm text-white font-medium">Since 2018</p>
+                      <p className="text-sm text-white font-medium">Since 2022</p>
                       <p className="text-xs text-dark-300">{EXPERIENCE_YEARS}+ years of service</p>
                     </div>
                   </div>
@@ -181,7 +179,7 @@ export default async function AboutPage() {
 
                 <div className="pt-4 border-t border-white/5">
                   <p className="text-xs text-dark-300 text-center italic">
-                    &quot;Healthy animals, healthy communities.&quot;
+                    &quot;Building scalable solutions for a connected world.&quot;
                   </p>
                 </div>
               </div>

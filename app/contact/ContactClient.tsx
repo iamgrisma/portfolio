@@ -24,13 +24,13 @@ type ContactInfoProps = {
 
 export default function ContactClient({ currentAddress, phone, publicEmail, socials = [] }: ContactInfoProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [activeTab, setActiveTab] = useState<'contact' | 'booking'>('contact');
+  const [activeTab, setActiveTab] = useState<'contact' | 'inquiry'>('contact');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
-      if (params.get('tab') === 'booking') {
-        setActiveTab('booking');
+      if (params.get('tab') === 'inquiry') {
+        setActiveTab('inquiry');
       }
     }
   }, []);
@@ -46,7 +46,7 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
       email: formData.get('email'),
       phone: formData.get('phone'),
       service: formData.get('service'),
-      animalType: formData.get('animalType'),
+      projectType: formData.get('projectType'),
       date: formData.get('date'),
       time: formData.get('time'),
       message: formData.get('message'),
@@ -175,10 +175,10 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
                     Send a Message
                   </button>
                   <button 
-                    onClick={() => { setActiveTab('booking'); setStatus('idle'); }} 
-                    className={`px-6 py-2.5 rounded-lg text-sm font-bold font-[var(--font-heading)] transition-all duration-300 ${activeTab === 'booking' ? 'bg-gradient-to-r from-accent-500 to-teal-500 text-white shadow-md shadow-accent-500/20' : 'text-dark-300 hover:text-white hover:bg-white/5'}`}
+                    onClick={() => { setActiveTab('inquiry'); setStatus('idle'); }} 
+                    className={`px-6 py-2.5 rounded-lg text-sm font-bold font-[var(--font-heading)] transition-all duration-300 ${activeTab === 'inquiry' ? 'bg-gradient-to-r from-accent-500 to-teal-500 text-white shadow-md shadow-accent-500/20' : 'text-dark-300 hover:text-white hover:bg-white/5'}`}
                   >
-                    Book Appointment
+                    Project Inquiry
                   </button>
                 </div>
 
@@ -188,18 +188,18 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
                       <CheckCircle className="w-8 h-8 text-accent-400" />
                     </div>
                     <h3 className="text-xl font-bold text-white font-[var(--font-heading)]">
-                      {activeTab === 'booking' ? 'Booking Request Sent!' : 'Message Sent!'}
+                      {activeTab === 'inquiry' ? 'Inquiry Sent!' : 'Message Sent!'}
                     </h3>
                     <p className="text-dark-200 text-sm">
-                      {activeTab === 'booking' 
-                        ? "Thank you! I've received your appointment request and will get back to you shortly to confirm." 
+                      {activeTab === 'inquiry' 
+                        ? "Thank you! I've received your project inquiry and will get back to you shortly to discuss." 
                         : "Thank you for reaching out. I'll respond as soon as possible."}
                     </p>
                     <button
                       onClick={() => setStatus('idle')}
                       className="btn-secondary text-sm mt-4"
                     >
-                      {activeTab === 'booking' ? 'Book Another' : 'Send Another Message'}
+                      {activeTab === 'inquiry' ? 'Send Another Inquiry' : 'Send Another Message'}
                     </button>
                   </div>
                 ) : (
@@ -230,7 +230,7 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
                       </div>
                     </div>
 
-                    {activeTab === 'booking' && (
+                    {activeTab === 'inquiry' && (
                       <>
                         <div className="grid sm:grid-cols-2 gap-6">
                           <div>
@@ -238,37 +238,37 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
                             <input type="tel" id="contact-phone" name="phone" required placeholder="+977..." className="admin-input" />
                           </div>
                           <div>
-                            <label htmlFor="contact-animal" className="block text-sm font-medium text-dark-100 mb-2">Animal Type</label>
-                            <select id="contact-animal" name="animalType" className="admin-input">
-                              <option value="Dog">Dog</option>
-                              <option value="Cat">Cat</option>
-                              <option value="Livestock">Livestock (Cow/Buffalo)</option>
-                              <option value="Poultry">Poultry</option>
-                              <option value="Goat/Sheep">Goat/Sheep</option>
+                            <label htmlFor="contact-project" className="block text-sm font-medium text-dark-100 mb-2">Project Type</label>
+                            <select id="contact-project" name="projectType" className="admin-input">
+                              <option value="Web Development">Web Development</option>
+                              <option value="Mobile App">Mobile App</option>
+                              <option value="UI/UX Design">UI/UX Design</option>
+                              <option value="Consulting">Consulting</option>
                               <option value="Other">Other</option>
                             </select>
                           </div>
                         </div>
                         <div className="grid sm:grid-cols-3 gap-6">
                           <div>
-                            <label htmlFor="contact-service" className="block text-sm font-medium text-dark-100 mb-2">Service</label>
+                            <label htmlFor="contact-service" className="block text-sm font-medium text-dark-100 mb-2">Budget Range</label>
                             <select id="contact-service" name="service" className="admin-input">
-                              <option value="Consultation">Consultation</option>
-                              <option value="Vaccination">Vaccination</option>
-                              <option value="Surgery">Surgery</option>
-                              <option value="Farm Visit">Farm Visit</option>
+                              <option value="<$1k">&lt; $1k</option>
+                              <option value="$1k - $5k">$1k - $5k</option>
+                              <option value="$5k - $10k">$5k - $10k</option>
+                              <option value="$10k+">$10k+</option>
                             </select>
                           </div>
                           <div>
-                            <label htmlFor="contact-date" className="block text-sm font-medium text-dark-100 mb-2">Preferred Date</label>
+                            <label htmlFor="contact-date" className="block text-sm font-medium text-dark-100 mb-2">Target Start Date</label>
                             <input type="date" id="contact-date" name="date" className="admin-input" />
                           </div>
                           <div>
-                            <label htmlFor="contact-time" className="block text-sm font-medium text-dark-100 mb-2">Time Slot</label>
+                            <label htmlFor="contact-time" className="block text-sm font-medium text-dark-100 mb-2">Timeline</label>
                             <select id="contact-time" name="time" className="admin-input">
-                              <option value="Morning">Morning</option>
-                              <option value="Afternoon">Afternoon</option>
-                              <option value="Evening">Evening</option>
+                              <option value="1-2 weeks">1-2 weeks</option>
+                              <option value="1 month">1 month</option>
+                              <option value="2-3 months">2-3 months</option>
+                              <option value="Flexible">Flexible</option>
                             </select>
                           </div>
                         </div>
@@ -277,14 +277,14 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
 
                     <div>
                       <label htmlFor="contact-message" className="block text-sm font-medium text-dark-100 mb-2">
-                        {activeTab === 'booking' ? 'Additional Notes (Optional)' : 'Message'}
+                        {activeTab === 'inquiry' ? 'Project Details' : 'Message'}
                       </label>
                       <textarea
                         id="contact-message"
                         name="message"
-                        rows={activeTab === 'booking' ? 3 : 6}
+                        rows={activeTab === 'inquiry' ? 3 : 6}
                         required={activeTab === 'contact'}
-                        placeholder={activeTab === 'booking' ? "Any specific symptoms or details?" : "Tell me what's on your mind..."}
+                        placeholder={activeTab === 'inquiry' ? "Please describe your project..." : "Tell me what's on your mind..."}
                         className="admin-input resize-none"
                       />
                     </div>
@@ -296,7 +296,7 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
                       </div>
                     )}
 
-                    <TurnstileWidget siteKey="0x4AAAAAADqzUDL1SGhRb6cZ" />
+                    <TurnstileWidget siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''} />
 
                     <button
                       type="submit"
@@ -304,7 +304,7 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
                       className="btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-2 text-sm disabled:opacity-50"
                     >
                       <Send className="w-4 h-4" />
-                      {status === 'loading' ? 'Submitting...' : activeTab === 'booking' ? 'Request Appointment' : 'Send Message'}
+                      {status === 'loading' ? 'Submitting...' : activeTab === 'inquiry' ? 'Send Inquiry' : 'Send Message'}
                     </button>
                   </form>
                 )}
