@@ -35,21 +35,26 @@ export default function ImageCompressorModal({ file, onConfirm, onCancel }: Imag
     // Load original image into memory
     useEffect(() => {
         let isMounted = true;
-        const objectUrl = URL.createObjectURL(file);
-        setPreviewUrl(objectUrl);
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            if (!isMounted || !e.target?.result) return;
+            const dataUrl = e.target.result as string;
+            setPreviewUrl(dataUrl);
 
-        const img = new Image();
-        img.onload = () => {
-            if (isMounted) {
-                originalImageRef.current = img;
-                if (processImageRef.current) processImageRef.current();
-            }
+            const img = new Image();
+            img.onload = () => {
+                if (isMounted) {
+                    originalImageRef.current = img;
+                    if (processImageRef.current) processImageRef.current();
+                }
+            };
+            img.src = dataUrl;
         };
-        img.src = objectUrl;
+        reader.readAsDataURL(file);
 
         return () => {
             isMounted = false;
-            URL.revokeObjectURL(objectUrl);
         };
     }, [file]);
 
