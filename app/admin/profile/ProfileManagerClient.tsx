@@ -124,7 +124,7 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
 
   // Load account data on mount
   useEffect(() => {
-    getAccountProfile().then(res => {
+    getAccountProfile().then((res: any) => {
       if (res.success && res.data) {
         setAccount(prev => ({ ...prev, name: res.data.name || "", email: res.data.email || "", image: res.data.image || "" }));
       }
