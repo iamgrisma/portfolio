@@ -29,7 +29,7 @@ export default function SettingsPage() {
 
     const loadSettings = async () => {
         try {
-            const res = await getSiteSettings();
+            const res: any = await getSiteSettings();
             if (res.success && res.data) {
                 setSettings((prev) => ({ ...prev, ...res.data }));
             }
@@ -52,7 +52,7 @@ export default function SettingsPage() {
         setMessage({ type: '', text: '' });
         
         try {
-            const res = await updateSiteSettings(settings);
+            const res: any = await updateSiteSettings(settings);
             if (res.success) {
                 setMessage({ type: 'success', text: 'Settings saved successfully!' });
             } else {
