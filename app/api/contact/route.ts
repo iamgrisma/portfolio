@@ -4,6 +4,8 @@ import { getDb, CloudflareEnv } from '../../../src/db/index';
 import { contacts } from '../../../src/db/schema';
 import { verifyTurnstile } from '../../../src/lib/turnstile';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   try {
     const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
