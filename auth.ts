@@ -8,8 +8,8 @@ import { eq } from 'drizzle-orm';
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Google({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
   session: {
@@ -71,6 +71,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/login",
     error: "/login?error=AccessDenied", // Redirect here if signIn callback returns false
   },
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   trustHost: true,
 });
