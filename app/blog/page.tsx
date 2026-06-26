@@ -1,8 +1,7 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import { getDb, CloudflareEnv } from '@/src/db';
-import { socialProfiles, blogs } from '@/src/db/schema';
+import { CloudflareEnv } from '@/src/db';
+import { getCachedSocials, getCachedAllBlogs } from '@/src/db/queries';
 import BlogListClient, { BlogPost } from './BlogListClient';
-import { eq, desc } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,22 +12,9 @@ export const metadata = {
 
 export default async function BlogPage() {
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
-  const db = getDb(env.DB);
+  const socials = await getCachedSocials(env.DB);
   
-  const socials = await db.select().from(socialProfiles);
-  
-  const fetchedBlogs = await db.query.blogs.findMany({
-    where: eq(blogs.published, true),
-    orderBy: [desc(blogs.createdAt)],
-    with: {
-      category: true,
-      blogTags: {
-        with: {
-          tag: true
-        }
-      }
-    }
-  });
+  const fetchedBlogs = await getCachedAllBlogs(env.DB);
 
   const formattedBlogs: BlogPost[] = fetchedBlogs.map((b, index) => ({
     id: b.id,

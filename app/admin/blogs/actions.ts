@@ -4,7 +4,7 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { getDb, CloudflareEnv } from "@/src/db";
 import { blogs, categories, tags, blogTags, users } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { auth } from "@/auth";
 
 async function verifyAdmin() {
@@ -89,6 +89,7 @@ export async function createBlog(data: {
   revalidatePath("/");
   revalidatePath("/blog");
   revalidatePath("/admin/blogs");
+  revalidateTag("blogs");
 }
 
 export async function updateBlog(id: number, data: {
@@ -152,6 +153,7 @@ export async function updateBlog(id: number, data: {
   revalidatePath("/blog");
   revalidatePath(`/blog/${data.slug}`);
   revalidatePath("/admin/blogs");
+  revalidateTag("blogs");
 }
 
 export async function deleteBlog(id: number) {
@@ -165,4 +167,5 @@ export async function deleteBlog(id: number) {
   revalidatePath("/");
   revalidatePath("/blog");
   revalidatePath("/admin/blogs");
+  revalidateTag("blogs");
 }

@@ -6,8 +6,7 @@ import Footer from '../components/Footer';
 import AnimatedSection from '../components/AnimatedSection';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from '@/src/db';
-import { profiles, educations, experiences, interests, socialProfiles } from '@/src/db/schema';
-
+import { getCachedProfile, getCachedEducations, getCachedExperiences, getCachedInterests, getCachedSocials } from '@/src/db/queries';
 // Helper to map icon names based on string
 const getIcon = (name: string) => {
   const lName = name.toLowerCase();
@@ -38,7 +37,7 @@ export default async function AboutPage() {
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const db = getDb(env.DB);
 
-  const profileRecord = await db.select().from(profiles).limit(1).get();
+  const profileRecord = await getCachedProfile(env.DB);
   const extractYear = (str: string) => {
     const match = str.match(/(\d{4})\s*(AD|BS)/i);
     if (match) {
@@ -55,10 +54,10 @@ export default async function AboutPage() {
     return 0;
   };
 
-  const educationsRaw = await db.select().from(educations);
+  const educationsRaw = await getCachedEducations(env.DB);
   const educationsList = educationsRaw.sort((a, b) => extractYear(b.year) - extractYear(a.year));
   
-  const experiencesRaw = await db.select().from(experiences);
+  const experiencesRaw = await getCachedExperiences(env.DB);
   const experiencesList = experiencesRaw.sort((a, b) => {
     const aPres = a.duration.toLowerCase().includes('present');
     const bPres = b.duration.toLowerCase().includes('present');
@@ -67,8 +66,8 @@ export default async function AboutPage() {
     return extractYear(b.duration) - extractYear(a.duration);
   });
   
-  const interestsList = await db.select().from(interests);
-  const socials = await db.select().from(socialProfiles);
+  const interestsList = await getCachedInterests(env.DB);
+  const socials = await getCachedSocials(env.DB);
 
   const EXPERIENCE_YEARS = new Date().getFullYear() - 2022;
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { getDb, CloudflareEnv } from "@/src/db";
 import { profiles, educations, experiences, interests, stats } from "@/src/db/schema";
@@ -40,6 +40,7 @@ export async function updateProfile(id: number, data: {
   revalidatePath("/admin/profile");
   revalidatePath("/about");
   revalidatePath("/");
+  revalidateTag("profile");
 }
 
 // === STATS ===
@@ -48,6 +49,7 @@ export async function addStat(data: { label: string; value: string; icon: string
   await db.insert(stats).values(data);
   revalidatePath("/admin/profile");
   revalidatePath("/");
+  revalidateTag("stats");
 }
 
 export async function updateStat(id: number, data: { label: string; value: string; icon: string; order: number }) {
@@ -55,6 +57,7 @@ export async function updateStat(id: number, data: { label: string; value: strin
   await db.update(stats).set(data).where(eq(stats.id, id));
   revalidatePath("/admin/profile");
   revalidatePath("/");
+  revalidateTag("stats");
 }
 
 export async function deleteStat(id: number) {
@@ -62,6 +65,7 @@ export async function deleteStat(id: number) {
   await db.delete(stats).where(eq(stats.id, id));
   revalidatePath("/admin/profile");
   revalidatePath("/");
+  revalidateTag("stats");
 }
 
 // === EDUCATION ===
@@ -70,6 +74,7 @@ export async function addEducation(data: { degree: string; institution: string; 
   await db.insert(educations).values(data);
   revalidatePath("/admin/profile");
   revalidatePath("/about");
+  revalidateTag("profile");
 }
 
 export async function deleteEducation(id: number) {
@@ -77,6 +82,7 @@ export async function deleteEducation(id: number) {
   await db.delete(educations).where(eq(educations.id, id));
   revalidatePath("/admin/profile");
   revalidatePath("/about");
+  revalidateTag("profile");
 }
 
 export async function updateEducation(id: number, data: { degree: string; institution: string; year: string; order: number }) {
@@ -84,6 +90,7 @@ export async function updateEducation(id: number, data: { degree: string; instit
   await db.update(educations).set(data).where(eq(educations.id, id));
   revalidatePath("/admin/profile");
   revalidatePath("/about");
+  revalidateTag("profile");
 }
 
 // === EXPERIENCE ===
@@ -92,6 +99,7 @@ export async function addExperience(data: { role: string; organization: string; 
   await db.insert(experiences).values(data);
   revalidatePath("/admin/profile");
   revalidatePath("/about");
+  revalidateTag("profile");
 }
 
 export async function deleteExperience(id: number) {
@@ -99,6 +107,7 @@ export async function deleteExperience(id: number) {
   await db.delete(experiences).where(eq(experiences.id, id));
   revalidatePath("/admin/profile");
   revalidatePath("/about");
+  revalidateTag("profile");
 }
 
 export async function updateExperience(id: number, data: { role: string; organization: string; duration: string; description?: string; order: number }) {
@@ -106,6 +115,7 @@ export async function updateExperience(id: number, data: { role: string; organiz
   await db.update(experiences).set(data).where(eq(experiences.id, id));
   revalidatePath("/admin/profile");
   revalidatePath("/about");
+  revalidateTag("profile");
 }
 
 // === INTERESTS ===
@@ -114,6 +124,7 @@ export async function addInterest(data: { name: string; category?: string }) {
   await db.insert(interests).values(data);
   revalidatePath("/admin/profile");
   revalidatePath("/about");
+  revalidateTag("profile");
 }
 
 export async function deleteInterest(id: number) {
@@ -121,4 +132,6 @@ export async function deleteInterest(id: number) {
   await db.delete(interests).where(eq(interests.id, id));
   revalidatePath("/admin/profile");
   revalidatePath("/about");
+  revalidatePath("/");
+  revalidateTag("profile");
 }

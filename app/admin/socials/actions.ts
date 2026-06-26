@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from '@/src/db';
 import { socialProfiles } from '@/src/db/schema';
@@ -26,6 +26,7 @@ export async function addSocialProfile(platform: string, url: string, icon: stri
   });
 
   revalidatePath('/', 'layout'); // revalidates all pages using the footer
+  revalidateTag('socials');
 }
 
 export async function deleteSocialProfile(id: number) {
@@ -36,6 +37,7 @@ export async function deleteSocialProfile(id: number) {
   await db.delete(socialProfiles).where(eq(socialProfiles.id, id));
 
   revalidatePath('/', 'layout');
+  revalidateTag('socials');
 }
 
 export async function updateSocialProfileUrl(id: number, url: string) {
@@ -46,4 +48,5 @@ export async function updateSocialProfileUrl(id: number, url: string) {
   await db.update(socialProfiles).set({ url }).where(eq(socialProfiles.id, id));
 
   revalidatePath('/', 'layout');
+  revalidateTag('socials');
 }

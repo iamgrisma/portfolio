@@ -3,32 +3,19 @@ import { Calendar, ArrowLeft, Clock, Tag, Share2, ArrowRight, BookOpen } from 'l
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import { getDb, CloudflareEnv } from '@/src/db';
-import { socialProfiles, blogs } from '@/src/db/schema';
-import { eq, desc, not } from 'drizzle-orm';
+import { CloudflareEnv } from '@/src/db';
+import { getCachedSocials, getCachedBlogBySlug, getCachedRelatedBlogs } from '@/src/db/queries';
 
 export const dynamic = 'force-dynamic';
 
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
-  const db = getDb(env.DB);
-  const socials = await db.select().from(socialProfiles);
+  const socials = await getCachedSocials(env.DB);
 
   const resolvedParams = await params;
   
   // Fetch the specific blog post
-  const post = await db.query.blogs.findFirst({
-    where: eq(blogs.slug, resolvedParams.slug),
-    with: {
-      category: true,
-      blogTags: {
-        with: {
-          tag: true
-        }
-      },
-      author: true
-    }
-  });
+  const post = await getCachedBlogBySlug(env.DB, resolvedParams.slug);
 
   if (!post || !post.published) {
     return (
@@ -49,37 +36,8 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     );
   }
 
-  // Fetch related posts (same category, excluding current)
-  let relatedPosts: any[] = [];
-  if (post.categoryId) {
-    relatedPosts = await db.query.blogs.findMany({
-      where: (blogs, { and, eq, not }) => and(
-        eq(blogs.categoryId, post.categoryId!),
-        not(eq(blogs.id, post.id)),
-        eq(blogs.published, true)
-      ),
-      limit: 2,
-      with: {
-        category: true
-      },
-      orderBy: [desc(blogs.createdAt)]
-    });
-  }
-
-  // Fallback: If no related posts in same category, just get latest 2
-  if (relatedPosts.length === 0) {
-    relatedPosts = await db.query.blogs.findMany({
-      where: (blogs, { and, not, eq }) => and(
-        not(eq(blogs.id, post.id)),
-        eq(blogs.published, true)
-      ),
-      limit: 2,
-      with: {
-        category: true
-      },
-      orderBy: [desc(blogs.createdAt)]
-    });
-  }
+  // Fetch related posts
+  const relatedPosts = await getCachedRelatedBlogs(env.DB, post.id, post.categoryId);
 
   const paragraphs = post.content.split('\n').filter(p => p.trim() !== '');
 

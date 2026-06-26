@@ -17,10 +17,13 @@ export const metadata: Metadata = {
   },
 };
 
+import NextTopLoader from 'nextjs-toploader';
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="dark">
       <body suppressHydrationWarning className="antialiased">
+        <NextTopLoader color="#4f46e5" showSpinner={false} />
         {children}
       </body>
     </html>

@@ -9,9 +9,7 @@ import Footer from './components/Footer';
 import AnimatedSection from './components/AnimatedSection';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from '@/src/db';
-import { profiles, educations, experiences, blogs, stats, socialProfiles } from '@/src/db/schema';
-import { eq, desc } from 'drizzle-orm';
-
+import { getCachedProfile, getCachedEducations, getCachedExperiences, getCachedLatestBlogs, getCachedStats, getCachedSocials } from '@/src/db/queries';
 // Helper to map icon names based on string
 const getIcon = (name: string) => {
   const lName = name.toLowerCase();
@@ -53,7 +51,7 @@ export default async function Home() {
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const db = getDb(env.DB);
 
-  const profileRecord = await db.select().from(profiles).limit(1).get();
+  const profileRecord = await getCachedProfile(env.DB);
   const extractYear = (str: string) => {
     const match = str.match(/(\d{4})\s*(AD|BS)/i);
     if (match) {
@@ -70,9 +68,9 @@ export default async function Home() {
     return 0;
   };
 
-  const educationsRaw = await db.select().from(educations);
+  const educationsRaw = await getCachedEducations(env.DB);
   const educationsList = educationsRaw.sort((a, b) => extractYear(b.year) - extractYear(a.year));
-  const experiencesRaw = await db.select().from(experiences);
+  const experiencesRaw = await getCachedExperiences(env.DB);
   const experiencesList = experiencesRaw.sort((a, b) => {
     const aPres = a.duration.toLowerCase().includes('present');
     const bPres = b.duration.toLowerCase().includes('present');
@@ -80,9 +78,9 @@ export default async function Home() {
     if (!aPres && bPres) return 1;
     return extractYear(b.duration) - extractYear(a.duration);
   });
-  const latestBlogs = await db.select().from(blogs).where(eq(blogs.published, true)).orderBy(desc(blogs.createdAt)).limit(3);
-  const dynamicStats = await db.select().from(stats).orderBy(stats.order);
-  const socials = await db.select().from(socialProfiles);
+  const latestBlogs = await getCachedLatestBlogs(env.DB, 3);
+  const dynamicStats = await getCachedStats(env.DB);
+  const socials = await getCachedSocials(env.DB);
 
   const EXPERIENCE_YEARS = new Date().getFullYear() - 2022;
 

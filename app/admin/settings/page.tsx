@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { getSiteSettings, updateSiteSettings } from '@/src/lib/apiClient';
+import { clearCacheByTag, clearAllCaches } from './actions';
 import MediaPicker from '../components/MediaPicker';
-import { Settings, Save, Globe, Image as ImageIcon, Link as LinkIcon, Trash2 } from 'lucide-react';
+import { Settings, Save, Globe, Image as ImageIcon, Link as LinkIcon, Trash2, Database } from 'lucide-react';
 
 export default function SettingsPage() {
     const [settings, setSettings] = useState<Record<string, string>>({
@@ -75,6 +76,32 @@ export default function SettingsPage() {
             setSettings(prev => ({ ...prev, [mediaPickerTarget]: media.url }));
         }
         setMediaPickerTarget(null);
+    };
+
+    const handleClearCache = async (tag: string) => {
+        setSaving(true);
+        setMessage({ type: '', text: '' });
+        try {
+            const res = await clearCacheByTag(tag);
+            setMessage({ type: 'success', text: res.message });
+        } catch (error: any) {
+            setMessage({ type: 'error', text: error.message || `Failed to clear ${tag} cache` });
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleClearAllCaches = async () => {
+        setSaving(true);
+        setMessage({ type: '', text: '' });
+        try {
+            const res = await clearAllCaches();
+            setMessage({ type: 'success', text: res.message });
+        } catch (error: any) {
+            setMessage({ type: 'error', text: error.message || 'Failed to clear all caches' });
+        } finally {
+            setSaving(false);
+        }
     };
 
     const renderImageField = (name: 'logoUrl' | 'faviconUrl' | 'ogImageUrl', label: string, description: string) => (
@@ -244,6 +271,68 @@ export default function SettingsPage() {
                                 className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition-shadow"
                             />
                         </div>
+                    </div>
+                </div>
+
+                {/* Cache Management */}
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                        <Database className="w-5 h-5 text-gray-400" />
+                        Cache Management
+                    </h2>
+                    <p className="text-sm text-gray-500 mb-6">
+                        Manually invalidate caches if changes are not reflecting on the frontend. The system automatically clears specific caches upon updates, but you can force a clear here if needed.
+                    </p>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <button
+                            type="button"
+                            disabled={saving}
+                            onClick={() => handleClearCache('profile')}
+                            className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium text-sm text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                        >
+                            Clear Profile Cache
+                        </button>
+                        <button
+                            type="button"
+                            disabled={saving}
+                            onClick={() => handleClearCache('projects')}
+                            className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium text-sm text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                        >
+                            Clear Projects Cache
+                        </button>
+                        <button
+                            type="button"
+                            disabled={saving}
+                            onClick={() => handleClearCache('blogs')}
+                            className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium text-sm text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                        >
+                            Clear Blogs Cache
+                        </button>
+                        <button
+                            type="button"
+                            disabled={saving}
+                            onClick={() => handleClearCache('stats')}
+                            className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium text-sm text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                        >
+                            Clear Stats Cache
+                        </button>
+                        <button
+                            type="button"
+                            disabled={saving}
+                            onClick={() => handleClearCache('socials')}
+                            className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium text-sm text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                        >
+                            Clear Socials Cache
+                        </button>
+                        <button
+                            type="button"
+                            disabled={saving}
+                            onClick={handleClearAllCaches}
+                            className="px-4 py-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/30 transition font-bold text-sm disabled:opacity-50"
+                        >
+                            Purge All Caches
+                        </button>
                     </div>
                 </div>
 

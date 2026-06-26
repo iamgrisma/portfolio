@@ -2,8 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from '@/src/db';
-import { projects, socialProfiles } from '@/src/db/schema';
-import { desc } from 'drizzle-orm';
+import { getCachedProjects, getCachedSocials } from '@/src/db/queries';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import AnimatedSection from '../components/AnimatedSection';
@@ -24,8 +23,8 @@ export default async function ProjectsPage() {
   const db = getDb(env.DB);
 
   const [projectList, socials] = await Promise.all([
-    db.select().from(projects).orderBy(projects.order),
-    db.select().from(socialProfiles)
+    getCachedProjects(env.DB),
+    getCachedSocials(env.DB)
   ]);
 
   return (
