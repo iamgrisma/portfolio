@@ -24,7 +24,7 @@ export default function Footer({ socials = [] }: { socials?: SocialLink[] }) {
             <div className="md:col-span-2 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center text-white font-bold text-lg font-[var(--font-heading)]">
-                  KB
+                  RM
                 </div>
                 <div>
                   <h3 className="text-white font-bold font-[var(--font-heading)]">Raksha</h3>

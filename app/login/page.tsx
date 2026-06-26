@@ -59,7 +59,7 @@ function LoginContent() {
           {/* Logo */}
           <div className="text-center mb-8">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center text-white font-bold text-xl mx-auto mb-4 animate-pulse-glow">
-              KB
+              RM
             </div>
             <h1 className="text-2xl font-bold text-white font-[var(--font-heading)]">Welcome Back</h1>
             <p className="text-dark-300 text-sm mt-1">Sign in to access your dashboard</p>

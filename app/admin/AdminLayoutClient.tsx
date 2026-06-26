@@ -45,7 +45,7 @@ export default function AdminLayoutClient({ children, unreadCount }: { children:
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center text-white font-bold text-sm transition-transform duration-300 group-hover:scale-110">
-              KB
+              RM
             </div>
           </Link>
           <div className="hidden sm:flex items-center gap-2 text-sm">
