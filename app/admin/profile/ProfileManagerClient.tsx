@@ -1,11 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Trash2, Save, User, GraduationCap, Briefcase, Heart, Edit2, X, BarChart, Lock, Mail, Image as ImageIcon } from "lucide-react";
-import { updateProfile, addEducation, deleteEducation, updateEducation, addExperience, deleteExperience, updateExperience, addInterest, deleteInterest, addStat, updateStat, deleteStat } from "./actions";
+import { Plus, Trash2, Save, User, GraduationCap, Briefcase, Heart, Edit2, X, BarChart, Lock, Mail, Image as ImageIcon, Share2 } from "lucide-react";
+import { updateProfile, addEducation, deleteEducation, updateEducation, addExperience, deleteExperience, updateExperience, addInterest, deleteInterest, addStat, updateStat, deleteStat, addSocialProfile, deleteSocialProfile, updateSocialProfileUrl } from "./actions";
 import IconPicker from "@/src/components/IconPicker";
+import { SocialIcon } from '@/src/components/SocialIcon';
 import { getAccountProfile, updateAccountProfile } from "@/src/lib/apiClient";
 import MediaPicker from "../components/MediaPicker";
+
+export const PLATFORMS = [
+  'Facebook', 'Twitter / X', 'LinkedIn', 'Instagram', 'YouTube', 'TikTok', 'GitHub', 
+  'Snapchat', 'Reddit', 'Pinterest', 'WhatsApp', 'Telegram', 'Discord', 'Twitch', 
+  'Medium', 'Dribbble', 'Figma', 'Behance', 'Stack Overflow', 'CodePen', 'GitLab', 
+  'Bitbucket', 'Patreon', 'Vimeo', 'SoundCloud', 'Spotify', 'Apple Music', 'Slack', 
+  'Mastodon', 'Threads', 'Tumblr', 'Flickr', 'Quora', 'VK', 'WeChat', 'LINE', 'Viber', 
+  'Skype', 'Strava', 'Goodreads', 'Yelp', 'TripAdvisor', 'Linktree', 'Substack', 
+  'Dev.to', 'Hashnode', 'Codecademy', 'HackerRank', 'LeetCode', 'Upwork', 'Fiverr', 
+  'Personal Website', 'Email', 'Phone', 'Other'
+];
 
 type ProfileData = {
   profile: any;
@@ -13,6 +25,7 @@ type ProfileData = {
   experiences: any[];
   interests: any[];
   stats: any[];
+  socials: any[];
 };
 
 function EducationYearInputs({ defaultValue = "", className = "admin-input text-xs p-1.5" }: { defaultValue?: string, className?: string }) {
@@ -584,6 +597,75 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
           </button>
         </form>
       </div>
+      </div>
+
+      {/* SOCIAL LINKS */}
+      <div className="glass-card p-6 rounded-2xl">
+        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+          <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400">
+            <Share2 className="w-5 h-5" />
+          </div>
+          <h2 className="text-xl font-bold text-white">Social Links</h2>
+        </div>
+        
+        <div className="space-y-3 mb-6">
+          {data.socials.map((link) => (
+            <div key={link.id} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10 group">
+              <div className="p-2 bg-white/5 rounded-lg text-white">
+                <SocialIcon platform={link.platform} className="w-5 h-5" />
+              </div>
+              <div className="w-48 shrink-0">
+                <p className="font-medium text-white text-sm">{link.platform}</p>
+              </div>
+              <form action={async (formData) => {
+                await updateSocialProfileUrl(link.id, formData.get("url") as string);
+              }} className="flex-1 flex gap-2">
+                <input 
+                  name="url" 
+                  defaultValue={link.url} 
+                  placeholder="https://" 
+                  className="admin-input flex-1 text-sm bg-transparent border-white/10" 
+                />
+                <button type="submit" className="p-2 text-dark-400 hover:text-white transition-colors" title="Save URL">
+                  <Save className="w-4 h-4" />
+                </button>
+              </form>
+              <button 
+                onClick={async () => {
+                  if(confirm('Remove this social link?')) await deleteSocialProfile(link.id);
+                }} 
+                className="p-2 text-dark-400 hover:text-red-400 transition-colors shrink-0"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <form action={async (formData) => {
+          const platform = formData.get("platform") as string;
+          const url = formData.get("url") as string;
+          if (!platform || !url) return;
+          await addSocialProfile(platform, url, platform.toLowerCase());
+          (document.getElementById('social-form') as HTMLFormElement).reset();
+        }} id="social-form" className="flex gap-3 items-end max-w-xl border-t border-white/5 pt-4">
+          <div className="flex-1 space-y-1">
+            <select name="platform" className="admin-input text-sm h-[42px]" required>
+              <option value="" className="bg-dark-900 text-white">Select platform...</option>
+              {PLATFORMS.map((p) => (
+                <option key={p} value={p} className="bg-dark-900 text-white">{p}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex-1 space-y-1">
+            <input name="url" placeholder="URL (https://...)" className="admin-input text-sm h-[42px]" required />
+          </div>
+          <button type="submit" className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium text-white transition-colors flex items-center gap-2 h-[42px]">
+            <Plus className="w-4 h-4" /> Add
+          </button>
+        </form>
+      </div>
+
       </div>
 
     </div>

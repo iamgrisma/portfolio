@@ -12,7 +12,16 @@ import { useState } from 'react';
 
 const SIDEBAR_LINKS = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard },
-  { href: '/admin/profile', label: 'Profile', icon: User },
+  {
+    label: 'Settings',
+    icon: Settings,
+    subItems: [
+      { href: '/admin/profile', label: 'Portfolio Profile', icon: User },
+      { href: '/admin/user-settings', label: 'User Account', icon: User },
+      { href: '/admin/settings', label: 'Site & SEO', icon: Settings },
+      { href: '/admin/cache', label: 'Caching', icon: Database },
+    ]
+  },
   { href: '/admin/media', label: 'Media Gallery', icon: Image },
   { href: '/admin/blogs', label: 'Blog Posts', icon: FileText },
   {
@@ -24,15 +33,13 @@ const SIDEBAR_LINKS = [
     ]
   },
   { href: '/admin/contacts', label: 'Messages', icon: MessageSquare },
-  { href: '/admin/socials', label: 'Social Links', icon: Share2 },
-  { href: '/admin/cache', label: 'Cache', icon: Database },
-  { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
 export default function AdminLayoutClient({ children, unreadCount = 0, settings = {} }: { children: ReactNode, unreadCount?: number, settings?: Record<string, string> }) {
   const pathname = usePathname();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({
-    'Taxonomy': true // Default open
+    'Taxonomy': true,
+    'Settings': true // Default open Settings as well
   });
 
   const toggleMenu = (label: string) => {

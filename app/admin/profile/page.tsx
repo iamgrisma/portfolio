@@ -1,6 +1,6 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { getDb, CloudflareEnv } from "@/src/db";
-import { profiles, educations, experiences, interests, stats } from "@/src/db/schema";
+import { profiles, educations, experiences, interests, stats, socialProfiles } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
 import ProfileManagerClient from "./ProfileManagerClient";
 
@@ -46,6 +46,7 @@ export default async function AdminProfilePage() {
   
   const interestsList = await db.select().from(interests);
   const statsList = await db.select().from(stats).orderBy(stats.order);
+  const socialsList = await db.select().from(socialProfiles);
 
   const data = {
     profile,
@@ -53,6 +54,7 @@ export default async function AdminProfilePage() {
     experiences: experiencesList,
     interests: interestsList,
     stats: statsList,
+    socials: socialsList,
   };
 
   return <ProfileManagerClient data={data} />;

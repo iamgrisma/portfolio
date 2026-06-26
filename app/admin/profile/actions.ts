@@ -3,7 +3,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { getDb, CloudflareEnv } from "@/src/db";
-import { profiles, educations, experiences, interests, stats } from "@/src/db/schema";
+import { profiles, educations, experiences, interests, stats, socialProfiles } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 
@@ -134,4 +134,26 @@ export async function deleteInterest(id: number) {
   revalidatePath("/about");
   revalidatePath("/");
   revalidateTag("profile");
+}
+
+// === SOCIAL PROFILES ===
+export async function addSocialProfile(platform: string, url: string, icon: string) {
+  const db = await getDbInstance();
+  await db.insert(socialProfiles).values({ platform, url, icon });
+  revalidatePath('/', 'layout');
+  revalidateTag('socials');
+}
+
+export async function deleteSocialProfile(id: number) {
+  const db = await getDbInstance();
+  await db.delete(socialProfiles).where(eq(socialProfiles.id, id));
+  revalidatePath('/', 'layout');
+  revalidateTag('socials');
+}
+
+export async function updateSocialProfileUrl(id: number, url: string) {
+  const db = await getDbInstance();
+  await db.update(socialProfiles).set({ url }).where(eq(socialProfiles.id, id));
+  revalidatePath('/', 'layout');
+  revalidateTag('socials');
 }
