@@ -7,77 +7,17 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import AnimatedSection from '../components/AnimatedSection';
 
-const CATEGORIES = ['All', 'Frontend', 'Backend', 'DevOps', 'IT Systems', 'System Design'];
-
-const BLOG_POSTS = [
-
-  {
-    id: 1,
-    title: 'Modern State Management in React',
-    excerpt: 'Exploring how Zustand and Context API can simplify state management in large scale React applications without the boilerplate of Redux.',
-    date: '2023-10-15',
-    slug: 'modern-state-management-react',
-    category: 'Frontend',
-    tags: ['React', 'State', 'Frontend'],
-    readingTime: '5 min read',
-    featured: true,
-  },
-  {
-    id: 2,
-    title: 'Building Resilient Microservices',
-    excerpt: 'Effective methods for ensuring your microservices architecture remains highly available and tolerant to partial failures.',
-    date: '2023-11-02',
-    slug: 'resilient-microservices',
-    category: 'Backend',
-    tags: ['Microservices', 'Architecture', 'Backend'],
-    readingTime: '4 min read',
-    featured: false,
-  },
-  {
-    id: 3,
-    title: 'The Future of Cloud Native Applications',
-    excerpt: 'How modern serverless technology and container orchestration are reshaping the landscape of application deployment.',
-    date: '2023-12-10',
-    slug: 'future-cloud-native',
-    category: 'DevOps',
-    tags: ['Cloud', 'Serverless', 'DevOps'],
-    readingTime: '6 min read',
-    featured: false,
-  },
-  {
-    id: 4,
-    title: 'Clean Code Principles for Modern TypeScript',
-    excerpt: 'Comprehensive guide to writing readable, maintainable, and robust TypeScript code in enterprise applications.',
-    date: '2024-01-20',
-    slug: 'clean-code-typescript',
-    category: 'IT Systems',
-    tags: ['TypeScript', 'Clean Code', 'Best Practices'],
-    readingTime: '7 min read',
-    featured: false,
-  },
-  {
-    id: 5,
-    title: 'System Design: Scaling to a Million Users',
-    excerpt: 'Understanding the critical components of a scalable backend architecture, including load balancing, caching, and database sharding.',
-    date: '2024-02-15',
-    slug: 'system-design-scaling',
-    category: 'System Design',
-    tags: ['Scaling', 'Architecture', 'Database'],
-    readingTime: '8 min read',
-    featured: false,
-  },
-  {
-    id: 6,
-    title: 'Optimizing Next.js App Router Performance',
-    excerpt: 'Strategies for maximizing the performance of your Next.js applications using Server Components and intelligent caching.',
-    date: '2024-03-05',
-    slug: 'optimizing-nextjs-app-router',
-    category: 'Frontend',
-    tags: ['Next.js', 'Performance', 'React'],
-    readingTime: '5 min read',
-    featured: false,
-  },
-];
+export type BlogPost = {
+  id: number;
+  title: string;
+  excerpt: string;
+  date: string;
+  slug: string;
+  category: string;
+  tags: string[];
+  readingTime: string;
+  featured: boolean;
+};
 
 type SocialLink = {
   id: number;
@@ -86,11 +26,11 @@ type SocialLink = {
   icon: string;
 };
 
-export default function BlogListClient({ socials }: { socials: SocialLink[] }) {
+export default function BlogListClient({ socials, initialBlogs }: { socials: SocialLink[], initialBlogs: BlogPost[] }) {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredPosts = BLOG_POSTS.filter((post) => {
+  const filteredPosts = initialBlogs.filter((post) => {
     const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
     const matchesSearch =
       searchQuery === '' ||
@@ -100,7 +40,9 @@ export default function BlogListClient({ socials }: { socials: SocialLink[] }) {
     return matchesCategory && matchesSearch;
   });
 
-  const featuredPost = BLOG_POSTS.find((p) => p.featured);
+  const featuredPost = initialBlogs.find((p) => p.featured);
+
+  const categories = ['All', ...Array.from(new Set(initialBlogs.map(b => b.category)))];
 
   return (
     <main className="min-h-screen bg-dark-900 overflow-hidden">
@@ -170,7 +112,7 @@ export default function BlogListClient({ socials }: { socials: SocialLink[] }) {
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
               {/* Category Pills */}
               <div className="flex flex-wrap gap-2">
-                {CATEGORIES.map((cat) => (
+                {categories.map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}

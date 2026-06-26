@@ -1,25 +1,74 @@
-"use client";
-
 import Link from 'next/link';
-import { FileText, MessageSquare, Share2, TrendingUp, Eye, Clock, ArrowRight, Plus } from 'lucide-react';
+import { FileText, MessageSquare, Share2, TrendingUp, Eye, Clock, ArrowRight, Plus, Briefcase } from 'lucide-react';
 import AnimatedSection from '../components/AnimatedSection';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { getDb, CloudflareEnv } from '@/src/db';
+import { blogs, contacts, socialProfiles, projects, profiles } from '@/src/db/schema';
+import { count, eq, desc } from 'drizzle-orm';
 
-const STATS = [
-  { label: 'Blog Posts', value: '6', change: '+2 this month', icon: FileText, color: 'from-blue-500 to-indigo-500', href: '/admin/blogs' },
-  { label: 'Messages', value: '12', change: '3 unread', icon: MessageSquare, color: 'from-accent-500 to-teal-500', href: '/admin/contacts' },
-  { label: 'Social Links', value: '3', change: 'All active', icon: Share2, color: 'from-purple-500 to-pink-500', href: '/admin/socials' },
-  { label: 'Page Views', value: '1.2K', change: '+15% this week', icon: Eye, color: 'from-amber-500 to-orange-500', href: '/admin' },
-];
+// Helper function to format relative time
+function formatDistanceToNow(date: Date, options: { addSuffix: boolean }): string {
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  
+  if (diffInSeconds < 60) return `${diffInSeconds} seconds${options.addSuffix ? ' ago' : ''}`;
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) return `${diffInMinutes} minutes${options.addSuffix ? ' ago' : ''}`;
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return `${diffInHours} hours${options.addSuffix ? ' ago' : ''}`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 30) return `${diffInDays} days${options.addSuffix ? ' ago' : ''}`;
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) return `${diffInMonths} months${options.addSuffix ? ' ago' : ''}`;
+  const diffInYears = Math.floor(diffInDays / 365);
+  return `${diffInYears} years${options.addSuffix ? ' ago' : ''}`;
+}
 
-const RECENT_ACTIVITY = [
-  { text: 'Published "Digital Governance in Local Municipalities"', time: '2 hours ago', type: 'blog' },
-  { text: 'New message from Sita Sharma', time: '5 hours ago', type: 'message' },
-  { text: 'Updated social media links', time: '1 day ago', type: 'social' },
-  { text: 'Draft saved: "Livestock Disease Prevention"', time: '2 days ago', type: 'blog' },
-  { text: 'New message from Ram Karki', time: '3 days ago', type: 'message' },
-];
+export const dynamic = 'force-dynamic';
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
+  const db = getDb(env.DB);
+
+  // Fetch Stats
+  const blogsCountResult = await db.select({ count: count() }).from(blogs);
+  const contactsCountResult = await db.select({ count: count() }).from(contacts).where(eq(contacts.read, false));
+  const socialsCountResult = await db.select({ count: count() }).from(socialProfiles);
+  const projectsCountResult = await db.select({ count: count() }).from(projects);
+  const profileResult = await db.select().from(profiles).limit(1);
+
+  const stats = [
+    { label: 'Blog Posts', value: blogsCountResult[0].count.toString(), change: 'Total articles', icon: FileText, color: 'from-blue-500 to-indigo-500', href: '/admin/blogs' },
+    { label: 'Unread Messages', value: contactsCountResult[0].count.toString(), change: 'Requires attention', icon: MessageSquare, color: 'from-accent-500 to-teal-500', href: '/admin/contacts' },
+    { label: 'Social Links', value: socialsCountResult[0].count.toString(), change: 'Active profiles', icon: Share2, color: 'from-purple-500 to-pink-500', href: '/admin/socials' },
+    { label: 'Projects', value: projectsCountResult[0].count.toString(), change: 'Completed work', icon: Briefcase, color: 'from-amber-500 to-orange-500', href: '/admin' }, // No dedicated projects admin page yet, link to admin root
+  ];
+
+  // Fetch Recent Activity (mix of blogs and messages)
+  const recentBlogs = await db.select().from(blogs).orderBy(desc(blogs.createdAt)).limit(5);
+  const recentMessages = await db.select().from(contacts).orderBy(desc(contacts.createdAt)).limit(5);
+
+  const activities = [
+    ...recentBlogs.map(b => ({
+      text: b.published ? `Published "${b.title}"` : `Draft saved: "${b.title}"`,
+      time: b.createdAt ? new Date(b.createdAt) : new Date(),
+      type: 'blog' as const
+    })),
+    ...recentMessages.map(m => ({
+      text: `New message from ${m.name}`,
+      time: m.createdAt ? new Date(m.createdAt) : new Date(),
+      type: 'message' as const
+    }))
+  ]
+  .sort((a, b) => b.time.getTime() - a.time.getTime())
+  .slice(0, 5)
+  .map(a => ({
+    ...a,
+    timeText: formatDistanceToNow(a.time, { addSuffix: true })
+  }));
+
+  const firstName = profileResult[0]?.name?.split(' ')[0] || 'Admin';
+
   return (
     <div className="max-w-6xl space-y-8">
       {/* Welcome */}
@@ -27,7 +76,7 @@ export default function AdminDashboard() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl lg:text-3xl font-bold text-white font-[var(--font-heading)]">
-              Welcome Back, <span className="gradient-text">Kamal</span>
+              Welcome Back, <span className="gradient-text">{firstName}</span>
             </h1>
             <p className="text-dark-200 text-sm mt-1">Here&apos;s what&apos;s happening with your portfolio today.</p>
           </div>
@@ -39,7 +88,7 @@ export default function AdminDashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {STATS.map((stat, i) => (
+        {stats.map((stat, i) => (
           <AnimatedSection key={stat.label} animation="fade-up" delay={i * 80}>
             <Link href={stat.href} className="block group">
               <div className="admin-card p-6 rounded-xl group-hover:border-white/10">
@@ -71,7 +120,9 @@ export default function AdminDashboard() {
               <Clock className="w-4 h-4 text-dark-300" />
             </div>
             <div className="space-y-4">
-              {RECENT_ACTIVITY.map((activity, i) => (
+              {activities.length === 0 ? (
+                <p className="text-sm text-dark-400">No recent activity.</p>
+              ) : activities.map((activity, i) => (
                 <div key={i} className="flex items-start gap-3 group">
                   <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${
                     activity.type === 'blog' ? 'bg-blue-400' :
@@ -79,7 +130,7 @@ export default function AdminDashboard() {
                   }`} />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-dark-100 truncate">{activity.text}</p>
-                    <p className="text-xs text-dark-400 mt-0.5">{activity.time}</p>
+                    <p className="text-xs text-dark-400 mt-0.5">{activity.timeText}</p>
                   </div>
                 </div>
               ))}
@@ -108,7 +159,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="flex-1">
                   <p className="text-sm text-white font-medium">View Messages</p>
-                  <p className="text-xs text-dark-400">3 unread messages</p>
+                  <p className="text-xs text-dark-400">Check inbox</p>
                 </div>
                 <ArrowRight className="w-4 h-4 text-dark-400 group-hover:text-white group-hover:translate-x-1 transition-all" />
               </Link>
