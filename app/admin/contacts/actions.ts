@@ -48,7 +48,7 @@ export async function sendEmailReply(contactId: number, to: string, name: string
   if (!brevoKey) throw new Error("Brevo API key is not configured.");
 
   const payload = {
-    sender: { email: 'contact@kamalpb.com.np', name: 'Raksha' },
+    sender: { email: 'contact@raksha.com.np', name: 'Raksha Mishra' },
     to: [{ email: to, name: name }],
     subject,
     htmlContent: `<div style="font-family:sans-serif; white-space: pre-wrap; font-size: 15px; color: #333;">${message}</div>`

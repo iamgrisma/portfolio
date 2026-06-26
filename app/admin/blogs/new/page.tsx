@@ -264,7 +264,7 @@ export default function NewBlogPost() {
           } else if (mediaPickerTarget === 'content') {
             // Append markdown image to content
             const markdownImage = `\n![${media.alt || 'image'}](${media.url})\n`;
-            setContent(prev => prev + markdownImage);
+            setContent((prev: string) => prev + markdownImage);
           }
           setMediaPickerTarget(null);
         }}

@@ -72,13 +72,13 @@ export default function MediaPicker({ isOpen, onClose, onSelect, accept, title =
         setLoading(true);
         try {
             const mimeFilter = accept === 'image/*' ? 'image/' : '';
-            const response = await getMediaList(
+            const response: { success: boolean; data?: { items: MediaItem[], pagination?: { total_pages: number } }; error?: string } = await getMediaList(
                 page,
                 24,
                 folder,
                 mimeFilter,
                 searchDebounced
-            );
+            ) as any;
             if (response.success && response.data) {
                 setItems(response.data.items || []);
                 setTotalPages(response.data.pagination?.total_pages || 1);

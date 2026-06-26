@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Trash2, Save, User, GraduationCap, Briefcase, Heart, Edit2, X, BarChart, Lock, Mail, Image as ImageIcon } from "lucide-react";
 import { updateProfile, addEducation, deleteEducation, updateEducation, addExperience, deleteExperience, updateExperience, addInterest, deleteInterest, addStat, updateStat, deleteStat } from "./actions";
 import IconPicker from "@/src/components/IconPicker";
@@ -123,7 +123,6 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
 
   // Load account data on mount
-  import { useEffect } from "react";
   useEffect(() => {
     getAccountProfile().then(res => {
       if (res.success && res.data) {

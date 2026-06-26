@@ -33,6 +33,7 @@ export async function createBlog(data: {
   published: boolean;
   categoryName: string;
   tagNames: string[];
+  featuredImage?: string;
 }) {
   const { db, user } = await getDbInstance();
   
@@ -62,6 +63,7 @@ export async function createBlog(data: {
     content: data.content,
     excerpt: data.excerpt,
     published: data.published,
+    featuredImage: data.featuredImage,
     authorId: author.id,
     categoryId: categoryId,
     readingTime: `${Math.ceil(data.content.length / 1000)} min read`, // rough estimate
@@ -97,6 +99,7 @@ export async function updateBlog(id: number, data: {
   published: boolean;
   categoryName: string;
   tagNames: string[];
+  featuredImage?: string;
 }) {
   const { db } = await getDbInstance();
 
@@ -121,6 +124,7 @@ export async function updateBlog(id: number, data: {
     content: data.content,
     excerpt: data.excerpt,
     published: data.published,
+    featuredImage: data.featuredImage,
     categoryId: categoryId,
     readingTime: `${Math.ceil(data.content.length / 1000)} min read`,
     updatedAt: new Date(),
