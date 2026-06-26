@@ -1,0 +1,206 @@
+PRAGMA defer_foreign_keys=TRUE;
+CREATE TABLE d1_migrations(
+		id         INTEGER PRIMARY KEY AUTOINCREMENT,
+		name       TEXT UNIQUE,
+		applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+INSERT INTO "d1_migrations" ("id","name","applied_at") VALUES(1,'0000_curly_swarm.sql','2026-06-26 05:51:38');
+INSERT INTO "d1_migrations" ("id","name","applied_at") VALUES(2,'0001_initial.sql','2026-06-26 05:51:39');
+INSERT INTO "d1_migrations" ("id","name","applied_at") VALUES(3,'0001_sturdy_shen.sql','2026-06-26 05:51:39');
+INSERT INTO "d1_migrations" ("id","name","applied_at") VALUES(4,'0002_ambiguous_stephen_strange.sql','2026-06-26 05:51:40');
+INSERT INTO "d1_migrations" ("id","name","applied_at") VALUES(5,'0003_jittery_bishop.sql','2026-06-26 05:51:41');
+INSERT INTO "d1_migrations" ("id","name","applied_at") VALUES(6,'0004_seed_raksha.sql','2026-06-26 05:51:41');
+INSERT INTO "d1_migrations" ("id","name","applied_at") VALUES(7,'0004_rename_animal_type.sql','2026-06-26 06:16:43');
+INSERT INTO "d1_migrations" ("id","name","applied_at") VALUES(8,'0005_seed_raksha_real_data.sql','2026-06-26 06:24:19');
+INSERT INTO "d1_migrations" ("id","name","applied_at") VALUES(9,'0006_create_projects_table.sql','2026-06-26 06:39:58');
+INSERT INTO "d1_migrations" ("id","name","applied_at") VALUES(10,'0007_seed_projects.sql','2026-06-26 06:39:58');
+INSERT INTO "d1_migrations" ("id","name","applied_at") VALUES(11,'0008_update_raksha_profile_accuracy.sql','2026-06-26 06:51:13');
+INSERT INTO "d1_migrations" ("id","name","applied_at") VALUES(12,'0009_update_fcgo_fulltime.sql','2026-06-26 06:59:04');
+INSERT INTO "d1_migrations" ("id","name","applied_at") VALUES(13,'0010_seed_it_blogs.sql','2026-06-26 07:05:58');
+CREATE TABLE `educations` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`degree` text NOT NULL,
+	`institution` text NOT NULL,
+	`year` text NOT NULL,
+	`order` integer DEFAULT 0 NOT NULL,
+	`created_at` integer
+);
+INSERT INTO "educations" ("id","degree","institution","year","order","created_at") VALUES(2,'Masters in Business Studies (MBS)','Nepal Commerce Campus (NCC)','2025 AD',1,NULL);
+INSERT INTO "educations" ("id","degree","institution","year","order","created_at") VALUES(3,'Bachelor in Business Information Management (BIM)','Nagarjuna College of IT (NCIT)','2022 AD',2,NULL);
+INSERT INTO "educations" ("id","degree","institution","year","order","created_at") VALUES(4,'+2','Bright Future College','2017 AD',3,NULL);
+CREATE TABLE `experiences` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`role` text NOT NULL,
+	`organization` text NOT NULL,
+	`duration` text NOT NULL,
+	`description` text,
+	`order` integer DEFAULT 0 NOT NULL,
+	`created_at` integer
+);
+INSERT INTO "experiences" ("id","role","organization","duration","description","order","created_at") VALUES(3,'IT Officer (Full-Time)','Financial Comptroller General Office (FCGO)','2025 - Present','Currently working full-time providing support assistance for the Electronic Funds Transfer (EFT) module under the Integrated Public Finance Management System (IPFMS). Verifies transactions, handles Oracle TOD for EFT issues, and communicates with government offices, DTCO, NCHL, and banks regarding EFT resolutions.',1,NULL);
+INSERT INTO "experiences" ("id","role","organization","duration","description","order","created_at") VALUES(4,'IT Professional','SitaSoft','2023 - 2024','Upgraded the Integrated Pension Management System (.NET, Gov of Nepal) and Cooperative Management Software. Developed a Hospital Billing system integrating government insurance requirements. Provided technical assistance and integrated CGAS API for the Pension Management Office.',2,NULL);
+INSERT INTO "experiences" ("id","role","organization","duration","description","order","created_at") VALUES(5,'Web Developer','BentRay','2022 - 2023','Developed and maintained custom Content Management Systems (CMS) utilizing core PHP and Laravel frameworks.',3,NULL);
+CREATE TABLE `interests` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`name` text NOT NULL,
+	`category` text,
+	`created_at` integer
+);
+INSERT INTO "interests" ("id","name","category","created_at") VALUES(11,'Angular','Frontend',NULL);
+INSERT INTO "interests" ("id","name","category","created_at") VALUES(12,'React & Next.js','Frontend',NULL);
+INSERT INTO "interests" ("id","name","category","created_at") VALUES(13,'.NET Framework','Backend',NULL);
+INSERT INTO "interests" ("id","name","category","created_at") VALUES(14,'Laravel (PHP)','Backend',NULL);
+INSERT INTO "interests" ("id","name","category","created_at") VALUES(15,'Oracle DB','Database',NULL);
+INSERT INTO "interests" ("id","name","category","created_at") VALUES(16,'System Integration','Architecture',NULL);
+CREATE TABLE `profiles` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`name` text NOT NULL,
+	`nickname` text,
+	`bio` text,
+	`tagline` text,
+	`created_at` integer,
+	`updated_at` integer
+, `current_address` text, `permanent_address` text, `phone` text, `public_email` text);
+INSERT INTO "profiles" ("id","name","nickname","bio","tagline","created_at","updated_at","current_address","permanent_address","phone","public_email") VALUES(2,'Raksha Mishra','Raksha','I am an IT Professional based in Lalitpur, originally from Jhapa. I have extensive experience providing technical support and integration for robust web applications, particularly in government systems like the Integrated Pension Management System and CGAS. I have a diverse technical background spanning .NET, PHP, and modern web frameworks.','IT Professional',NULL,NULL,'Lalitpur, Nepal','Jhapa, Nepal','+977 9840032616','contact@raksha.com.np');
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  uid TEXT NOT NULL UNIQUE,
+  email TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'user',
+  created_at INTEGER DEFAULT (unixepoch())
+);
+INSERT INTO "users" ("id","uid","email","role","created_at") VALUES(1,'admin-001','kamalbaral@mail.com','admin',1782453099);
+CREATE TABLE categories (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT NOT NULL UNIQUE,
+  color TEXT NOT NULL DEFAULT '#10b981',
+  created_at INTEGER DEFAULT (unixepoch())
+);
+INSERT INTO "categories" ("id","name","slug","color","created_at") VALUES(1,'Governance','governance','#3b82f6',1782453099);
+INSERT INTO "categories" ("id","name","slug","color","created_at") VALUES(2,'Community','community','#10b981',1782453099);
+INSERT INTO "categories" ("id","name","slug","color","created_at") VALUES(3,'Policy','policy','#8b5cf6',1782453099);
+INSERT INTO "categories" ("id","name","slug","color","created_at") VALUES(4,'IT Systems','it-systems','#f59e0b',1782453099);
+INSERT INTO "categories" ("id","name","slug","color","created_at") VALUES(5,'Health','health','#ef4444',1782453099);
+CREATE TABLE blogs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  slug TEXT NOT NULL UNIQUE,
+  title TEXT NOT NULL,
+  excerpt TEXT,
+  content TEXT NOT NULL,
+  featured_image TEXT,
+  reading_time TEXT,
+  published INTEGER NOT NULL DEFAULT 0,
+  author_id INTEGER NOT NULL REFERENCES users(id),
+  category_id INTEGER REFERENCES categories(id),
+  created_at INTEGER DEFAULT (unixepoch()),
+  updated_at INTEGER DEFAULT (unixepoch())
+);
+INSERT INTO "blogs" ("id","slug","title","excerpt","content","featured_image","reading_time","published","author_id","category_id","created_at","updated_at") VALUES(7,'modernizing-government-financial-systems-eft','Modernizing Government Financial Systems: The Transition to Electronic Funds Transfer (EFT)','Exploring the technical challenges and immense benefits of shifting from paper-based cheques to Electronic Funds Transfer (EFT) within Nepal''s government financial systems.',replace('The financial landscape of government operations in Nepal is undergoing a massive transformation, shifting from traditional, paper-based check disbursements to robust Electronic Funds Transfer (EFT) systems. As an IT Officer at the Financial Comptroller General Office (FCGO), I have witnessed firsthand the operational hurdles and the immense benefits of integrating the Centralized Government Accounting System (CGAS) with the national banking network.\n\nFor decades, government offices relied on physical cheques, a process fraught with delays, reconciliation errors, and security risks. The introduction of the EFT module under the Integrated Public Finance Management System (IPFMS) marked a paradigm shift. However, implementing such a system at a national scale is not without its technical and logistical challenges.\n\nOne of the primary challenges involves ensuring seamless communication between the Treasury system, the Nepal Clearing House Limited (NCHL), and the commercial banks. When an office issues a payment, the data flows through multiple verification gates. If an account number is mismatched or a branch code is incorrect, the transaction bounces. Handling these exceptions requires deep technical understanding and constant monitoring. We utilize Oracle TOD to investigate failed transactions, trace the exact point of failure, and communicate the resolution to the respective District Treasury Controller Offices (DTCOs) and the banks.\n\nAnother significant hurdle was data normalization. Legacy data from various disconnected systems had to be cleaned and structured to meet the strict API payload requirements of the NCHL. We implemented rigorous validation checks at the application level to prevent malformed requests from ever reaching the clearing house. \n\nThe impact of this modernization has been profound. Payments that previously took days to process and clear are now settled in near real-time. Beneficiaries receive funds directly into their bank accounts, minimizing the risk of fraud and eliminating the need to physically visit government offices. Furthermore, the automated reconciliation process has drastically reduced the workload on accounting staff, allowing them to focus on financial analysis rather than manual data entry.\n\nLooking ahead, the focus is on expanding the EFT system to encompass all forms of government disbursements, including social security allowances and local level grants. As we continue to refine the system and address edge cases, the goal remains clear: to build a transparent, efficient, and fully digitized public financial management infrastructure that serves the citizens of Nepal effectively.','\n',char(10)),NULL,NULL,1,1,4,1782457558000,1782457558000);
+INSERT INTO "blogs" ("id","slug","title","excerpt","content","featured_image","reading_time","published","author_id","category_id","created_at","updated_at") VALUES(8,'building-scalable-hospital-billing-systems','Building Scalable Hospital Billing Systems: Integrating National Health Insurance','A deep dive into the complexities of developing a .NET-based hospital billing system integrated with government health insurance protocols.',replace('Developing a hospital billing system is a complex endeavor, but the complexity multiplies when you introduce the requirement to integrate with a national health insurance program. During my tenure at SitaSoft, I had the opportunity to work on a billing system for Narayani Hospital in Chitwan, a project that required a deep understanding of both healthcare workflows and government compliance.\n\nThe core challenge lay in the dual nature of the billing process. The system had to seamlessly handle regular out-of-pocket patients while simultaneously processing patients covered by the government''s health insurance scheme. For insured patients, the system needed to instantly verify their policy status, calculate the covered amount based on strict government tariffs, and generate accurate claim reports for the insurance board.\n\nWe built the system using the .NET framework, leveraging its robust architecture to handle the high volume of transactions characteristic of a major hospital. One of the critical architectural decisions was implementing a modular design. The insurance logic was separated from the core billing engine, allowing us to update tariff rates and claim rules without disrupting the daily billing operations.\n\nData integrity and security were paramount. Healthcare data is highly sensitive, and any discrepancy in billing can lead to severe financial and legal repercussions. We implemented role-based access control (RBAC) to ensure that only authorized personnel could modify billing records or submit insurance claims. All transactions were logged meticulously to maintain a comprehensive audit trail.\n\nIntegrating with the government''s insurance API presented its own set of challenges. Network instability and periodic API downtime required us to build a resilient queueing system. If the insurance server was unreachable, the local system would securely queue the claims and automatically retry the submission once the connection was restored. This ensured that the hospital never lost claim data due to temporary network issues.\n\nThe successful deployment of this system significantly streamlined the hospital''s administrative processes. Wait times at the billing counters were reduced, and the accuracy of insurance claims improved drastically, leading to faster reimbursements from the government. This project underscored the critical role that well-designed software plays in improving healthcare delivery and operational efficiency.','\n',char(10)),NULL,NULL,1,1,5,1782025558000,1782025558000);
+INSERT INTO "blogs" ("id","slug","title","excerpt","content","featured_image","reading_time","published","author_id","category_id","created_at","updated_at") VALUES(9,'evolution-pension-management-upgrading-legacy-net','The Evolution of Pension Management: Upgrading Legacy .NET Systems','Insights into the technical process of upgrading a massive, legacy Integrated Pension Management System using the .NET framework.',replace('Managing the pensions for a nation''s retired civil servants is a monumental task that demands absolute accuracy and reliability. At SitaSoft, I was heavily involved in the project to upgrade the Integrated Pension Management System for the Government of Nepal''s Pension Management Office. This project was a masterclass in modernizing legacy infrastructure while maintaining continuous service delivery.\n\nThe original system, while functional, was built on an older version of the .NET framework and was beginning to show its age. As the number of pensioners grew and the complexity of pension rules increased, the system struggled with performance bottlenecks, particularly during the end-of-month processing cycle.\n\nOur primary objective was to upgrade the underlying framework, optimize the database queries, and introduce a more intuitive user interface without disrupting the ongoing monthly disbursements. The sheer volume of legacy data—decades worth of service records, salary scales, and payment histories—made data migration a delicate operation. We developed automated migration scripts and conducted extensive parallel testing, running the old and new systems simultaneously to ensure zero discrepancies in the output.\n\nOne of the most significant improvements was the refactoring of the core calculation engine. Over the years, numerous patches and quick fixes had made the codebase difficult to maintain. We rewrote the calculation logic using modern C# features, separating the business rules from the data access layer. This modular approach not only improved performance but also made it much easier to implement new government policies regarding pension increments and allowances.\n\nSecurity was another major focus area. We implemented strong encryption for sensitive personal data and introduced multi-factor authentication for system administrators. The audit logging mechanism was completely overhauled to track every modification made to a pensioner''s record, ensuring complete transparency and accountability.\n\nThe upgraded Integrated Pension Management System proved to be significantly faster, more secure, and easier to maintain. The end-of-month processing time was reduced from days to hours, ensuring that retired civil servants received their pensions accurately and on time. This project highlighted the importance of proactive system modernization and the power of the .NET ecosystem in enterprise environments.','\n',char(10)),NULL,NULL,1,1,1,1781593558000,1781593558000);
+INSERT INTO "blogs" ("id","slug","title","excerpt","content","featured_image","reading_time","published","author_id","category_id","created_at","updated_at") VALUES(10,'effective-content-management-core-php-vs-laravel','Effective Content Management: Core PHP vs. Laravel Framework','A comparative analysis of building custom CMS solutions using Core PHP versus the Laravel framework, based on real-world development experience.',replace('When building Content Management Systems (CMS) for clients, one of the first architectural decisions is whether to build from scratch using core PHP or to leverage a modern framework like Laravel. During my time at BentRay, I worked extensively with both approaches, and the choice is rarely a simple binary. It depends entirely on the specific requirements, timeline, and long-term goals of the project.\n\nCore PHP offers ultimate flexibility and minimal overhead. For simple websites with very specific, lightweight backend requirements, a custom PHP script can be incredibly fast and efficient. You aren''t loading megabytes of framework code for a simple CRUD operation. However, the lack of a standardized structure can become a nightmare as the project scales. Without the enforced discipline of an MVC (Model-View-Controller) architecture, codebases can quickly turn into spaghetti code, mixing database queries, business logic, and HTML rendering in the same file.\n\nThis is where Laravel shines. Laravel provides a robust, elegant structure that enforces best practices out of the box. Its Eloquent ORM (Object-Relational Mapper) makes database interactions intuitive and secure, automatically protecting against SQL injection attacks. The built-in authentication, routing, and templating engine (Blade) drastically reduce development time for complex features.\n\nFor a comprehensive CMS that requires user roles, complex data relationships, and a scalable architecture, Laravel is unequivocally the better choice. It allows developers to focus on the unique business logic of the application rather than reinventing the wheel for common tasks. Furthermore, the standardization makes it much easier to onboard new developers or hand the project over to the client''s internal team.\n\nHowever, Laravel does have a learning curve and requires a more sophisticated hosting environment than a simple PHP script. The key is to assess the project scope accurately. If you are building a small, static portfolio with a simple contact form, core PHP might suffice. But if you are building a dynamic platform that will grow over time, investing in a framework like Laravel pays massive dividends in maintainability, security, and developer sanity.','\n',char(10)),NULL,NULL,1,1,4,1781161558000,1781161558000);
+INSERT INTO "blogs" ("id","slug","title","excerpt","content","featured_image","reading_time","published","author_id","category_id","created_at","updated_at") VALUES(11,'navigating-database-challenges-oracle-tod','Navigating Database Challenges: Oracle TOD in Enterprise Environments','Discussing the technical realities of managing high-volume financial transactions and troubleshooting database issues using Oracle TOD at the FCGO.',replace('In the realm of enterprise IT, particularly within government financial systems, the database is the beating heart of the operation. At the Financial Comptroller General Office (FCGO), our systems rely heavily on Oracle TOD (Treasury Oscillator System) to manage the massive influx of financial transactions from offices across the country. Working with a database of this scale presents unique challenges that require a rigorous and analytical approach.\n\nOne of the most critical aspects of managing the EFT (Electronic Funds Transfer) module is ensuring absolute data integrity. When a transaction fails—whether due to an invalid account number, a network timeout with the clearing house (NCHL), or an internal processing error—the system must handle the failure gracefully. This means implementing robust transaction management to ensure that partial updates are rolled back and the financial ledgers remain perfectly balanced.\n\nTroubleshooting failed EFT transactions often feels like detective work. It involves delving into the Oracle database, writing complex SQL queries to trace the lifecycle of a specific payment request, and analyzing the corresponding system logs. Understanding the schema architecture and the relationships between various treasury modules is essential for quickly identifying the root cause of an issue.\n\nPerformance tuning is another constant battle. As the volume of digital transactions grows, queries that performed adequately a year ago can become bottlenecks. We frequently analyze query execution plans to identify missing indexes or inefficient table joins. Optimizing these queries is crucial for ensuring that end-of-day reconciliation processes complete within their designated time windows.\n\nCommunication is just as important as technical skill in this role. When a systemic database issue affects payment processing, it requires coordinating with multiple stakeholders, including software vendors, network administrators, and the clearing house. Being able to translate complex database errors into actionable information for non-technical management is a critical skill for an IT Officer.\n\nWorking with Oracle TOD in such a high-stakes environment is both demanding and rewarding. It reinforces the importance of meticulous database design, proactive monitoring, and the absolute necessity of rigorous testing before deploying any changes to a production system.','\n',char(10)),NULL,NULL,1,1,4,1780729558000,1780729558000);
+CREATE TABLE tags (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT NOT NULL UNIQUE,
+  created_at INTEGER DEFAULT (unixepoch())
+);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(1,'Digital','digital',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(2,'Government','government',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(3,'Technology','technology',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(4,'Nepal','nepal',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(5,'Outreach','outreach',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(6,'Inclusion','inclusion',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(7,'Planning','planning',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(8,'Future','future',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(9,'Innovation','innovation',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(10,'Livestock','livestock',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(11,'Disease','disease',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(12,'Prevention','prevention',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(13,'Zoonotic','zoonotic',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(14,'Public Health','public-health',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(15,'One Health','one-health',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(16,'Rural','rural',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(17,'Empowerment','empowerment',1782453099);
+INSERT INTO "tags" ("id","name","slug","created_at") VALUES(18,'Development','development',1782453099);
+CREATE TABLE blog_tags (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  blog_id INTEGER NOT NULL REFERENCES blogs(id),
+  tag_id INTEGER NOT NULL REFERENCES tags(id)
+);
+CREATE TABLE contacts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  message TEXT NOT NULL,
+  read INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER DEFAULT (unixepoch())
+, `type` text DEFAULT 'contact' NOT NULL, `phone` text, `service` text, "project_type" text, `date` text, `time` text, `status` text DEFAULT 'pending' NOT NULL);
+CREATE TABLE social_profiles (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  platform TEXT NOT NULL,
+  url TEXT NOT NULL,
+  icon TEXT NOT NULL,
+  created_at INTEGER DEFAULT (unixepoch())
+);
+INSERT INTO "social_profiles" ("id","platform","url","icon","created_at") VALUES(4,'LinkedIn','https://linkedin.com/in/rakshamishra','linkedin',1782453101);
+INSERT INTO "social_profiles" ("id","platform","url","icon","created_at") VALUES(5,'GitHub','https://github.com/rakshamishra','github',1782453101);
+CREATE TABLE `stats` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`label` text NOT NULL,
+	`value` text NOT NULL,
+	`icon` text DEFAULT 'Award' NOT NULL,
+	`order` integer DEFAULT 0 NOT NULL
+);
+INSERT INTO "stats" ("id","label","value","icon","order") VALUES(5,'Years Experience','4+','Briefcase',1);
+INSERT INTO "stats" ("id","label","value","icon","order") VALUES(6,'Projects Delivered','10+','Code',2);
+INSERT INTO "stats" ("id","label","value","icon","order") VALUES(7,'Tech Stacks','6+','Laptop',3);
+CREATE TABLE `contact_replies` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`contact_id` integer NOT NULL,
+	`subject` text NOT NULL,
+	`message` text NOT NULL,
+	`created_at` integer,
+	FOREIGN KEY (`contact_id`) REFERENCES `contacts`(`id`) ON UPDATE no action ON DELETE cascade
+);
+CREATE TABLE `projects` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`title` text NOT NULL,
+	`description` text NOT NULL,
+	`organization` text,
+	`tech_stack` text,
+	`order` integer DEFAULT 0 NOT NULL,
+	`created_at` integer DEFAULT (CURRENT_TIMESTAMP)
+);
+INSERT INTO "projects" ("id","title","description","organization","tech_stack","order","created_at") VALUES(1,'Centralized Government Accounting System (CGAS / EFT)','Provides support assistance at the Officer level for the Electronic Funds Transfer (EFT) module under the Integrated Public Finance Management System (IPFMS). Verifies transactions, handles Oracle TOD for EFT issues, and communicates with government offices, DTCO, NCHL (clearing house in Nepal), and banks regarding EFT resolutions.','Financial Comptroller General Office (FCGO)','Oracle TOD, Banking/EFT Systems',1,'2026-06-26 06:39:58');
+INSERT INTO "projects" ("id","title","description","organization","tech_stack","order","created_at") VALUES(2,'Integrated Pension Management System (IPMS)','Upgraded the legacy IPMS to the latest .NET framework with UI/UX, technical flow, and feature enhancements for the Pension Management Office. Successfully integrated IPMS with the CGAS (IPFMS) system to automatically send pensioners'' monthly generated amounts and required details for EFT processing.','SitaSoft (Pension Management Office)','.NET Framework, API Integration',2,'2026-06-26 06:39:58');
+INSERT INTO "projects" ("id","title","description","organization","tech_stack","order","created_at") VALUES(3,'Hospital Insurance Billing System','Developed a hospital billing system for Narayani Hospital, Chitwan, specifically tailored to integrate government requirements and processes for insured patient billing.','SitaSoft (Narayani Hospital)','.NET Framework',3,'2026-06-26 06:39:58');
+INSERT INTO "projects" ("id","title","description","organization","tech_stack","order","created_at") VALUES(4,'Cooperative Management Software','Upgraded and maintained a widely-used cooperative management system, utilized by around 120 leading cooperatives inside and outside Kathmandu. Enhanced the system with better interest calculation algorithms and credit management features.','SitaSoft','.NET Framework',4,'2026-06-26 06:39:58');
+INSERT INTO "projects" ("id","title","description","organization","tech_stack","order","created_at") VALUES(5,'Custom CMS & Web Applications','Began as an intern and transitioned to a developer role, creating scalable, tailored Content Management Systems and small-scale websites for news agencies and small organizations.','BentRay','Core PHP, Laravel, Backend Development',5,'2026-06-26 06:39:58');
+INSERT INTO "projects" ("id","title","description","organization","tech_stack","order","created_at") VALUES(6,'Modern Developer Portfolio','A high-performance, edge-rendered portfolio website built with modern web technologies. Integrated Cloudflare D1 (SQLite) for the database and R2/S3 for object storage, ensuring global low latency.','Personal Project','Next.js, React, Cloudflare Edge, D1 (SQLite), R2/S3',6,'2026-06-26 06:39:58');
+DELETE FROM sqlite_sequence;
+INSERT INTO "sqlite_sequence" ("name","seq") VALUES('d1_migrations',13);
+INSERT INTO "sqlite_sequence" ("name","seq") VALUES('users',1);
+INSERT INTO "sqlite_sequence" ("name","seq") VALUES('categories',5);
+INSERT INTO "sqlite_sequence" ("name","seq") VALUES('tags',18);
+INSERT INTO "sqlite_sequence" ("name","seq") VALUES('blogs',11);
+INSERT INTO "sqlite_sequence" ("name","seq") VALUES('blog_tags',19);
+INSERT INTO "sqlite_sequence" ("name","seq") VALUES('social_profiles',5);
+INSERT INTO "sqlite_sequence" ("name","seq") VALUES('profiles',2);
+INSERT INTO "sqlite_sequence" ("name","seq") VALUES('educations',4);
+INSERT INTO "sqlite_sequence" ("name","seq") VALUES('experiences',5);
+INSERT INTO "sqlite_sequence" ("name","seq") VALUES('stats',7);
+INSERT INTO "sqlite_sequence" ("name","seq") VALUES('interests',16);
+INSERT INTO "sqlite_sequence" ("name","seq") VALUES('projects',6);
+CREATE INDEX idx_blogs_slug ON blogs(slug);
+CREATE INDEX idx_blogs_published ON blogs(published);
+CREATE INDEX idx_blogs_category_id ON blogs(category_id);
+CREATE INDEX idx_blogs_author_id ON blogs(author_id);
+CREATE INDEX idx_categories_slug ON categories(slug);
+CREATE INDEX idx_tags_slug ON tags(slug);
+CREATE INDEX idx_blog_tags_blog_id ON blog_tags(blog_id);
+CREATE INDEX idx_blog_tags_tag_id ON blog_tags(tag_id);
+CREATE INDEX idx_contacts_read ON contacts(read);
+CREATE INDEX idx_users_uid ON users(uid);
