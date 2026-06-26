@@ -4,6 +4,8 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from './src/db/index';
 import { users } from './src/db/schema';
 import { eq } from 'drizzle-orm';
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -11,6 +13,50 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        try {
+          const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
+          const db = getDb(env.DB);
+          
+          const user = await db.select().from(users).where(eq(users.email, credentials.email as string)).get();
+          
+          if (!user || !user.password) {
+            return null; // User not found or no password set
+          }
+
+          const isPasswordValid = await bcrypt.compare(credentials.password as string, user.password);
+          
+          if (!isPasswordValid) {
+            return null;
+          }
+          
+          if (user.role !== 'admin') {
+            return null;
+          }
+
+          return {
+            id: user.uid,
+            email: user.email,
+            name: user.name,
+            image: user.image,
+            role: user.role
+          };
+        } catch (e) {
+          console.error("Credentials error:", e);
+          return null;
+        }
+      }
+    })
   ],
   session: {
     strategy: "jwt",
@@ -54,15 +100,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         // If they successfully signed in through the logic above, they are an admin
-        token.role = "admin";
+        token.role = (user as any).role || "admin";
+        token.image = user.image;
+        token.name = user.name;
       }
       return token;
     },
     // Exposing the role on the session object
     async session({ session, token }) {
       if (session.user) {
-        // @ts-expect-error adding role to session
+        // @ts-expect-error adding extra fields
         session.user.role = token.role;
+        // @ts-expect-error
+        session.user.image = token.image as string | undefined || session.user.image;
+        // @ts-expect-error
+        session.user.name = token.name as string | undefined || session.user.name;
       }
       return session;
     },

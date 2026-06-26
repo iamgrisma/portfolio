@@ -5,7 +5,10 @@ import { relations } from 'drizzle-orm';
 export const users = sqliteTable('users', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   uid: text('uid').notNull().unique(),
-  email: text('email').notNull(),
+  name: text('name'),
+  email: text('email').notNull().unique(),
+  password: text('password'), // hashed password for credentials auth
+  image: text('image'), // profile picture URL
   role: text('role').notNull().default('user'), // 'admin' or 'user'
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
@@ -141,6 +144,7 @@ export const interests = sqliteTable('interests', {
 // ===== RELATIONS =====
 export const usersRelations = relations(users, ({ many }) => ({
   blogs: many(blogs),
+  media: many(media),
 }));
 
 export const categoriesRelations = relations(categories, ({ many }) => ({
@@ -185,7 +189,6 @@ export const contactRepliesRelations = relations(contactReplies, ({ one }) => ({
   }),
 }));
 
-// ===== PROJECTS =====
 export const projects = sqliteTable('projects', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   title: text('title').notNull(),
@@ -195,4 +198,35 @@ export const projects = sqliteTable('projects', {
   order: integer('order').notNull().default(0),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
+
+// ===== MEDIA =====
+export const media = sqliteTable('media', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  filename: text('filename').notNull(),
+  originalFilename: text('original_filename').notNull(),
+  r2Key: text('r2_key').notNull().unique(),
+  url: text('url').notNull(),
+  altText: text('alt_text'),
+  caption: text('caption'),
+  mimeType: text('mime_type').notNull(),
+  size: integer('size').notNull(),
+  folder: text('folder').notNull(), // 'Admin Media', 'Featured Images', 'Blog Images', etc.
+  uploadedBy: integer('uploaded_by').references(() => users.id),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
+// ===== SITE SETTINGS =====
+export const siteSettings = sqliteTable('site_settings', {
+  key: text('key').primaryKey(), // e.g. 'favicon', 'logo', 'seo_title'
+  value: text('value').notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
+export const mediaRelations = relations(media, ({ one }) => ({
+  uploadedBy: one(users, {
+    fields: [media.uploadedBy],
+    references: [users.id],
+  }),
+}));
 

@@ -4,6 +4,7 @@ import * as schema from './schema';
 // CloudFlare env type for D1
 export interface CloudflareEnv {
   DB: D1Database;
+  R2_STORAGE: R2Bucket;
   APP_ENV?: string;
   TURNSTILE_SECRET_KEY?: string;
   BREVO_API_KEY?: string;

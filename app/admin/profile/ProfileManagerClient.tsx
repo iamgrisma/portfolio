@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash2, Save, User, GraduationCap, Briefcase, Heart, Edit2, X, BarChart } from "lucide-react";
+import { Plus, Trash2, Save, User, GraduationCap, Briefcase, Heart, Edit2, X, BarChart, Lock, Mail, Image as ImageIcon } from "lucide-react";
 import { updateProfile, addEducation, deleteEducation, updateEducation, addExperience, deleteExperience, updateExperience, addInterest, deleteInterest, addStat, updateStat, deleteStat } from "./actions";
 import IconPicker from "@/src/components/IconPicker";
+import { getAccountProfile, updateAccountProfile } from "@/src/lib/apiClient";
+import MediaPicker from "../components/MediaPicker";
 
 type ProfileData = {
   profile: any;
@@ -115,6 +117,43 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
   const [editingExpId, setEditingExpId] = useState<number | null>(null);
   const [editingStatId, setEditingStatId] = useState<number | null>(null);
 
+  // Account Settings State
+  const [account, setAccount] = useState({ name: "", email: "", image: "", password: "", newPassword: "" });
+  const [isSavingAccount, setIsSavingAccount] = useState(false);
+  const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
+
+  // Load account data on mount
+  import { useEffect } from "react";
+  useEffect(() => {
+    getAccountProfile().then(res => {
+      if (res.success && res.data) {
+        setAccount(prev => ({ ...prev, name: res.data.name || "", email: res.data.email || "", image: res.data.image || "" }));
+      }
+    }).catch(console.error);
+  }, []);
+
+  const handleAccountSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingAccount(true);
+    try {
+      const dataToUpdate: any = {
+        name: account.name,
+        email: account.email,
+        image: account.image,
+      };
+      if (account.newPassword) {
+        dataToUpdate.password = account.newPassword;
+      }
+      await updateAccountProfile(dataToUpdate);
+      alert("Account updated successfully!");
+      setAccount(prev => ({ ...prev, password: "", newPassword: "" }));
+    } catch (err: any) {
+      alert(err.message || "Failed to update account");
+    } finally {
+      setIsSavingAccount(false);
+    }
+  };
+
   const handleProfileSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
@@ -130,7 +169,86 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
         <p className="text-dark-200">Manage your personal information, education, experience, and interests.</p>
       </div>
 
-      {/* BASIC INFO */}
+      {/* ACCOUNT SETTINGS (Admin User) */}
+      <div className="glass-card p-6 rounded-2xl">
+        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+          <div className="p-2 bg-indigo-500/10 rounded-lg text-indigo-400">
+            <Lock className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-white">Account Settings</h2>
+            <p className="text-xs text-dark-300 mt-1">Update your login email, password, and admin avatar.</p>
+          </div>
+        </div>
+        
+        <form onSubmit={handleAccountSave} className="space-y-4">
+          <div className="flex items-start gap-6">
+            <div className="w-24 h-24 bg-dark-900 border border-white/10 rounded-full flex items-center justify-center overflow-hidden relative group shrink-0">
+              {account.image ? (
+                <>
+                  <img src={account.image} alt="Avatar" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button 
+                      type="button"
+                      onClick={() => setAccount(prev => ({ ...prev, image: '' }))}
+                      className="p-1.5 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <User className="w-8 h-8 text-dark-400" />
+              )}
+            </div>
+            
+            <div className="flex-1 space-y-4">
+              <button
+                type="button"
+                onClick={() => setMediaPickerOpen(true)}
+                className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm font-medium hover:bg-white/10 transition text-white"
+              >
+                Change Avatar
+              </button>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-dark-200">Admin Name</label>
+                  <input type="text" className="admin-input" required value={account.name} onChange={e => setAccount({...account, name: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-dark-200">Login Email</label>
+                  <input type="email" className="admin-input" required value={account.email} onChange={e => setAccount({...account, email: e.target.value})} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/5">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-dark-200">New Password (optional)</label>
+                  <input type="password" placeholder="Leave blank to keep current" className="admin-input" value={account.newPassword} onChange={e => setAccount({...account, newPassword: e.target.value})} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-2">
+            <button type="submit" disabled={isSavingAccount} className="btn-primary flex items-center gap-2 text-sm bg-indigo-600 hover:bg-indigo-700">
+              <Save className="w-4 h-4" />
+              {isSavingAccount ? "Saving..." : "Save Account"}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <MediaPicker
+        isOpen={mediaPickerOpen}
+        onClose={() => setMediaPickerOpen(false)}
+        onSelect={(media) => setAccount(prev => ({ ...prev, image: media.url }))}
+        title="Select Avatar"
+        accept="image/*"
+      />
+
+      {/* BASIC INFO (Public Profile) */}
       <div className="glass-card p-6 rounded-2xl">
         <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
           <div className="p-2 bg-accent-500/10 rounded-lg text-accent-400">

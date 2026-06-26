@@ -17,6 +17,12 @@
 			"migrations_dir": "migrations"
 		}
 	],
+	"r2_buckets": [
+		{
+			"binding": "R2_STORAGE",
+			"bucket_name": "raksha"
+		}
+	],
 	"vars": {
 		"APP_ENV": "production"
 	}

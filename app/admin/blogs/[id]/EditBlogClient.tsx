@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Save, Eye, Tag, ImageIcon } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Tag, ImageIcon, Image as ImageIconSolid, X } from 'lucide-react';
 import { updateBlog } from '../actions';
+import MediaPicker from '../../components/MediaPicker';
 
 const CATEGORIES = ['Governance', 'Community', 'Policy', 'IT Systems', 'Health'];
 const AVAILABLE_TAGS = ['Digital', 'Government', 'Technology', 'Nepal', 'Outreach', 'Inclusion', 'Planning', 'Future', 'Innovation', 'Livestock', 'Disease', 'Prevention', 'Zoonotic', 'Public Health', 'Rural', 'Empowerment'];
@@ -18,6 +19,10 @@ export default function EditBlogClient({ initialBlog }: { initialBlog: any }) {
   const [content, setContent] = useState(initialBlog.content || '');
   const [excerpt, setExcerpt] = useState(initialBlog.excerpt || '');
   const [published, setPublished] = useState(initialBlog.published || false);
+  const [featuredImage, setFeaturedImage] = useState(initialBlog.featuredImage || '');
+  
+  const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
+  const [mediaPickerTarget, setMediaPickerTarget] = useState<'featured' | 'content' | null>(null);
 
   const generateSlug = (title: string) => {
     return title
@@ -51,6 +56,7 @@ export default function EditBlogClient({ initialBlog }: { initialBlog: any }) {
         content,
         excerpt,
         published,
+        featuredImage,
         categoryName: category,
         tagNames: selectedTags
       });
@@ -131,11 +137,18 @@ export default function EditBlogClient({ initialBlog }: { initialBlog: any }) {
           <div className="admin-card rounded-xl p-6">
             <label className="block text-sm font-medium text-dark-100 mb-2">Content</label>
             <div className="glass rounded-lg p-2 mb-3 flex gap-1 flex-wrap">
-              {['B', 'I', 'U', 'H1', 'H2', 'H3', '•', '1.', '"', '🔗', '📷'].map((btn) => (
-                <button key={btn} className="w-8 h-8 rounded text-xs font-bold text-dark-200 hover:text-white hover:bg-white/10 transition-colors flex items-center justify-center">
+              {['B', 'I', 'U', 'H1', 'H2', 'H3', '•', '1.', '"', '🔗'].map((btn) => (
+                <button key={btn} type="button" className="w-8 h-8 rounded text-xs font-bold text-dark-200 hover:text-white hover:bg-white/10 transition-colors flex items-center justify-center">
                   {btn}
                 </button>
               ))}
+              <button 
+                type="button" 
+                onClick={() => { setMediaPickerTarget('content'); setMediaPickerOpen(true); }}
+                className="w-8 h-8 rounded text-xs font-bold text-dark-200 hover:text-white hover:bg-white/10 transition-colors flex items-center justify-center"
+              >
+                📷
+              </button>
             </div>
             <textarea
               value={content}
@@ -216,14 +229,48 @@ export default function EditBlogClient({ initialBlog }: { initialBlog: any }) {
           {/* Featured Image */}
           <div className="admin-card rounded-xl p-6 space-y-4">
             <h3 className="text-sm font-bold text-white uppercase tracking-wider">Featured Image</h3>
-            <div className="glass rounded-xl p-8 border-dashed border-2 border-white/10 text-center hover:border-accent-500/30 transition-colors cursor-pointer">
-              <ImageIcon className="w-8 h-8 text-dark-400 mx-auto mb-2" />
-              <p className="text-xs text-dark-300">Click to upload image</p>
-              <p className="text-[10px] text-dark-400 mt-1">PNG, JPG up to 5MB</p>
-            </div>
+            
+            {featuredImage ? (
+              <div className="relative rounded-xl overflow-hidden group">
+                <img src={featuredImage} alt="Featured" className="w-full aspect-video object-cover" />
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                  <button onClick={() => { setMediaPickerTarget('featured'); setMediaPickerOpen(true); }} className="p-2 bg-white text-dark-900 rounded-lg hover:bg-gray-200">
+                    <ImageIconSolid className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => setFeaturedImage('')} className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div 
+                onClick={() => { setMediaPickerTarget('featured'); setMediaPickerOpen(true); }}
+                className="glass rounded-xl p-8 border-dashed border-2 border-white/10 text-center hover:border-accent-500/30 transition-colors cursor-pointer"
+              >
+                <ImageIcon className="w-8 h-8 text-dark-400 mx-auto mb-2" />
+                <p className="text-xs text-dark-300">Click to choose image</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      <MediaPicker
+        isOpen={mediaPickerOpen}
+        onClose={() => setMediaPickerOpen(false)}
+        onSelect={(media) => {
+          if (mediaPickerTarget === 'featured') {
+            setFeaturedImage(media.url);
+          } else if (mediaPickerTarget === 'content') {
+            // Append markdown image to content
+            const markdownImage = `\n![${media.alt || 'image'}](${media.url})\n`;
+            setContent(prev => prev + markdownImage);
+          }
+          setMediaPickerTarget(null);
+        }}
+        title="Select Image"
+        accept="image/*"
+      />
     </div>
   );
 }

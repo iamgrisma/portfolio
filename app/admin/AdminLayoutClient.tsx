@@ -6,16 +6,18 @@ import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import {
   LayoutDashboard, FileText, FolderOpen, MessageSquare,
-  Share2, LogOut, ChevronRight, User
+  Share2, LogOut, ChevronRight, User, Image, Settings
 } from 'lucide-react';
 
 const SIDEBAR_LINKS = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard },
   { href: '/admin/profile', label: 'Profile', icon: User },
+  { href: '/admin/media', label: 'Media Gallery', icon: Image },
   { href: '/admin/blogs', label: 'Blog Posts', icon: FileText },
   { href: '/admin/categories', label: 'Categories', icon: FolderOpen },
   { href: '/admin/contacts', label: 'Messages', icon: MessageSquare },
   { href: '/admin/socials', label: 'Social Links', icon: Share2 },
+  { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
 export default function AdminLayoutClient({ children, unreadCount }: { children: ReactNode, unreadCount: number }) {
