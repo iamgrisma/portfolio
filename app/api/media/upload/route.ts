@@ -5,7 +5,7 @@ import { media } from '@/src/db/schema';
 import { eq } from 'drizzle-orm';
 import { auth } from '@/auth';
 
-export const runtime = 'edge';
+
 
 function sanitizeFilename(filename: string): string {
     const parts = filename.split('.');

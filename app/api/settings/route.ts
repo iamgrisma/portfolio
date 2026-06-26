@@ -4,7 +4,7 @@ import { getDb, CloudflareEnv } from '@/src/db';
 import { siteSettings } from '@/src/db/schema';
 import { auth } from '@/auth';
 
-export const runtime = 'edge';
+
 
 export async function GET() {
     try {

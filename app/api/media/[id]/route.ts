@@ -5,7 +5,7 @@ import { media } from '@/src/db/schema';
 import { eq } from 'drizzle-orm';
 import { auth } from '@/auth';
 
-export const runtime = 'edge';
+
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {

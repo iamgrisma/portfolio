@@ -5,7 +5,7 @@ import { media } from '@/src/db/schema';
 import { desc, and, eq, like, count, sql } from 'drizzle-orm';
 import { auth } from '@/auth';
 
-export const runtime = 'edge';
+
 
 export async function GET(req: Request) {
     try {
