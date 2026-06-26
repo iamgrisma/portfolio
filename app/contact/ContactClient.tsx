@@ -75,8 +75,8 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
     {
       icon: Mail,
       label: 'Email',
-      value: publicEmail || 'contact@kamalpb.com.np',
-      href: `mailto:${publicEmail || 'contact@kamalpb.com.np'}`,
+      value: publicEmail || 'contact@raksha.com.np',
+      href: `mailto:${publicEmail || 'contact@raksha.com.np'}`,
       color: 'from-blue-500 to-indigo-500',
     },
     {

@@ -10,7 +10,7 @@ INSERT INTO "interests" ("id","name","category","created_at") VALUES(13,'.NET Fr
 INSERT INTO "interests" ("id","name","category","created_at") VALUES(14,'Laravel (PHP)','Backend',NULL);
 INSERT INTO "interests" ("id","name","category","created_at") VALUES(15,'Oracle DB','Database',NULL);
 INSERT INTO "interests" ("id","name","category","created_at") VALUES(16,'System Integration','Architecture',NULL);
-INSERT INTO "users" ("id","uid","email","role","created_at") VALUES(1,'admin-001','kamalbaral@mail.com','admin',1782453099);
+INSERT INTO "users" ("id","uid","email","role","created_at") VALUES(1,'admin-001','rakshamishra556@gmail.com','admin',1782453099);
 INSERT INTO "categories" ("id","name","slug","color","created_at") VALUES(1,'Governance','governance','#3b82f6',1782453099);
 INSERT INTO "categories" ("id","name","slug","color","created_at") VALUES(2,'Community','community','#10b981',1782453099);
 INSERT INTO "categories" ("id","name","slug","color","created_at") VALUES(3,'Policy','policy','#8b5cf6',1782453099);

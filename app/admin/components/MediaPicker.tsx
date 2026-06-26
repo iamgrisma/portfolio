@@ -108,7 +108,7 @@ export default function MediaPicker({ isOpen, onClose, onSelect, accept, title =
         setUploading(true);
         setUploadError('');
         try {
-            const response = await uploadMedia(file, uploadFolder);
+            const response: any = await uploadMedia(file, uploadFolder);
             if (response.success && response.data) {
                 setActiveTab('library');
                 setPage(1);
