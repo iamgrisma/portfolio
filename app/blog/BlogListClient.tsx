@@ -26,7 +26,7 @@ type SocialLink = {
   icon: string;
 };
 
-export default function BlogListClient({ socials, initialBlogs }: { socials: SocialLink[], initialBlogs: BlogPost[] }) {
+export default function BlogListClient({ initialBlogs = [], socials = [], settings = {} }: { initialBlogs: BlogPost[], socials: SocialLink[], settings?: Record<string, string> }) {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -46,7 +46,7 @@ export default function BlogListClient({ socials, initialBlogs }: { socials: Soc
 
   return (
     <main className="min-h-screen bg-dark-900 overflow-hidden">
-      <Navbar />
+      <Navbar settings={settings} />
 
       {/* Hero */}
       <section className="relative pt-32 pb-16 px-6 lg:px-8 hero-bg">
@@ -196,7 +196,7 @@ export default function BlogListClient({ socials, initialBlogs }: { socials: Soc
         </div>
       </section>
 
-      <Footer socials={socials} />
+      <Footer socials={socials} settings={settings} />
     </main>
   );
 }

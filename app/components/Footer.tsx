@@ -9,7 +9,7 @@ interface SocialLink {
   icon: string;
 }
 
-export default function Footer({ socials = [] }: { socials?: SocialLink[] }) {
+export default function Footer({ socials = [], settings = {} }: { socials?: SocialLink[], settings?: Record<string, string> }) {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -23,12 +23,16 @@ export default function Footer({ socials = [] }: { socials?: SocialLink[] }) {
             {/* Brand */}
             <div className="md:col-span-2 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center text-white font-bold text-lg font-[var(--font-heading)]">
-                  RM
-                </div>
+                {settings.logoUrl ? (
+                  <img src={settings.logoUrl} alt={settings.siteName || 'Logo'} className="w-10 h-10 rounded-xl object-cover" />
+                ) : (
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center text-white font-bold text-lg font-[var(--font-heading)]">
+                    {settings.siteName ? settings.siteName.charAt(0).toUpperCase() : 'RM'}
+                  </div>
+                )}
                 <div>
-                  <h3 className="text-white font-bold font-[var(--font-heading)]">Raksha</h3>
-                  <p className="text-xs text-dark-200 uppercase tracking-widest">IT Professional</p>
+                  <h3 className="text-white font-bold font-[var(--font-heading)]">{settings.siteName || 'Raksha'}</h3>
+                  <p className="text-xs text-dark-200 uppercase tracking-widest">{settings.seoTitle?.split('|')[1]?.trim() || 'IT Professional'}</p>
                 </div>
               </div>
               <p className="text-dark-200 text-sm leading-relaxed max-w-sm">
@@ -87,7 +91,7 @@ export default function Footer({ socials = [] }: { socials?: SocialLink[] }) {
         <div className="border-t border-white/5">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-xs text-dark-300">
-              &copy; {currentYear} Raksha. All rights reserved.
+              &copy; {currentYear} {settings.siteName || 'Raksha'}. All rights reserved.
             </p>
             <p className="text-xs text-dark-300 flex items-center gap-1">
               Made with <Heart className="w-3 h-3 text-red-400 fill-red-400" /> in Remote

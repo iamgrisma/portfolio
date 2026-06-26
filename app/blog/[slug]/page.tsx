@@ -4,13 +4,34 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { CloudflareEnv } from '@/src/db';
-import { getCachedSocials, getCachedBlogBySlug, getCachedRelatedBlogs } from '@/src/db/queries';
+import { getCachedSocials, getCachedBlogBySlug, getCachedRelatedBlogs, getCachedSiteSettings } from '@/src/db/queries';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
+  const resolvedParams = await params;
+  const post = await getCachedBlogBySlug(env.DB, resolvedParams.slug);
+
+  if (!post || !post.published) {
+    return { title: 'Post Not Found' };
+  }
+
+  return {
+    title: post.title,
+    description: post.excerpt || `Read ${post.title}`,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt || `Read ${post.title}`,
+      images: post.featuredImage ? [{ url: post.featuredImage }] : [],
+    },
+  };
+}
 
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const socials = await getCachedSocials(env.DB);
+  const settings = await getCachedSiteSettings(env.DB);
 
   const resolvedParams = await params;
   
@@ -20,7 +41,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   if (!post || !post.published) {
     return (
       <main className="min-h-screen bg-dark-900 overflow-hidden">
-        <Navbar />
+        <Navbar settings={settings} />
         <section className="pt-32 pb-20 px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <BookOpen className="w-16 h-16 text-dark-400 mx-auto mb-6" />
@@ -43,7 +64,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
   return (
     <main className="min-h-screen bg-dark-900 overflow-hidden">
-      <Navbar />
+      <Navbar settings={settings} />
 
       {/* Article Header */}
       <section className="relative pt-32 pb-16 px-6 lg:px-8 hero-bg">
@@ -70,12 +91,16 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center text-white font-bold text-sm">
-                RM
-              </div>
+              {settings.logoUrl ? (
+                <img src={settings.logoUrl} alt={settings.siteName || 'Logo'} className="w-10 h-10 rounded-full object-cover" />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center text-white font-bold text-sm">
+                  {settings.siteName ? settings.siteName.charAt(0).toUpperCase() : 'RM'}
+                </div>
+              )}
               <div>
-                <p className="text-sm text-white font-medium">Raksha</p>
-                <p className="text-xs text-dark-300">IT Professional</p>
+                <p className="text-sm text-white font-medium">{settings.siteName || 'Raksha'}</p>
+                <p className="text-xs text-dark-300">{settings.seoTitle?.split('|')[1]?.trim() || 'IT Professional'}</p>
               </div>
             </div>
           </div>
@@ -137,7 +162,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         </div>
       </section>
 
-      <Footer socials={socials} />
+      <Footer socials={socials} settings={settings} />
     </main>
   );
 }

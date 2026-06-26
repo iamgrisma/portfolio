@@ -4,6 +4,7 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from '@/src/db';
 import { contacts } from '@/src/db/schema';
 import { eq, and } from 'drizzle-orm';
+import { getCachedSiteSettings } from '@/src/db/queries';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,8 +19,10 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   const uniqueIds = new Set([...unreadRecords.map(r => r.id), ...pendingBookings.map(b => b.id)]);
   const unreadCount = uniqueIds.size;
 
+  const settings = await getCachedSiteSettings(env.DB);
+
   return (
-    <AdminLayoutClient unreadCount={unreadCount}>
+    <AdminLayoutClient unreadCount={unreadCount} settings={settings}>
       {children}
     </AdminLayoutClient>
   );

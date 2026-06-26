@@ -1,18 +1,19 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { CloudflareEnv } from '@/src/db';
-import { getCachedSocials, getCachedAllBlogs } from '@/src/db/queries';
+import { getCachedSocials, getCachedAllBlogs, getCachedSiteSettings } from '@/src/db/queries';
 import BlogListClient, { BlogPost } from './BlogListClient';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Blog | Raksha',
+  title: 'Blog',
   description: 'Articles about IT Systems, tech trends, and web development.',
 };
 
 export default async function BlogPage() {
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const socials = await getCachedSocials(env.DB);
+  const settings = await getCachedSiteSettings(env.DB);
   
   const fetchedBlogs = await getCachedAllBlogs(env.DB);
 
@@ -28,5 +29,5 @@ export default async function BlogPage() {
     featured: index === 0, // Make the most recent post featured
   }));
 
-  return <BlogListClient socials={socials} initialBlogs={formattedBlogs} />;
+  return <BlogListClient initialBlogs={formattedBlogs} socials={socials} settings={settings} />;
 }

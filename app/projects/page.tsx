@@ -1,8 +1,13 @@
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: 'Projects',
+  description: 'View the professional projects and applications I have worked on.',
+};
+
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from '@/src/db';
-import { getCachedProjects, getCachedSocials } from '@/src/db/queries';
+import { getCachedProjects, getCachedSocials, getCachedSiteSettings } from '@/src/db/queries';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import AnimatedSection from '../components/AnimatedSection';
@@ -22,9 +27,10 @@ export default async function ProjectsPage() {
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const db = getDb(env.DB);
 
-  const [projectList, socials] = await Promise.all([
+  const [projectList, socials, settings] = await Promise.all([
     getCachedProjects(env.DB),
-    getCachedSocials(env.DB)
+    getCachedSocials(env.DB),
+    getCachedSiteSettings(env.DB)
   ]);
 
   return (
@@ -32,7 +38,7 @@ export default async function ProjectsPage() {
       <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-900/20 via-slate-950 to-slate-950"></div>
       
       <div className="relative z-10 flex flex-col min-h-screen">
-        <Navbar />
+        <Navbar settings={settings} />
         
         <main className="flex-grow pt-32 pb-20">
           <div className="max-w-6xl mx-auto px-6">
@@ -109,7 +115,7 @@ export default async function ProjectsPage() {
           </div>
         </main>
         
-        <Footer socials={socials} />
+        <Footer socials={socials} settings={settings} />
       </div>
     </div>
   );

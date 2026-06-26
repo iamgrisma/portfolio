@@ -1,6 +1,6 @@
 import { unstable_cache } from 'next/cache';
 import { getDb } from '@/src/db';
-import { profiles, educations, experiences, blogs, stats, socialProfiles, categories, tags, blogTags, interests, projects } from '@/src/db/schema';
+import { profiles, educations, experiences, blogs, stats, socialProfiles, categories, tags, blogTags, interests, projects, siteSettings } from '@/src/db/schema';
 import { eq, desc, asc } from 'drizzle-orm';
 
 // Caching duration (e.g. 1 year, essentially infinite until manually revalidated)
@@ -182,6 +182,23 @@ export const getCachedRelatedBlogs = async (dbBinding: any, currentPostId: numbe
     },
     ['related-blogs-data', currentPostId.toString()],
     { tags: ['blogs'], revalidate: CACHE_TTL }
+  );
+  return getFn();
+};
+
+export const getCachedSiteSettings = async (dbBinding: any) => {
+  const getFn = unstable_cache(
+    async () => {
+      const db = getDb(dbBinding);
+      const rows = await db.select().from(siteSettings);
+      const settings: Record<string, string> = {};
+      for (const row of rows) {
+        settings[row.key] = row.value;
+      }
+      return settings;
+    },
+    ['site-settings-data'],
+    { tags: ['settings'], revalidate: CACHE_TTL }
   );
   return getFn();
 };

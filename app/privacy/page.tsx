@@ -6,18 +6,22 @@ import { getDb, CloudflareEnv } from '@/src/db';
 import { socialProfiles } from '@/src/db/schema';
 
 export const metadata = {
-  title: 'Privacy Policy — Raksha',
-  description: 'Privacy policy for Raksha\'s portfolio website. Learn how we handle your data.',
+  title: 'Privacy Policy',
+  description: 'Privacy policy for this portfolio website. Learn how we handle your data.',
 };
 
 export default async function PrivacyPage() {
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
   const db = getDb(env.DB);
-  const socials = await db.select().from(socialProfiles);
+  
+  const [socials, settings] = await Promise.all([
+    db.select().from(socialProfiles),
+    import('@/src/db/queries').then(m => m.getCachedSiteSettings(env.DB))
+  ]);
 
   return (
     <main className="min-h-screen bg-dark-900 overflow-hidden">
-      <Navbar />
+      <Navbar settings={settings} />
 
       <section className="pt-32 pb-20 px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
@@ -116,7 +120,7 @@ export default async function PrivacyPage() {
         </div>
       </section>
 
-      <Footer socials={socials} />
+      <Footer socials={socials} settings={settings} />
     </main>
   );
 }

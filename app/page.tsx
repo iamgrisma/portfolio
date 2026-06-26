@@ -9,7 +9,7 @@ import Footer from './components/Footer';
 import AnimatedSection from './components/AnimatedSection';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from '@/src/db';
-import { getCachedProfile, getCachedEducations, getCachedExperiences, getCachedLatestBlogs, getCachedStats, getCachedSocials } from '@/src/db/queries';
+import { getCachedProfile, getCachedEducations, getCachedExperiences, getCachedLatestBlogs, getCachedStats, getCachedSocials, getCachedSiteSettings } from '@/src/db/queries';
 // Helper to map icon names based on string
 const getIcon = (name: string) => {
   const lName = name.toLowerCase();
@@ -80,6 +80,8 @@ export default async function Home() {
   });
   const latestBlogs = await getCachedLatestBlogs(env.DB, 3);
   const dynamicStats = await getCachedStats(env.DB);
+  const statsList = await getCachedStats(env.DB);
+  const settings = await getCachedSiteSettings(env.DB);
   const socials = await getCachedSocials(env.DB);
 
   const EXPERIENCE_YEARS = new Date().getFullYear() - 2022;
@@ -114,7 +116,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-dark-900 overflow-hidden">
-      <Navbar />
+      <Navbar settings={settings} />
 
       {/* ===== HERO SECTION ===== */}
       <section className="relative min-h-screen flex items-center hero-bg pt-20">
@@ -427,7 +429,7 @@ export default async function Home() {
         </AnimatedSection>
       </section>
 
-      <Footer socials={socials} />
+      <Footer socials={socials} settings={settings} />
     </main>
   );
 }

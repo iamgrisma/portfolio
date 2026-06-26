@@ -14,7 +14,7 @@ const NAV_LINKS = [
   { href: '/privacy', label: 'Privacy' },
 ];
 
-export default function Navbar() {
+export default function Navbar({ settings = {} }: { settings?: Record<string, string> }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -41,12 +41,16 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center text-white font-bold text-lg font-[var(--font-heading)] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
-              RM
-            </div>
+            {settings.logoUrl ? (
+              <img src={settings.logoUrl} alt={settings.siteName || 'Logo'} className="w-10 h-10 rounded-xl object-cover transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3" />
+            ) : (
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center text-white font-bold text-lg font-[var(--font-heading)] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                {settings.siteName ? settings.siteName.charAt(0).toUpperCase() : 'RM'}
+              </div>
+            )}
             <div className="hidden sm:block">
-              <h1 className="text-sm font-bold text-white tracking-wide font-[var(--font-heading)]">Raksha</h1>
-              <p className="text-[10px] text-dark-200 uppercase tracking-[0.2em]">IT Professional</p>
+              <h1 className="text-sm font-bold text-white tracking-wide font-[var(--font-heading)]">{settings.siteName || 'Raksha'}</h1>
+              <p className="text-[10px] text-dark-200 uppercase tracking-[0.2em]">{settings.seoTitle?.split('|')[1]?.trim() || 'IT Professional'}</p>
             </div>
           </Link>
 

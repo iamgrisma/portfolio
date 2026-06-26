@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import {
   LayoutDashboard, FileText, FolderOpen, MessageSquare,
-  Share2, LogOut, ChevronRight, ChevronDown, User, Image, Settings, Tag
+  Share2, LogOut, ChevronRight, ChevronDown, User, Image, Settings, Tag, Database
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -25,10 +25,11 @@ const SIDEBAR_LINKS = [
   },
   { href: '/admin/contacts', label: 'Messages', icon: MessageSquare },
   { href: '/admin/socials', label: 'Social Links', icon: Share2 },
+  { href: '/admin/cache', label: 'Cache', icon: Database },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
-export default function AdminLayoutClient({ children, unreadCount }: { children: ReactNode, unreadCount: number }) {
+export default function AdminLayoutClient({ children, unreadCount = 0, settings = {} }: { children: ReactNode, unreadCount?: number, settings?: Record<string, string> }) {
   const pathname = usePathname();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({
     'Taxonomy': true // Default open
@@ -44,9 +45,13 @@ export default function AdminLayoutClient({ children, unreadCount }: { children:
       <header className="glass-strong border-b border-white/5 px-6 py-3 flex items-center justify-between shrink-0 z-40">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center text-white font-bold text-sm transition-transform duration-300 group-hover:scale-110">
-              RM
-            </div>
+            {settings.logoUrl ? (
+              <img src={settings.logoUrl} alt={settings.siteName || 'Logo'} className="w-9 h-9 rounded-xl object-cover transition-transform duration-300 group-hover:scale-110" />
+            ) : (
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center text-white font-bold text-sm transition-transform duration-300 group-hover:scale-110">
+                {settings.siteName ? settings.siteName.charAt(0).toUpperCase() : 'RM'}
+              </div>
+            )}
           </Link>
           <div className="hidden sm:flex items-center gap-2 text-sm">
             <Link href="/" className="text-dark-300 hover:text-white transition-colors">Home</Link>

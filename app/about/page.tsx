@@ -6,7 +6,7 @@ import Footer from '../components/Footer';
 import AnimatedSection from '../components/AnimatedSection';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb, CloudflareEnv } from '@/src/db';
-import { getCachedProfile, getCachedEducations, getCachedExperiences, getCachedInterests, getCachedSocials } from '@/src/db/queries';
+import { getCachedProfile, getCachedEducations, getCachedExperiences, getCachedInterests, getCachedSocials, getCachedSiteSettings } from '@/src/db/queries';
 // Helper to map icon names based on string
 const getIcon = (name: string) => {
   const lName = name.toLowerCase();
@@ -32,6 +32,11 @@ const SKILLS = [
 ];
 
 export const dynamic = 'force-dynamic';
+
+export const metadata = {
+  title: 'About',
+  description: 'Learn more about my professional journey, education, and skills.',
+};
 
 export default async function AboutPage() {
   const { env } = (await getCloudflareContext({ async: true })) as unknown as { env: CloudflareEnv };
@@ -68,6 +73,7 @@ export default async function AboutPage() {
   
   const interestsList = await getCachedInterests(env.DB);
   const socials = await getCachedSocials(env.DB);
+  const settings = await getCachedSiteSettings(env.DB);
 
   const EXPERIENCE_YEARS = new Date().getFullYear() - 2022;
 
@@ -98,7 +104,7 @@ export default async function AboutPage() {
 
   return (
     <main className="min-h-screen bg-dark-900 overflow-hidden">
-      <Navbar />
+      <Navbar settings={settings} />
 
       {/* Hero */}
       <section className="relative pt-32 pb-20 px-6 lg:px-8 hero-bg">
@@ -280,7 +286,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <Footer socials={socials} />
+      <Footer socials={socials} settings={settings} />
     </main>
   );
 }

@@ -20,9 +20,10 @@ type ContactInfoProps = {
   phone: string;
   publicEmail: string;
   socials: SocialLink[];
+  settings?: Record<string, string>;
 };
 
-export default function ContactClient({ currentAddress, phone, publicEmail, socials = [] }: ContactInfoProps) {
+export default function ContactClient({ currentAddress, phone, publicEmail, socials = [], settings = {} }: ContactInfoProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [activeTab, setActiveTab] = useState<'contact' | 'inquiry'>('contact');
 
@@ -97,9 +98,9 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
 
   return (
     <main className="min-h-screen bg-dark-900 overflow-hidden">
-      <Navbar />
+      <Navbar settings={settings} />
 
-      {/* Hero */}
+      {/* Hero Section */}
       <section className="relative pt-32 pb-16 px-6 lg:px-8 hero-bg">
         <div className="blob-green -top-20 right-0 opacity-50" />
         <div className="max-w-7xl mx-auto relative z-10">
@@ -314,7 +315,7 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
         </div>
       </section>
 
-      <Footer socials={socials} />
+      <Footer socials={socials} settings={settings} />
     </main>
   );
 }
