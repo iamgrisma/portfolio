@@ -94,7 +94,7 @@ export default function ImageCompressorModal({ file, onConfirm, onCancel }: Imag
         }
 
         const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-        const newFileName = `${baseName}_compressed.${extension}`;
+        const newFileName = `${baseName}.${extension}`;
 
         canvas.toBlob(
             (blob) => {
