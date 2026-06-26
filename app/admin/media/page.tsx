@@ -62,7 +62,7 @@ export default function MediaGalleryPage() {
                 folder,
                 '',
                 searchDebounced
-            );
+            ) as any;
             if (response.success && response.data) {
                 setItems(response.data.items || []);
                 setTotalPages(response.data.pagination?.total_pages || 1);
@@ -82,7 +82,7 @@ export default function MediaGalleryPage() {
         setUploading(true);
         setUploadError('');
         try {
-            const response = await uploadMedia(file, uploadFolder);
+            const response: any = await uploadMedia(file, uploadFolder);
             if (response.success && response.data) {
                 setActiveTab('library');
                 setPage(1);
