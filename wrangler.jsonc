@@ -1,5 +1,5 @@
 {
-	"name": "portfolio",
+	"name": "raksha",
 	"main": ".open-next/worker.js",
 	"compatibility_date": "2025-06-01",
 	"compatibility_flags": [
@@ -12,8 +12,8 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "portfolio",
-			"database_id": "a3f61014-754c-465c-97bd-da97c8590dd7",
+			"database_name": "raksha",
+			"database_id": "d4c93453-f9f9-4011-95bd-8e44b036d93a",
 			"migrations_dir": "migrations"
 		}
 	],

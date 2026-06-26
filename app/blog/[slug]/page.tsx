@@ -18,9 +18,9 @@ const BLOG_CONTENT: Record<string, {
     title: 'Digital Governance in Local Municipalities',
     content: [
       'Public administration is undergoing a massive shift towards digital governance. By embracing digital tools, local municipalities can significantly improve service delivery, transparency, and citizen engagement.',
-      'In Nepal, the transition to digital governance presents both opportunities and challenges. Rural municipalities like those in Sindhuli district are gradually adopting technology for citizen services, land records, and public health tracking.',
+      'In Nepal, the transition to digital governance presents both opportunities and challenges. Rural municipalities like those in Remote district are gradually adopting technology for citizen services, land records, and public health tracking.',
       'This shift requires not only technological investment but also a cultural change within government institutions. Training public servants to effectively use new systems is just as important as the systems themselves.',
-      'Key areas where digital governance can make an immediate impact include: birth and death registration, property tax collection, veterinary service scheduling, and public health reporting. Each of these services, when digitized, reduces paperwork, speeds up processing, and increases accessibility for citizens.',
+      'Key areas where digital governance can make an immediate impact include: birth and death registration, property tax collection, Software Engineering service scheduling, and public health reporting. Each of these services, when digitized, reduces paperwork, speeds up processing, and increases accessibility for citizens.',
       'Looking ahead, the integration of mobile platforms and cloud-based solutions will further democratize access to government services, especially for communities in remote hill districts of Nepal.',
     ],
     date: '2023-10-15',
@@ -33,7 +33,7 @@ const BLOG_CONTENT: Record<string, {
     content: [
       'Effective community outreach is the backbone of good governance. In 2024, local governments need to adopt multi-channel strategies to ensure all community voices are heard.',
       'Traditional methods like town hall meetings remain important, but they must be supplemented with digital platforms, social media engagement, and targeted awareness campaigns.',
-      'In my experience working in Sindhuli, the most successful outreach programs are those that combine local knowledge with modern communication tools. Door-to-door campaigns, community radio broadcasts, and partnership with local organizations create a comprehensive outreach network.',
+      'In my experience working in Remote, the most successful outreach programs are those that combine local knowledge with modern communication tools. Door-to-door campaigns, community radio broadcasts, and partnership with local organizations create a comprehensive outreach network.',
       'Special attention must be given to marginalized groups — women, indigenous communities, and people with disabilities — to ensure inclusive participation in community decision-making processes.',
     ],
     date: '2023-11-02',
@@ -125,8 +125,8 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                 KB
               </div>
               <div>
-                <p className="text-sm text-white font-medium">Kamal Baral</p>
-                <p className="text-xs text-dark-300">Veterinary Technician</p>
+                <p className="text-sm text-white font-medium">Raksha</p>
+                <p className="text-xs text-dark-300">IT Professional</p>
               </div>
             </div>
           </div>

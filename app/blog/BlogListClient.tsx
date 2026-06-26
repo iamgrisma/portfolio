@@ -7,7 +7,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import AnimatedSection from '../components/AnimatedSection';
 
-const CATEGORIES = ['All', 'Governance', 'Community', 'Policy', 'Veterinary', 'Health'];
+const CATEGORIES = ['All', 'Governance', 'Community', 'Policy', 'Software Engineering', 'Health'];
 
 const BLOG_POSTS = [
   {
@@ -49,7 +49,7 @@ const BLOG_POSTS = [
     excerpt: 'Comprehensive guide to preventing common livestock diseases in rural Nepalese communities through vaccination and hygiene practices.',
     date: '2024-01-20',
     slug: 'livestock-disease-prevention',
-    category: 'Veterinary',
+    category: 'Software Engineering',
     tags: ['Livestock', 'Disease', 'Prevention'],
     readingTime: '7 min read',
     featured: false,
@@ -57,7 +57,7 @@ const BLOG_POSTS = [
   {
     id: 5,
     title: 'Zoonotic Diseases: Bridging Animal and Human Health',
-    excerpt: 'Understanding the critical link between animal health and human health, and how veterinary professionals play a key role in public health.',
+    excerpt: 'Understanding the critical link between animal health and human health, and how Software Engineering professionals play a key role in public health.',
     date: '2024-02-15',
     slug: 'zoonotic-diseases',
     category: 'Health',
@@ -117,7 +117,7 @@ export default function BlogListClient({ socials }: { socials: SocialLink[] }) {
               Latest <span className="gradient-text-blue">Insights</span>
             </h1>
             <p className="text-dark-200 mt-4">
-              Thoughts on veterinary science, governance, community development, and public health.
+              Thoughts on Software Engineering science, governance, community development, and public health.
             </p>
           </AnimatedSection>
         </div>

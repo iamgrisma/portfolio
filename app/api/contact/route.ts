@@ -75,7 +75,7 @@ export async function POST(req: Request) {
 
         const payload = {
           sender: { email: 'contact@kamalpb.com.np', name: 'Portfolio Contact Form' },
-          to: [{ email: 'baralkamal2054@gmail.com', name: 'Kamal Baral' }],
+          to: [{ email: 'baralkamal2054@gmail.com', name: 'Raksha' }],
           replyTo: { email, name },
           subject,
           htmlContent

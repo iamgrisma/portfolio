@@ -6,8 +6,8 @@ import { getDb, CloudflareEnv } from '@/src/db';
 import { socialProfiles } from '@/src/db/schema';
 
 export const metadata = {
-  title: 'Privacy Policy — Kamal Baral',
-  description: 'Privacy policy for Kamal Baral\'s portfolio website. Learn how we handle your data.',
+  title: 'Privacy Policy — Raksha',
+  description: 'Privacy policy for Raksha\'s portfolio website. Learn how we handle your data.',
 };
 
 export default async function PrivacyPage() {
@@ -35,7 +35,7 @@ export default async function PrivacyPage() {
             <div className="glass-card rounded-2xl p-8 space-y-4">
               <h2 className="text-xl font-bold text-white font-[var(--font-heading)]">1. Introduction</h2>
               <p>
-                Welcome to Kamal Baral&apos;s portfolio website. This privacy policy explains how we collect,
+                Welcome to Raksha&apos;s portfolio website. This privacy policy explains how we collect,
                 use, and protect your personal information when you visit our website or interact with our services.
               </p>
               <p>

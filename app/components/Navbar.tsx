@@ -44,7 +44,7 @@ export default function Navbar() {
               KB
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-sm font-bold text-white tracking-wide font-[var(--font-heading)]">Kamal Baral</h1>
+              <h1 className="text-sm font-bold text-white tracking-wide font-[var(--font-heading)]">Raksha</h1>
               <p className="text-[10px] text-dark-200 uppercase tracking-[0.2em]">Vet Technician</p>
             </div>
           </Link>

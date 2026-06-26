@@ -1,5 +1,5 @@
 {
-  "name": "portfolio",
+  "name": "raksha",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -13,8 +13,8 @@
     "cf:preview": "opennextjs-cloudflare preview",
     "cf:deploy": "opennextjs-cloudflare deploy",
     "db:generate": "drizzle-kit generate",
-    "db:migrate:local": "wrangler d1 migrations apply portfolio --local",
-    "db:migrate:remote": "wrangler d1 migrations apply portfolio --remote",
+    "db:migrate:local": "wrangler d1 migrations apply raksha --local",
+    "db:migrate:remote": "wrangler d1 migrations apply raksha --remote",
     "db:studio": "drizzle-kit studio",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"

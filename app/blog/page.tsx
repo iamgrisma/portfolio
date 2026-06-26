@@ -6,8 +6,8 @@ import BlogListClient from './BlogListClient';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Blog | Kamal Baral',
-  description: 'Articles about veterinary science, governance, and community development.',
+  title: 'Blog | Raksha',
+  description: 'Articles about Software Engineering science, governance, and community development.',
 };
 
 export default async function BlogPage() {

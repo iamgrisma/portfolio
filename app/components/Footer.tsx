@@ -27,12 +27,12 @@ export default function Footer({ socials = [] }: { socials?: SocialLink[] }) {
                   KB
                 </div>
                 <div>
-                  <h3 className="text-white font-bold font-[var(--font-heading)]">Kamal Baral</h3>
-                  <p className="text-xs text-dark-200 uppercase tracking-widest">Veterinary Technician</p>
+                  <h3 className="text-white font-bold font-[var(--font-heading)]">Raksha</h3>
+                  <p className="text-xs text-dark-200 uppercase tracking-widest">IT Professional</p>
                 </div>
               </div>
               <p className="text-dark-200 text-sm leading-relaxed max-w-sm">
-                Dedicated veterinary professional serving the community of Sindhuli, Nepal.
+                Dedicated Software Engineering professional serving the community of Remote.
                 Passionate about animal welfare, public health, and community development.
               </p>
               <div className="flex flex-wrap gap-3 pt-2">
@@ -87,10 +87,10 @@ export default function Footer({ socials = [] }: { socials?: SocialLink[] }) {
         <div className="border-t border-white/5">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-xs text-dark-300">
-              &copy; {currentYear} Kamal Baral. All rights reserved.
+              &copy; {currentYear} Raksha. All rights reserved.
             </p>
             <p className="text-xs text-dark-300 flex items-center gap-1">
-              Made with <Heart className="w-3 h-3 text-red-400 fill-red-400" /> in Sindhuli, Nepal
+              Made with <Heart className="w-3 h-3 text-red-400 fill-red-400" /> in Remote
             </p>
           </div>
         </div>

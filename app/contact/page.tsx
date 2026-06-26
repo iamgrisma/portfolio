@@ -6,8 +6,8 @@ import ContactClient from './ContactClient';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Contact | Kamal Baral',
-  description: 'Get in touch with Kamal Baral.',
+  title: 'Contact | Raksha',
+  description: 'Get in touch with Raksha.',
 };
 
 export default async function ContactPage() {

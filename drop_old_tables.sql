@@ -1,0 +1,23 @@
+PRAGMA defer_foreign_keys = ON;
+PRAGMA foreign_keys = OFF;
+
+DROP TABLE IF EXISTS blog_tags;
+DROP TABLE IF EXISTS article_tags;
+DROP TABLE IF EXISTS contact_replies;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS blogs;
+DROP TABLE IF EXISTS news_articles;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS tags;
+DROP TABLE IF EXISTS ad_slots;
+DROP TABLE IF EXISTS settings;
+DROP TABLE IF EXISTS migrations;
+DROP TABLE IF EXISTS d1_migrations;
+DROP TABLE IF EXISTS educations;
+DROP TABLE IF EXISTS experiences;
+DROP TABLE IF EXISTS interests;
+DROP TABLE IF EXISTS profiles;
+DROP TABLE IF EXISTS contacts;
+DROP TABLE IF EXISTS social_profiles;
+DROP TABLE IF EXISTS stats;

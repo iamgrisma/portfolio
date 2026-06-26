@@ -15,11 +15,11 @@ import { eq, desc } from 'drizzle-orm';
 // Helper to map icon names based on string
 const getIcon = (name: string) => {
   const lName = name.toLowerCase();
-  if (lName.includes('literature') || lName.includes('reading') || lName.includes('book')) return Book;
-  if (lName.includes('music') || lName.includes('song')) return Music;
-  if (lName.includes('travel') || lName.includes('map')) return Map;
-  if (lName.includes('vet') || lName.includes('animal') || lName.includes('health')) return Stethoscope;
-  if (lName.includes('welfare') || lName.includes('heart')) return Heart;
+  if (lName.includes('code') || lName.includes('software') || lName.includes('dev')) return BookOpen;
+  if (lName.includes('design') || lName.includes('ui')) return Sparkles;
+  if (lName.includes('web') || lName.includes('internet')) return Map;
+  if (lName.includes('cloud') || lName.includes('server') || lName.includes('system')) return Briefcase;
+  if (lName.includes('data') || lName.includes('database')) return Book;
   if (lName.includes('gov') || lName.includes('admin') || lName.includes('poli')) return Briefcase;
   if (lName.includes('edu') || lName.includes('school') || lName.includes('degree')) return GraduationCap;
   if (lName.includes('rural') || lName.includes('community')) return Users;
@@ -28,21 +28,21 @@ const getIcon = (name: string) => {
 
 const EXPERTISE = [
   {
-    title: 'Animal Health & Welfare',
-    description: 'Providing comprehensive veterinary care, disease prevention, and livestock management for rural communities across Sindhuli district.',
-    icon: Heart,
+    title: 'Software Development',
+    description: 'Building robust, scalable, and secure web applications tailored to business needs.',
+    icon: BookOpen,
     gradient: 'from-rose-500 to-pink-500',
   },
   {
-    title: 'Public Administration',
-    description: 'Ensuring efficient government service delivery and implementing policies that bridge the gap between administration and community needs.',
+    title: 'Cloud Infrastructure',
+    description: 'Designing and maintaining cloud infrastructure for high availability and performance.',
     icon: Briefcase,
     gradient: 'from-blue-500 to-indigo-500',
   },
   {
-    title: 'Community Development',
-    description: 'Empowering local communities through awareness programs, agricultural training, and public health education initiatives.',
-    icon: Users,
+    title: 'UI/UX Design',
+    description: 'Creating intuitive and engaging user interfaces that provide exceptional user experiences.',
+    icon: Sparkles,
     gradient: 'from-accent-500 to-teal-500',
   },
 ];
@@ -100,8 +100,8 @@ export default async function Home() {
     icon: getIcon(s.icon)
   })) : [
     { value: `${EXPERIENCE_YEARS}+`, label: 'Years Experience', icon: Calendar },
-    { value: '1000+', label: 'Animals Treated', icon: Heart },
-    { value: '50+', label: 'Community Programs', icon: Users },
+    { value: '100+', label: 'Projects Delivered', icon: Briefcase },
+    { value: '50+', label: 'Happy Clients', icon: Users },
     { value: `${educationsList.length}`, label: 'Qualifications', icon: GraduationCap },
   ];
 
@@ -146,7 +146,7 @@ export default async function Home() {
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold font-[var(--font-heading)] leading-[1.1] tracking-tight">
                   <span className="text-white">Hi, I&apos;m</span>
                   <br />
-                  <span className="gradient-text">{profileRecord?.name || 'Kamal Baral'}</span>
+                  <span className="gradient-text">{profileRecord?.name || 'Raksha'}</span>
                 </h1>
               </AnimatedSection>
 
@@ -156,9 +156,9 @@ export default async function Home() {
                     profileRecord.bio.substring(0, 200) + '...'
                   ) : (
                     <span>
-                      <span className="text-white font-semibold">{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].role : 'Professional'}</span> with {EXPERIENCE_YEARS}+ years of
-                      dedicated service at the {experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].organization : 'Government of Nepal'}. Passionate about
-                      animal welfare, public health, and community empowerment.
+                      <span className="text-white font-semibold">{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].role : 'IT Professional'}</span> with {EXPERIENCE_YEARS}+ years of
+                      dedicated service in the tech industry. Passionate about
+                      software engineering, cloud infrastructure, and modern web development.
                     </span>
                   )}
                 </p>
@@ -187,12 +187,12 @@ export default async function Home() {
                 <div className="flex items-center gap-3 pt-4">
                   <div className="flex items-center gap-2 text-sm text-dark-200">
                     <MapPin className="w-4 h-4 text-accent-500" />
-                    <span>{profileRecord?.currentAddress || 'Sindhuli, Nepal'}</span>
+                    <span>{profileRecord?.currentAddress || 'Remote / Worldwide'}</span>
                   </div>
                   <span className="text-dark-400">•</span>
                   <div className="flex items-center gap-2 text-sm text-dark-200">
                     <Briefcase className="w-4 h-4 text-accent-500" />
-                    <span>{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].organization : 'Government of Nepal'}</span>
+                    <span>{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].organization : 'Tech Industry'}</span>
                   </div>
                 </div>
               </AnimatedSection>
@@ -205,7 +205,7 @@ export default async function Home() {
                 <div className="glass-card rounded-3xl p-8 space-y-6">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent-500 to-teal-500 flex items-center justify-center shadow-lg shadow-accent-500/20">
-                      <Stethoscope className="w-6 h-6 text-white" />
+                      <BookOpen className="w-6 h-6 text-white" />
                     </div>
                     <div>
                       <h3 className="text-white font-bold font-[var(--font-heading)]">Quick Profile</h3>
@@ -230,7 +230,7 @@ export default async function Home() {
                   </div>
 
                   <div className="pt-4 border-t border-white/5">
-                    <p className="text-xs text-dark-300 text-center">Serving since 2018</p>
+                    <p className="text-xs text-dark-300 text-center">Coding since 2018</p>
                   </div>
                 </div>
 
@@ -277,7 +277,7 @@ export default async function Home() {
               Academic <span className="gradient-text">Journey</span>
             </h2>
             <p className="text-dark-200 mt-4 max-w-xl mx-auto">
-              A blend of veterinary science and political science — building expertise in both animal welfare and public administration.
+              A blend of software engineering and design — building expertise in scalable systems and intuitive interfaces.
             </p>
           </AnimatedSection>
 
@@ -315,7 +315,7 @@ export default async function Home() {
               Areas of <span className="gradient-text">Expertise</span>
             </h2>
             <p className="text-dark-200 mt-4 max-w-xl mx-auto">
-              Combining veterinary knowledge with public service experience to create meaningful impact.
+              Combining technical knowledge with real-world experience to create meaningful software solutions.
             </p>
           </AnimatedSection>
 
@@ -353,7 +353,7 @@ export default async function Home() {
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white font-[var(--font-heading)] mt-4">
                 Latest <span className="gradient-text-blue">Insights</span>
               </h2>
-              <p className="text-dark-200 mt-3">Thoughts on veterinary science, governance, and community development.</p>
+              <p className="text-dark-200 mt-3">Thoughts on software engineering, web development, and tech trends.</p>
             </div>
             <Link href="/blog" className="btn-secondary text-sm inline-flex items-center gap-2 shrink-0">
               View All Posts <ArrowRight className="w-4 h-4" />
@@ -407,7 +407,7 @@ export default async function Home() {
                 Let&apos;s Work Together
               </h2>
               <p className="text-white/80 max-w-lg mx-auto">
-                Whether it&apos;s about veterinary consultation, community projects, or just a conversation —
+                Whether it&apos;s about a software project, technical consultation, or just a conversation —
                 I&apos;d love to hear from you.
               </p>
               <div className="flex flex-wrap justify-center gap-4 pt-4">

@@ -3,13 +3,13 @@ import { ReactNode } from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Kamal Baral — Veterinary Technician & Public Servant',
-  description: 'Portfolio of Kamal Baral — Veterinary Technician with 8+ years of experience at the Government of Nepal, Sindhuli. JTA, Diploma in Veterinary Science, Bachelor in Political Science.',
-  keywords: ['Kamal Baral', 'Veterinary Technician', 'Nepal', 'Sindhuli', 'Government of Nepal', 'Portfolio'],
-  authors: [{ name: 'Kamal Baral' }],
+  title: 'Raksha — Software Developer',
+  description: 'Portfolio of Raksha — Software Developer with experience in building web applications. Bachelor in Information Management.',
+  keywords: ['Raksha', 'Software Developer', 'Nepal', 'Remote', 'Tech Industry', 'Portfolio'],
+  authors: [{ name: 'Raksha' }],
   openGraph: {
-    title: 'Kamal Baral — Veterinary Technician & Public Servant',
-    description: 'Portfolio of Kamal Baral — Veterinary Technician with 8+ years of experience serving communities in Sindhuli, Nepal.',
+    title: 'Raksha — Software Developer',
+    description: 'Portfolio of Raksha — Software Developer with experience in building web applications.',
     type: 'website',
     locale: 'en_US',
   },

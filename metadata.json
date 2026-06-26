@@ -1,6 +1,6 @@
 {
   "name": "Portfolio App",
-  "description": "A portfolio website for Kamal Baral",
+  "description": "A portfolio website for Raksha",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

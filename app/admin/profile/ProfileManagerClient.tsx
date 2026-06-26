@@ -161,7 +161,7 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-dark-200">Permanent Address</label>
-              <input type="text" className="admin-input" value={profileForm.permanentAddress} onChange={e => setProfileForm({...profileForm, permanentAddress: e.target.value})} placeholder="e.g. Sindhuli, Nepal" />
+              <input type="text" className="admin-input" value={profileForm.permanentAddress} onChange={e => setProfileForm({...profileForm, permanentAddress: e.target.value})} placeholder="e.g. Remote" />
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

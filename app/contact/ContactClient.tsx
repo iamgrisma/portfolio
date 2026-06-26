@@ -82,7 +82,7 @@ export default function ContactClient({ currentAddress, phone, publicEmail, soci
     {
       icon: MapPin,
       label: 'Location',
-      value: currentAddress || 'Sindhuli, Nepal',
+      value: currentAddress || 'Remote',
       href: null,
       color: 'from-accent-500 to-teal-500',
     },

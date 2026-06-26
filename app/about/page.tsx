@@ -26,7 +26,7 @@ const getIcon = (name: string) => {
 // Define predefined skills 
 const SKILLS = [
   { name: 'Animal Health & Diagnosis', level: 95 },
-  { name: 'Veterinary Surgery', level: 85 },
+  { name: 'Software Engineering Surgery', level: 85 },
   { name: 'Livestock Management', level: 90 },
   { name: 'Public Administration', level: 80 },
   { name: 'Community Outreach', level: 92 },
@@ -133,8 +133,8 @@ export default async function AboutPage() {
                   <p>{profileRecord.bio}</p>
                 ) : (
                   <p>
-                    I am <span className="text-white font-semibold">{profileRecord?.name || 'Kamal Baral'}</span>, a veterinary technician
-                    currently serving at the Government of Nepal in Sindhuli district. My journey in veterinary
+                    I am <span className="text-white font-semibold">{profileRecord?.name || 'Raksha'}</span>, a IT Professional
+                    currently serving at the Tech Industry in Remote district. My journey in Software Engineering
                     science began with a passion for animal welfare and a deep connection to the rural
                     communities of Nepal.
                   </p>
@@ -153,13 +153,13 @@ export default async function AboutPage() {
                     <Briefcase className="w-5 h-5 text-accent-400 mt-0.5 shrink-0" />
                     <div>
                       <p className="text-sm text-white font-medium">{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].role : 'Professional'}</p>
-                      <p className="text-xs text-dark-300">{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].organization : 'Government of Nepal'}</p>
+                      <p className="text-xs text-dark-300">{experiencesList.length > 0 ? experiencesList[experiencesList.length - 1].organization : 'Tech Industry'}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <MapPin className="w-5 h-5 text-accent-400 mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-sm text-white font-medium">{profileRecord?.currentAddress || 'Sindhuli, Nepal'}</p>
+                      <p className="text-sm text-white font-medium">{profileRecord?.currentAddress || 'Remote'}</p>
                       <p className="text-xs text-dark-300">{profileRecord?.permanentAddress || 'Bagmati Province'}</p>
                     </div>
                   </div>
