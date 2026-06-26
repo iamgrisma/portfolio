@@ -111,9 +111,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         // @ts-expect-error adding extra fields
         session.user.role = token.role;
-        // @ts-expect-error
         session.user.image = token.image as string | undefined || session.user.image;
-        // @ts-expect-error
         session.user.name = token.name as string | undefined || session.user.name;
       }
       return session;
