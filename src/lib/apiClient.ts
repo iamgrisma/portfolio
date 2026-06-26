@@ -9,7 +9,7 @@ export const uploadMedia = async (file: File, folder: string = 'Other Media') =>
   });
 
   if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
+    const errorData: any = await res.json().catch(() => ({}));
     throw new Error(errorData.error || 'Failed to upload media');
   }
   return res.json();
