@@ -245,6 +245,7 @@ export default function ProfileManagerClient({ data }: { data: ProfileData }) {
         onSelect={(media) => setAccount(prev => ({ ...prev, image: media.url }))}
         title="Select Avatar"
         accept="image/*"
+        defaultFolder="Admin Media"
       />
 
       {/* BASIC INFO (Public Profile) */}

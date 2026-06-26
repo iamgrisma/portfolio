@@ -258,6 +258,7 @@ export default function NewBlogPost() {
       <MediaPicker
         isOpen={mediaPickerOpen}
         onClose={() => setMediaPickerOpen(false)}
+        defaultFolder={mediaPickerTarget === 'featured' ? 'Featured Images' : 'Blog Images'}
         onSelect={(media) => {
           if (mediaPickerTarget === 'featured') {
             setFeaturedImage(media.url);

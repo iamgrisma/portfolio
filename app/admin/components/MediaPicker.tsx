@@ -24,6 +24,7 @@ interface MediaPickerProps {
     onSelect: (media: { url: string; alt?: string; id: number }) => void;
     accept?: string;
     title?: string;
+    defaultFolder?: string;
 }
 
 export const FOLDER_OPTIONS = [
@@ -45,7 +46,7 @@ function formatFileSize(bytes: number): string {
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 }
 
-export default function MediaPicker({ isOpen, onClose, onSelect, accept, title = 'Media Library' }: MediaPickerProps) {
+export default function MediaPicker({ isOpen, onClose, onSelect, accept, title = 'Media Library', defaultFolder }: MediaPickerProps) {
     const [activeTab, setActiveTab] = useState<'library' | 'upload'>('library');
     const [items, setItems] = useState<MediaItem[]>([]);
     const [loading, setLoading] = useState(false);
@@ -101,8 +102,12 @@ export default function MediaPicker({ isOpen, onClose, onSelect, accept, title =
             setSelectedItem(null);
             setActiveTab('library');
             setUploadError('');
+            if (defaultFolder) {
+                setUploadFolder(defaultFolder);
+                setFolder(defaultFolder);
+            }
         }
-    }, [isOpen]);
+    }, [isOpen, defaultFolder]);
 
     const doActualUpload = async (file: File) => {
         setUploading(true);

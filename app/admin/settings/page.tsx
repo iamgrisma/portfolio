@@ -269,6 +269,7 @@ export default function SettingsPage() {
                 onSelect={handleMediaSelect}
                 title="Select Image"
                 accept="image/*"
+                defaultFolder="Admin Media"
             />
         </div>
     );
